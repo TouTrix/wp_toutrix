@@ -99,7 +99,7 @@ function mt_toutrix_page() {
         update_option( "ad_toutrix_access_token", "" );
         update_option( "ad_toutrix_website_id", "" );
         update_option( "ad_toutrix_zone_id", "" );
-        update_option( "ad_channel_id", $_POST['channelId'] );
+        update_option( "ad_channel_id", $_POST[ 'channelId'] );
 
         // Read their posted value
         $toutrix_username = $_POST[ "ad_toutrix_username" ];
@@ -142,7 +142,6 @@ function mt_toutrix_page() {
 	
   if (strlen($toutrix_username)==0 && strlen($toutrix_password)==0) {
      $channels = $adserver->channels_get(array());
-     //var_dump($channels);	
      echo '<div class="wrap">';
 ?>
 
@@ -162,7 +161,7 @@ function mt_toutrix_page() {
 <p><?php _e("Channel:", 'menu-test' ); ?> 
 <select name='channelId'>
 <? foreach ($channels as $channel) { ?>
-<option name='<? echo $channel->id; ?>'><? echo $channel->Title; ?></option>
+<option value='<? echo $channel->id; ?>'><? echo $channel->Title; ?></option>
 <? } ?>
 </select> Choose the good channel for your website. We may change it for you later.
 
@@ -196,9 +195,12 @@ function mt_toutrix_page() {
               $site->Url = get_site_url();
               $site->Description = get_bloginfo ( 'description' );
               $site->channelId = $toutrix_channel_id;
+//var_dump($site);
+//echo "<br/>";
               $site = $adserver->site_create($site);
-              //echo "Create website: ";
-              //var_dump($site);
+//              echo "Create website: ";
+//              var_dump($site);
+//echo "<br/>";
               if ($site->id > 0) {
                 update_option( "ad_toutrix_website_id", $site->id);
                 $toutrix_website_id = $site->id;
@@ -275,7 +277,9 @@ function mt_toutrix_page() {
 // mt_sublevel_page() displays the page content for the first submenu
 // of the custom Test Toplevel menu
 function mt_stats_page() {
-    echo "<h2>Stats</h2>";
+  echo "<h2>Stats</h2>";
+
+  echo "Coming in a next update";
 }
 
 add_action('widgets_init', 'toutrix_init');
@@ -303,14 +307,20 @@ function __construct() {
 // Creating widget front-end
 // This is where the action happens
 public function widget( $args, $instance ) {
-      $toutrix_zone_id  = get_option("ad_toutrix_zone_id");
+  $toutrix_zone_id  = get_option("ad_toutrix_zone_id");
   $title = apply_filters( 'widget_title', $instance['title'] );
   // before and after widget arguments are defined by themes
   echo $args['before_widget'];
   if ( ! empty( $title ) )
   echo $args['before_title'] . $title . $args['after_title'];
 
-  echo "<script src='http://serv.toutrix.com/js/creative?zone_id=" . $toutrix_zone_id . "&adtypeId=2'></script>";
+  if ($instance[ 'adtypeId' ]==1) {
+?>
+    <script type='text/javascript'>var cpma_rnd=Math.floor(Math.random()*99999999999); document.write("<scr"+"ipt type='text/javascript' src='http://serv.toutrix.com/popunder_js?id=<? echo $toutrix_zone_id;?>&rnd="+cpma_rnd+"'></scr"+"ipt>");</script>
+<?
+  } else {
+    echo "<script src='http://serv.toutrix.com/js/creative?zone_id=" . $toutrix_zone_id . "&adtypeId=2'></script>";
+  }
 
   echo $args['after_widget'];
 }
@@ -323,6 +333,9 @@ public function form( $instance ) {
 
   if ( isset( $instance[ 'title' ] ) ) {
     $title = $instance[ 'title' ];
+  }
+
+  if ( isset( $instance[ 'adtypeId' ] ) ) {
     $adtypeId = $instance[ 'adtypeId' ];
   }
   else {
@@ -346,7 +359,7 @@ public function form( $instance ) {
 public function update( $new_instance, $old_instance ) {
   $instance = array();
   $instance['title'] = ( ! empty( $new_instance['title'] ) ) ? strip_tags( $new_instance['title'] ) : '';
-  $instance['adtypeId'] = ( ! empty( $new_instance['adtypeId'] ) ) ? strip_tags( $new_instance['adtypeId'] ) : '';
+  $instance['channel'] = ( ! empty( $new_instance['channelId'] ) ) ? strip_tags( $new_instance['channelId'] ) : '';
   return $instance;
 }
 
