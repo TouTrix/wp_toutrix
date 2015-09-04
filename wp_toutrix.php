@@ -2,8 +2,8 @@
 /*
 Plugin Name: TouTrix AdServer
 Plugin URI:  http://toutrix.com/wp_toutrix
-Description: This plugin connect to TouTrix AdMedia Server, create zone to earn money to show ads. You casn also ask a withdrawal without leaving your website.
-Version:     0.1
+Description: This plugin connect to TouTrix AdMedia Server, create zone to earn money to show ads. You can also ask a withdrawal without leaving your website.
+Version:     0.2
 Author:      TouTrix
 Author URI:  http://toutrix.com/
 License:     GPL2
@@ -45,10 +45,18 @@ function mt_add_pages() {
     add_menu_page(__('TouTrix','menu-toutrix'), __('TouTrix','menu-toutrix'	), 'manage_options', 'mt_toutrix_page-handle', 'mt_toutrix_page' );
 
     // Add a submenu to the custom top-level menu:
-    add_submenu_page('mt_toutrix_page-handle', __('Stats','menu-stats'), __('Stats','menu-stats'), 'manage_options', 'sub-page', 'mt_stats_page');
+    add_submenu_page('mt_toutrix_page-handle', __('Stats','menu-stats'), __('Stats','menu-stats'), 'manage_options', 'mt_stats_page', 'mt_stats_page');
+
+    // Add a submenu to the custom top-level menu:
+    add_submenu_page('mt_toutrix_page-handle', __('Creatives','menu-stats'), __('Creatives','menu-stats'), 'manage_options', 'mt_creative', 'mt_creative_page');
+
+    // Add a submenu to the custom top-level menu:
+    add_submenu_page('mt_toutrix_page-handle', __('Campaigns','menu-stats'), __('Campaigns','menu-stats'), 'manage_options', 'mt_campaign', 'mt_campaign_page');
 }
 
-function get_channel() {
+function get_channels() {
+  global $adserver;
+  return $adserver->channels_get(array());
 }
 
 function toutrix_get_token() {
@@ -74,6 +82,22 @@ function toutrix_get_token() {
         //}
     }
     return false;
+}
+
+function mt_creative_page() {
+  global $adserver;
+
+  echo "<h2>Creatives</h2>";
+  echo "Coming soon";
+}
+
+function mt_campaign_page() {
+    global $adserver;
+
+    if (empty($_GET['subpage'])) {
+      echo "<h2>Advertisers</h2>";
+      echo "Coming soon";
+    }
 }
 
 // mt_toplevel_page() displays the page content for the custom Test Toplevel menu
@@ -141,7 +165,7 @@ function mt_toutrix_page() {
     }
 	
   if (strlen($toutrix_username)==0 && strlen($toutrix_password)==0) {
-     $channels = $adserver->channels_get(array());
+     $channels = get_channels();
      echo '<div class="wrap">';
 ?>
 
@@ -359,7 +383,7 @@ public function form( $instance ) {
 public function update( $new_instance, $old_instance ) {
   $instance = array();
   $instance['title'] = ( ! empty( $new_instance['title'] ) ) ? strip_tags( $new_instance['title'] ) : '';
-  $instance['channel'] = ( ! empty( $new_instance['channelId'] ) ) ? strip_tags( $new_instance['channelId'] ) : '';
+  $instance['adtypeId'] = ( ! empty( $new_instance['adtypeId'] ) ) ? strip_tags( $new_instance['adtypeId'] ) : '';
   return $instance;
 }
 
