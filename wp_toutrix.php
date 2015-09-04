@@ -52,6 +52,9 @@ function mt_add_pages() {
 
     // Add a submenu to the custom top-level menu:
     add_submenu_page('mt_toutrix_page-handle', __('Campaigns','menu-stats'), __('Campaigns','menu-stats'), 'manage_options', 'mt_campaign', 'mt_campaign_page');
+
+    // Add a submenu to the custom top-level menu:
+    add_submenu_page('mt_toutrix_page-handle', __('Marketplace','menu-stats'), __('Marketplace','menu-stats'), 'manage_options', 'mt_marketplace', 'mt_marketplace_page');
 }
 
 function get_channels() {
@@ -86,16 +89,116 @@ function toutrix_get_token() {
 
 function mt_creative_page() {
   global $adserver;
+  toutrix_get_token();
 
-  echo "<h2>Creatives</h2>";
-  echo "Coming soon";
+  if (empty($_GET['creativeId'])) {
+    if (!empty($_POST['b'])) {
+      $fields = new stdclass();
+      $fields->user_id = $adserver->userId;
+      $fields->title = $_POST['title'];
+      $fields->url = $_POST['url'];
+      $fields->banner_url = $_POST['banner_url'];
+      $fields->html = $_POST['html'];
+      $fields->adtypeId = $_POST['adtypeId'];
+      $fields->IsDeleted = 0;
+      $fields->IsActive = 1;
+      stripslashes_deep( $fields );
+      $creative = $adserver->creative_create($fields);
+//var_dump($creative);
+?>
+<div class="updated"><p><strong><?php _e('Creative added', 'menu-test' ); ?></strong></p></div>
+<?
+    }
+
+    echo "<h2>Creatives</h2>";
+
+    $creatives = $adserver->creatives_list(array());
+?>
+<table>
+  <tr><th>Id</th><th>Title</th><th>Action</th></tr>
+<?
+    foreach ($creatives as $creative) {
+      echo "<tr><td><a href='?page=mt_creative&creativeId=" . $creative->id . "'>" . $creative->id ."</a></td><td>" . $creative->title ."</td><td></td></tr>";
+    }
+?>
+</table>
+
+<h2>Create a new creative</h2>
+<?
+    $new = new stdclass();
+    creative_form($new);
+  } elseif (!empty($_GET['creativeId'])) {
+    if (!empty($_POST['b'])) {
+      $fields = new stdclass();
+      $fields->id = $_POST['id'];
+      $fields->title = $_POST['title'];
+      $fields->url = $_POST['url'];
+      $fields->banner_url = $_POST['banner_url'];
+      $fields->html = $_POST['html'];
+      $fields->adtypeId = $_POST['adtypeId'];
+      stripslashes_deep( $fields );
+//var_dump($fields);
+//echo "<br/>";
+      $creative = $adserver->creative_update($fields);
+//var_dump($creative);
+?>
+<div class="updated"><p><strong><?php _e('Creative saved', 'menu-test' ); ?></strong></p></div>
+<?
+    }
+    $fields = new stdclass();
+    $fields->creativeId = $_GET['creativeId'];
+    $creative = $adserver->creative_get($fields)
+?>
+<h2>Update creative</h2>
+<?
+    creative_form($creative);
+    //var_dump($creative);
+  }
+}
+
+function creative_form($creative) {
+  global $adserver;
+  $adtypes = $adserver->adtypes_get(array());
+?>
+<form method='POST'>
+<? if (!empty($creative->id)) {?>
+<input type='hidden' name='id' value='<?echo $creative->id;?>'>
+<? } ?>
+Title: <input type='text' name='title' value='<?echo $creative->title;?>'><br/>
+
+Ad Type: <select name='adtypeId'>
+<? foreach ($adtypes as $adtype) { ?>
+<option value='<? echo $adtype->id; ?>'<? if ($creative->adtypeId == $adtype->id) echo " selected"; ?>><? echo $adtype->name; ?></option>
+<? } ?>
+</select><br/>
+	
+Url: <input type='text' name='url' value='<?echo $creative->url;?>'><br/>
+Banner Url: <input type='text' name='banner_url' value='<?echo $creative->banner_url;?>'> (optional)<br/>
+HTML:<br/>
+<textarea name='html'>
+<?echo $creative->html;?>
+</textarea> (optional)<br/>
+<input type='submit' name='b' value='Save'>
+</form>
+<?
 }
 
 function mt_campaign_page() {
-    global $adserver;
+  global $adserver;
+  $this->toutrix_get_token();
 
     if (empty($_GET['subpage'])) {
       echo "<h2>Advertisers</h2>";
+      echo "Coming soon";
+    }
+}
+
+function mt_marketplace_page() {
+  global $adserver;
+  $this->toutrix_get_token();
+
+    if (empty($_GET['subpage'])) {
+      echo "<h2>Marketplace</h2>";
       echo "Coming soon";
     }
 }
