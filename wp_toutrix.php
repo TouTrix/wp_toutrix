@@ -3,7 +3,7 @@
 Plugin Name: TouTrix AdServer
 Plugin URI:  http://toutrix.com/wp_toutrix
 Description: This plugin connect to TouTrix AdMedia Server, create zone to earn money to show ads. You can also ask a withdrawal without leaving your website.
-Version:     0.2
+Version:     0.3
 Author:      TouTrix
 Author URI:  http://toutrix.com/
 License:     GPL2
@@ -185,12 +185,88 @@ HTML:<br/>
 
 function mt_campaign_page() {
   global $adserver;
-  $this->toutrix_get_token();
+  toutrix_get_token();
 
-    if (empty($_GET['subpage'])) {
-      echo "<h2>Advertisers</h2>";
-      echo "Coming soon";
+  if (empty($_GET['campaignId'])) {
+    if (!empty($_POST['b'])) {
+      $fields = new stdclass();
+      $fields->user_id = $adserver->userId;
+      $fields->title = $_POST['title'];
+      $fields->url = $_POST['url'];
+      $fields->banner_url = $_POST['banner_url'];
+      $fields->html = $_POST['html'];
+      $fields->adtypeId = $_POST['adtypeId'];
+      $fields->IsDeleted = 0;
+      $fields->IsActive = 1;
+      stripslashes_deep( $fields );
+      $campaign = $adserver->campaign_create($fields);
+//var_dump($campaign);
+?>
+<div class="updated"><p><strong><?php _e('Campaign added', 'menu-test' ); ?></strong></p></div>
+<?
     }
+
+    echo "<h2>Campaigns</h2>";
+
+    $campaigns = $adserver->campaigns_list(array());
+?>
+<table>
+  <tr><th>Id</th><th>Title</th><th>Action</th></tr>
+<?
+    foreach ($campaigns as $campaign) {
+      echo "<tr><td><a href='?page=mt_campaign&campaignId=" . $campaign->id . "'>" . $campaign->id ."</a></td><td>" . $campaign->name ."</td><td></td></tr>";
+    }
+?>
+</table>
+
+<h2>Create a new campaign</h2>
+<?
+    $new = new stdclass();
+    campaign_form($new);
+  } elseif (!empty($_GET['campaignId'])) {
+    if (!empty($_POST['b'])) {
+      $fields = new stdclass();
+      $fields->id = $_POST['id'];
+      $fields->name = $_POST['name'];
+      stripslashes_deep( $fields );
+//var_dump($fields);
+//echo "<br/>";
+      $campaign = $adserver->campaign_update($fields);
+//var_dump($campaign);
+?>
+<div class="updated"><p><strong><?php _e('Campaign saved', 'menu-test' ); ?></strong></p></div>
+<?
+    }
+    $fields = new stdclass();
+    $fields->campaignId = $_GET['campaignId'];
+    $campaign = $adserver->campaign_get($fields);
+?>
+<h2>Update campaign</h2>
+<?
+    campaign_form($campaign);
+    //var_dump($campaign);
+
+    flights($campaign);
+  }
+}
+
+function flights($campaign) {
+  echo "<h2>Flights</h2>";
+
+}
+
+function campaign_form($campaign) {
+  global $adserver;
+?>
+<form method='POST'>
+<? if (!empty($campaign->id)) {?>
+<input type='hidden' name='id' value='<?echo $campaign->id;?>'>
+<? } ?>
+Name: <input type='text' name='name' value='<?echo $campaign->name;?>'><br/>
+
+<input type='submit' name='b' value='Save'>
+</form>
+<?
 }
 
 function mt_marketplace_page() {

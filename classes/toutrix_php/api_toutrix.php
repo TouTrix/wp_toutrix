@@ -11,9 +11,11 @@ class api_toutrix_adserver extends api_toutrix {
   var $p_channels = "/channels";
   var $p_adtypes = "/adtypes";
   var $p_campaign = "/users/:userId/campaigns";
+  var $p_campaign_update = "/campaigns/:id";
   var $p_creative = "/users/:userId/creatives";
   var $p_creative_update = "/creatives/:id";
   var $p_user_creative = "/users/:userId/creatives/:creativeId";
+  var $p_user_campaign = "/users/:userId/campaigns/:campaignId";
   var $p_sites = "/users/:userId/sites";
   var $p_zones = "/sites/:siteId/zones";
   var $p_flight_update = "/flights/:id";
@@ -110,6 +112,21 @@ class api_toutrix_adserver extends api_toutrix {
   function campaigns_get($fields) {
      $path = $this->do_path($this->p_campaign, $fields);
      return $this->model_get($path, $fields);
+  }
+
+  function campaign_get($fields) {
+     $path = $this->do_path($this->p_user_campaign, $fields);
+     return $this->model_get($path, $fields);
+  }
+
+  function campaigns_list($fields) {
+     $path = $this->do_path($this->p_campaign, $fields);
+     return $this->model_get($path, $fields);
+  }
+
+  function campaign_update($fields) {
+     $path = $this->do_path($this->p_campaign_update, $fields);
+     return $this->model_put($path, $fields);
   }
 
   // Creative
