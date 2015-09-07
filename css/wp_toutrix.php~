@@ -13,7 +13,6 @@ Text Domain: toutrix-adserver
 */
 
 // TODO - Error manager from the API. We don't check for error at all for the moment.
-// TODO - Validation before submiting
 // TODO - Add ads inside article
 
 defined( 'ABSPATH' ) or die( 'No script kiddies please!' );
@@ -34,7 +33,7 @@ add_option( 'ad_toutrix_zone_id', '', '', 'yes' );
 // Hook for adding admin menus
 add_action('admin_menu', 'toutrix_add_pages');
 
-wp_enqueue_style('admin_css_toutrix', plugins_url('/wp_toutrix/css/toutrix.css'), false, '1.0.0', 'all');
+wp_enqueue_style('admin_css_bootstrap', 'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js');
 
 //add_action( 'widgets_init', 'register_my_widget' );
 
@@ -42,14 +41,6 @@ global $adserver;
 $adserver = new api_toutrix_adserver();
 
 global $zoneId;
-
-/*
-function toutrix_get_solde() {
-  global $adserver;
-  $user = $adserver->get_user();
-  $toutrix_user_solde = $adserver->funds;
-}
-*/
 
 // action function for above hook
 function toutrix_add_pages() {
@@ -110,7 +101,6 @@ function mt_marketplace_page() {
 // mt_toplevel_page() displays the page content for the custom Test Toplevel menu
 function mt_toutrix_page() {
     global $adserver;
-
     echo "<div class='container'>";
 
     echo "<center><a href='http://toutrix.com/2015/09/07/we-are-looking-for-developpers/'>We are looking for developpers</a></center><br/>";
@@ -264,11 +254,6 @@ function mt_toutrix_page() {
 
        }
     }
-
-    $user = $adserver->get_user();
-
-    echo "<b>Funds available: </b> $" . number_format($user->funds,2) . "<br/>";
-
 ?>
 <h1>Connect with your TouTrix account</h2>
 <?php

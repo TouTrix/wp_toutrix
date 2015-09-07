@@ -10,7 +10,6 @@ class api_toutrix_adserver extends api_toutrix {
 
   var $p_login_user = "/users/login";
   var $p_user = "/users";
-  var $p_user_one = "/users/:id";
   var $p_channels = "/channels";
   var $p_adtypes = "/adtypes";
   var $p_campaign = "/users/:userId/campaigns";
@@ -58,18 +57,6 @@ class api_toutrix_adserver extends api_toutrix {
      }
   }
 
-  // user
-
-  function get_user() {
-    if ($this->user == null) {
-      $fields = new stdclass();
-      $fields->id = $this->userId;
-      $path = $this->do_path($this->p_user_one, $fields);
-      $this->user = $this->model_get($path, $fields);
-    }
-    return $this->user;
-  }
-   
   function user_create($fields) {
      $path = $this->do_path($this->p_user, $fields);
      return $this->model_create($path, $fields);
@@ -209,7 +196,7 @@ class api_toutrix_adserver extends api_toutrix {
 
   function flight_update($fields) {
      $path = $this->do_path($this->p_flight_update, $fields);
-     // TODO - Use the update function
+     // TODO - Create an update function
      $datas = array('path'=> $path,
                     'method'=> 'PUT',
                     'fields'=> $fields
@@ -264,10 +251,9 @@ class api_toutrix {
   var $last_code;
   var $access_token;
   var $userId;
-  var $user;
 
   function __construct() {
-    $this->user = null;
+
   }
 
   function reset_ch() {
