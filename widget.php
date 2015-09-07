@@ -35,7 +35,10 @@ public function widget( $args, $instance ) {
 
   if ($instance[ 'adtypeId' ]==1) {
 ?>
-    <script type='text/javascript'>var cpma_rnd=Math.floor(Math.random()*99999999999); document.write("<scr"+"ipt type='text/javascript' src='http://serv.toutrix.com/popunder_js?id=<?php echo $toutrix_zone_id;?>&rnd="+cpma_rnd+"'></scr"+"ipt>");</script>
+  <script type='text/javascript'>
+  zoneId=<?php echo $toutrix_zone_id; ?>
+  </script>
+  <script type='text/javascript'>var cpma_rnd=Math.floor(Math.random()*99999999999); document.write("<scr"+"ipt type='text/javascript' src='http://serv.toutrix.com/popunder_js?rnd="+cpma_rnd+"'></scr"+"ipt>");</script>
 <?php
   } else {
     echo "<script src='http://serv.toutrix.com/js/creative?zone_id=" . $toutrix_zone_id . "&adtypeId=2'></script>";

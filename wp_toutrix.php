@@ -180,7 +180,8 @@ function mt_toutrix_page() {
      echo '<div class="wrap">';
 ?>
 
-<h1>Signup on TouTrix</h2>
+<h1>Create your account now</h2>
+Fill-up the form to create your account now.<br/>
 <form name="form1" method="post" action="">
 <input type="hidden" name="signup" value="Y">
 <input type="hidden" name="refererId" value="1">
@@ -267,7 +268,7 @@ function mt_toutrix_page() {
 
     $user = $adserver->get_user();
 
-    echo "<b>Funds available: </b> $" . number_format($user->funds,2) . "<br/>";
+    echo "<font size='5'><b>Funds available: </b> <font color='green'>$" . number_format($user->funds,2) . "</font></font><br/>";
 
 ?>
 <h1>Connect with your TouTrix account</h2>
