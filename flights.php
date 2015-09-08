@@ -108,11 +108,14 @@ function flight() {
 
   echo "<b>Price:</b> $" . $flight->Price . "<br/>";
 ?>
+<div class="CSSTableGenerator">
 <table>
   <tr><th>ID</th><th>Active</th><th>Creative</th><th>Action</th></tr>
 <?php
   $all_used = array();
+  $i = 0;
   foreach ($creative_flights as $creative_flight) {
+    $i++;
     if ($creative_flight->IsActive)
       $active = "<a href='?page=mt_campaign&campaignId=17&flightId=2335&deactiveId=" . $creative_flight->id . "'>Yes</a>";
     else
@@ -140,8 +143,12 @@ function flight() {
 
     echo "</td><td><a href='?page=mt_campaign&campaignId=" . $_GET['campaignId'] . "&flightId=" . $_GET['flightId'] . "&removeTargetId=" . $creative_flight->id . "'><img src='/wp-content/plugins/wp_toutrix/images/Remove.png' height='25' width='25' border='0'></a></td></tr>";
   }
+  if ($i==0) {
+    echo "<tr><td colspan='4'>No creative added yet. You should add at least one.</td></tr>";
+  }
 ?>
 </table>
+</div>
 
 <h2>Add a creative to this flight</h2>
 <?php
