@@ -25,7 +25,7 @@ function toutrix_show_target_line($target) {
     foreach ($values as $country_code) {
       if (!$first) echo "<br/>";
       $lcountry = strtolower($country_code);
-      echo "<img src= '/wp-content/plugins/wp_toutrix/flags/" . $lcountry . ".png'> " . $country_code;
+      echo "<img src= '" . plugins_url( 'flags/' . $lcountry . '.png', __FILE__ ) . "'> " . $country_code;
       $first = false;
     }
   } else {

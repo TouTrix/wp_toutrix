@@ -35,7 +35,8 @@ add_option( 'ad_toutrix_zone_id', '', '', 'yes' );
 // Hook for adding admin menus
 add_action('admin_menu', 'toutrix_add_pages');
 
-wp_enqueue_style('admin_css_toutrix', plugins_url('/wp_toutrix/css/toutrix.css'), false, '1.0.0', 'all');
+wp_enqueue_style('admin_css_toutrix', plugins_url( 'css/toutrix.css', __FILE__ ), false, '1.0.0', 'all');
+
 
 //add_action( 'widgets_init', 'register_my_widget' );
 
