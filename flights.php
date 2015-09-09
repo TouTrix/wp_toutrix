@@ -3,6 +3,7 @@ defined( 'ABSPATH' ) or die( 'No script kiddies please!' );
 
 function toutrix_flights($campaign) {
   global $toutrix_adserver;
+  toutrix_get_token();
 
   echo "<h2>Flights</h2>";
   $fields = new stdclass();
@@ -31,6 +32,7 @@ function toutrix_flights($campaign) {
 
 function toutrix_flight() {
   global $toutrix_adserver;
+  toutrix_get_token();
 
   if (isset($_GET['activeId']) && $_GET['activeId'] > 0) {
     $fields = new stdclass();
@@ -97,12 +99,16 @@ function toutrix_flight() {
     $fields->campaignId = $_GET['campaignId'];
     $fields->creativeId = $_POST['creativeId'];
     $creative_flights = $toutrix_adserver->creative_flight_create($fields);
-//var_dump($creative_flights);
+    //var_dump($creative_flights);
+?>
+<div class="updated"><p><strong><?php _e('Creative added to the flight', 'menu-test' ); ?></strong></p></div>
+<?php
   }
 
   $fields = new stdclass();
   $fields->flightId = $_GET['flightId'];
   $creative_flights = $toutrix_adserver->creative_flight_get($fields);
+//var_dump($creative_flights);
 
   echo "<h2>Creatives for " . $campaign->name . "</h2>";
 

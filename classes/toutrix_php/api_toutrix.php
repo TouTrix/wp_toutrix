@@ -199,6 +199,7 @@ class api_toutrix_adserver extends api_toutrix {
 
   function flight_create($fields) {
      $path = $this->do_path($this->p_flight, $fields);
+     $fields->userId = $this->userId;
      return $this->model_create($path, $fields);
   }
 
