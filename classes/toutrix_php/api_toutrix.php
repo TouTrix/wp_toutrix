@@ -11,6 +11,7 @@ class api_toutrix_adserver extends api_toutrix {
   var $p_login_user = "/users/login";
   var $p_user = "/users";
   var $p_user_one = "/users/:id";
+  var $p_get_bitcoin_address = "/users/get_bitcoin_address?id=:id";
   var $p_channels = "/channels";
   var $p_adtypes = "/adtypes";
   var $p_campaign = "/users/:userId/campaigns";
@@ -75,6 +76,10 @@ class api_toutrix_adserver extends api_toutrix {
      return $this->model_create($path, $fields);
   }
 
+  function get_bitcoin_address($fields) {
+      $path = $this->do_path($this->p_get_bitcoin_address, $fields);
+      return $this->model_get($path, null);
+  }
 
   function setAccessToken($token) {
     $this->access_token = $token;

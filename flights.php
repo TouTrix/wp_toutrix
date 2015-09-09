@@ -1,13 +1,13 @@
 <?php
 defined( 'ABSPATH' ) or die( 'No script kiddies please!' );
 
-function flights($campaign) {
-  global $adserver;
+function toutrix_flights($campaign) {
+  global $toutrix_adserver;
 
   echo "<h2>Flights</h2>";
   $fields = new stdclass();
   $fields->campaignId = $campaign->id;
-  $flights = $adserver->flights_get($fields);
+  $flights = $toutrix_adserver->flights_get($fields);
   //var_dump($flights);
 ?>
 <div class="CSSTableGenerator">
@@ -15,7 +15,7 @@ function flights($campaign) {
   <tr><th>ID</th><th>Name</th><th>Price</th><th>Action</th></tr>
 <?php
   foreach ($flights as $flight) { 
-    echo "<tr><td><a href='?page=mt_campaign&campaignId=" . $_GET['campaignId'] . "&flightId=" . $flight->id . "'>" . $flight->id . "</a></td><td>" . $flight->Name . "</td><td>$" . $flight->Price . "</td><td></td></tr>";
+    echo "<tr><td><a href='?page=mt_toutrix_campaign&campaignId=" . $_GET['campaignId'] . "&flightId=" . $flight->id . "'>" . $flight->id . "</a></td><td>" . $flight->Name . "</td><td>$" . $flight->Price . "</td><td></td></tr>";
   }
 ?>
 </table>
@@ -26,17 +26,17 @@ function flights($campaign) {
   $flight = new stdclass();
   $flight->max_per_ip = 0;
   $flight->campaignId = $_GET['campaignId'];
-  flight_form($flight);
+  toutrix_flight_form($flight);
 }
 
-function flight() {
-  global $adserver;
+function toutrix_flight() {
+  global $toutrix_adserver;
 
   if (isset($_GET['activeId']) && $_GET['activeId'] > 0) {
     $fields = new stdclass();
     $fields->id = $_GET['activeId'];
     $fields->IsActive = true;
-    $target = $adserver->creative_flight_save($fields);
+    $target = $toutrix_adserver->creative_flight_save($fields);
 ?>
 <div class="updated"><p><strong><?php _e('Creative started', 'menu-test' ); ?></strong></p></div>
 <?php
@@ -46,7 +46,7 @@ function flight() {
     $fields = new stdclass();
     $fields->id = $_GET['deactiveId'];
     $fields->IsActive = false;
-    $target = $adserver->creative_flight_save($fields);
+    $target = $toutrix_adserver->creative_flight_save($fields);
 ?>
 <div class="updated"><p><strong><?php _e('Creative stopped', 'menu-test' ); ?></strong></p></div>
 <?php
@@ -57,7 +57,7 @@ function flight() {
     $fields->id = $_GET['removeTargetId'];
     $fields->IsDeleted = true;
     $fields->IsActive = false;
-    $target = $adserver->creative_flight_save($fields);
+    $target = $toutrix_adserver->creative_flight_save($fields);
 ?>
 <div class="updated"><p><strong><?php _e('Creative removed', 'menu-test' ); ?></strong></p></div>
 <?php
@@ -71,7 +71,7 @@ function flight() {
     $fields->isExcept = false;
     $fields->target_type = $_POST['target_type'];
     $fields->target_value = $_POST['target_value'];
-    $target = $adserver->target_create($fields);
+    $target = $toutrix_adserver->target_create($fields);
     //var_dump($target);
 ?>
 <div class="updated"><p><strong><?php _e('Flight target added', 'menu-test' ); ?></strong></p></div>
@@ -81,12 +81,12 @@ function flight() {
   $fields = new stdclass();
   $fields->campaignId = $_GET['campaignId'];
   //var_dump($fields); echo "<br/>";
-  $campaign = $adserver->campaign_get($fields);
+  $campaign = $toutrix_adserver->campaign_get($fields);
 
   $fields = new stdclass();
   $fields->campaignId = $_GET['campaignId'];
   $fields->flightId = $_GET['flightId'];
-  $flight = $adserver->flights_get($fields);
+  $flight = $toutrix_adserver->flights_get($fields);
 //echo "Current flight:<br/>";
 //var_dump($flight);
 //echo "<br/>";
@@ -96,13 +96,13 @@ function flight() {
     $fields->flightId = $_GET['flightId'];
     $fields->campaignId = $_GET['campaignId'];
     $fields->creativeId = $_POST['creativeId'];
-    $creative_flights = $adserver->creative_flight_create($fields);
+    $creative_flights = $toutrix_adserver->creative_flight_create($fields);
 //var_dump($creative_flights);
   }
 
   $fields = new stdclass();
   $fields->flightId = $_GET['flightId'];
-  $creative_flights = $adserver->creative_flight_get($fields);
+  $creative_flights = $toutrix_adserver->creative_flight_get($fields);
 
   echo "<h2>Creatives for " . $campaign->name . "</h2>";
 
@@ -117,9 +117,9 @@ function flight() {
   foreach ($creative_flights as $creative_flight) {
     $i++;
     if ($creative_flight->IsActive)
-      $active = "<a href='?page=mt_campaign&campaignId=17&flightId=2335&deactiveId=" . $creative_flight->id . "'>Yes</a>";
+      $active = "<a href='?page=mt_toutrix_campaign&campaignId=17&flightId=2335&deactiveId=" . $creative_flight->id . "'>Yes</a>";
     else
-      $active = "<a href='?page=mt_campaign&campaignId=17&flightId=2335&activeId=" . $creative_flight->id . "'>No</a>";
+      $active = "<a href='?page=mt_toutrix_campaign&campaignId=17&flightId=2335&activeId=" . $creative_flight->id . "'>No</a>";
     echo "<tr><td>" . $creative_flight->id . "</td><td>" . $active ."</td><td>";
     $first = true;
 //echo "--";
@@ -127,7 +127,7 @@ function flight() {
 
     $creative = new stdclass();
     $creative->creativeId = $creative_flight->creativeId;
-    $creative = $adserver->creative_get($creative);
+    $creative = $toutrix_adserver->creative_get($creative);
 
     $all_used[$creative->id] = 1;
 
@@ -141,7 +141,7 @@ function flight() {
     echo "</span><br/>";
     $first = false;
 
-    echo "</td><td><a href='?page=mt_campaign&campaignId=" . $_GET['campaignId'] . "&flightId=" . $_GET['flightId'] . "&removeTargetId=" . $creative_flight->id . "'><img src='/wp-content/plugins/wp_toutrix/images/Remove.png' height='25' width='25' border='0'></a></td></tr>";
+    echo "</td><td><a href='?page=mt_toutrix_campaign&campaignId=" . $_GET['campaignId'] . "&flightId=" . $_GET['flightId'] . "&removeTargetId=" . $creative_flight->id . "'><img src='/wp-content/plugins/wp_toutrix/images/Remove.png' height='25' width='25' border='0'></a></td></tr>";
   }
   if ($i==0) {
     echo "<tr><td colspan='4'>No creative added yet. You should add at least one.</td></tr>";
@@ -152,7 +152,7 @@ function flight() {
 
 <h2>Add a creative to this flight</h2>
 <?php
-  $creatives = $adserver->creatives_list(array());
+  $creatives = $toutrix_adserver->creatives_list(array());
 ?>
 <form method='POST'>
 <input type='hidden' name='creative' value='Y'>
@@ -171,17 +171,17 @@ foreach ($creatives as $one_crea) {
   echo "<h2>Targets for " . $campaign->name . "</h2>";
   $fields = new stdclass();
   $fields->flightId = $_GET['flightId'];
-  $targets = $adserver->flight_targets_get($fields);
-  show_targets($targets);
+  $targets = $toutrix_adserver->flight_targets_get($fields);
+  toutrix_show_targets($targets);
 
   $fields = new stdclass();
   $fields->flightId = $_GET['flightId'];
 
   echo "<h2>Add a new target</h2>";
-  show_target_form($fields);
+  toutrix_show_target_form($fields);
 }
 
-function flight_form($flight) {
+function toutrix_flight_form($flight) {
 ?>
 <form method='POST'>
 <input type='hidden' name='flight' value='yes'>

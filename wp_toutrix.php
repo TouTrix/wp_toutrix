@@ -24,6 +24,7 @@ require "campaign.php";
 require "flights.php";
 require "target.php";
 require "widget.php";
+require "bank.php";
 
 add_option( 'ad_toutrix_username', '', '', 'yes' );
 add_option( 'ad_toutrix_password', '', '', 'yes' );
@@ -38,39 +39,33 @@ wp_enqueue_style('admin_css_toutrix', plugins_url('/wp_toutrix/css/toutrix.css')
 
 //add_action( 'widgets_init', 'register_my_widget' );
 
-global $adserver;
-$adserver = new api_toutrix_adserver();
+global $toutrix_adserver;
+$toutrix_adserver = new api_toutrix_adserver();
 
-global $zoneId;
-
-/*
-function toutrix_get_solde() {
-  global $adserver;
-  $user = $adserver->get_user();
-  $toutrix_user_solde = $adserver->funds;
-}
-*/
+global $toutrix_zoneId;
 
 // action function for above hook
 function toutrix_add_pages() {
     add_menu_page(__('TouTrix','menu-toutrix'), __('TouTrix','menu-toutrix'), 'manage_options', 'mt_toutrix_page-handle', 'mt_toutrix_page');
 
-    add_submenu_page('mt_toutrix_page-handle', __('Stats','menu-stats'), __('Stats','menu-stats'), 'manage_options', 'mt_stats_page', 'mt_stats_page');
+    add_submenu_page('mt_toutrix_page-handle', __('Stats','menu-stats'), __('Stats','menu-stats'), 'manage_options', 'mt_toutrix_stats_page', 'mt_toutrix_stats_page');
 
     add_submenu_page('mt_toutrix_page-handle', __('Creatives','menu-stats'), __('Creatives','menu-stats'), 'manage_options', 'toutrix_creative', 'toutrix_creative_page');
 
-    add_submenu_page('mt_toutrix_page-handle', __('Campaigns','menu-stats'), __('Campaigns','menu-stats'), 'manage_options', 'mt_campaign', 'mt_campaign_page');
+    add_submenu_page('mt_toutrix_page-handle', __('Campaigns','menu-stats'), __('Campaigns','menu-stats'), 'manage_options', 'mt_toutrix_campaign', 'mt_toutrix_campaign_page');
 
-    add_submenu_page('mt_toutrix_page-handle', __('Marketplace','menu-stats'), __('Marketplace','menu-stats'), 'manage_options', 'mt_marketplace', 'mt_marketplace_page');
+    add_submenu_page('mt_toutrix_page-handle', __('Marketplace','menu-stats'), __('Marketplace','menu-stats'), 'manage_options', 'mt_toutrix_marketplace', 'mt_toutrix_marketplace_page');
+
+    add_submenu_page('mt_toutrix_page-handle', __('Bank','menu-stats'), __('Bank','menu-stats'), 'manage_options', 'mt_toutrix_bank', 'mt_toutrix_bank_page');
 }
 
-function get_channels() {
-  global $adserver;
-  return $adserver->channels_get(array());
+function toutrix_get_channels() {
+  global $toutrix_adserver;
+  return $toutrix_adserver->channels_get(array());
 }
 
 function toutrix_get_token() {
-    global $adserver;
+    global $toutrix_adserver;
 
     $toutrix_username = get_option("ad_toutrix_username");
     $toutrix_password  = get_option("ad_toutrix_password");
@@ -82,9 +77,9 @@ function toutrix_get_token() {
     if (strlen($toutrix_username)>0 && strlen($toutrix_password)>0) {
         // Si nous n'avons pas d'access token, ca nous en prend un
         //if (strlen($toutrix_access_token)==0) {
-           if ($adserver->login($toutrix_username, $toutrix_password)) {
+           if ($toutrix_adserver->login($toutrix_username, $toutrix_password)) {
              //echo "Access Token is now: " . $adserver->access_token . "<br/>";
-             update_option( "ad_toutrix_access_token", $adserver->access_token );
+             update_option( "ad_toutrix_access_token", $toutrix_adserver->access_token );
              return true;
            } else {
 ?>
@@ -97,9 +92,9 @@ function toutrix_get_token() {
     return false;
 }
 
-function mt_marketplace_page() {
-  global $adserver;
-  $adserver->toutrix_get_token();
+function mt_toutrix_marketplace_page() {
+  global $toutrix_adserver;
+  $toutrix_adserver->toutrix_get_token();
 
     if (empty($_GET['subpage'])) {
       echo "<h2>Marketplace</h2>";
@@ -109,7 +104,7 @@ function mt_marketplace_page() {
 
 // mt_toplevel_page() displays the page content for the custom Test Toplevel menu
 function mt_toutrix_page() {
-    global $adserver;
+    global $toutrix_adserver;
 
     echo "<div class='container'>";
 
@@ -145,7 +140,7 @@ function mt_toutrix_page() {
         $user->email = $_POST[ "ad_toutrix_email" ];
         $user->refererId = $_POST[ "refererId" ];
 //var_dump($adserver);
-        $user = $adserver->user_create($user);
+        $user = $toutrix_adserver->user_create($user);
         if ($user->error && !$user->error->message == "path is not defined") {
 ?>
 <div class="updated"><p><strong><?php _e($user->error->message, 'menu-test' ); ?></strong></p></div>
@@ -176,7 +171,7 @@ function mt_toutrix_page() {
     }
 	
   if (strlen($toutrix_username)==0 && strlen($toutrix_password)==0) {
-     $channels = get_channels();
+     $channels = toutrix_get_channels();
      echo '<div class="wrap">';
 ?>
 
@@ -232,7 +227,7 @@ Fill-up the form to create your account now.<br/>
               $site->channelId = $toutrix_channel_id;
 //var_dump($site);
 //echo "<br/>";
-              $site = $adserver->site_create($site);
+              $site = $toutrix_adserver->site_create($site);
 //              echo "Create website: ";
 //              var_dump($site);
 //echo "<br/>";
@@ -251,7 +246,7 @@ Fill-up the form to create your account now.<br/>
               $zone->siteId = $toutrix_website_id;
               $zone->channelId = channel_mainstream;
 
-              $zone = $adserver->zone_create($zone);
+              $zone = $toutrix_adserver->zone_create($zone);
               //echo "Create zone: ";
               //var_dump($zone);
               if ($zone->id > 0) {
@@ -262,11 +257,10 @@ Fill-up the form to create your account now.<br/>
               }
               echo "<br/>";
           }
-
        }
     }
 
-    $user = $adserver->get_user();
+    $user = $toutrix_adserver->get_user();
 
     echo "<font size='5'><b>Funds available: </b> <font color='green'>$" . number_format($user->funds,2) . "</font></font><br/>";
 
@@ -311,7 +305,7 @@ Fill-up the form to create your account now.<br/>
     echo "</div>";
 }
 
-function mt_stats_page() {
+function mt_toutrix_stats_page() {
   echo "<h2>Stats</h2>";
 
   echo "Coming in a next update";

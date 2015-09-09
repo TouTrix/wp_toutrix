@@ -1,14 +1,14 @@
 <?php
 defined( 'ABSPATH' ) or die( 'No script kiddies please!' );
 
-function show_targets($targets) {
+function toutrix_show_targets($targets) {
 ?>
 <div class="CSSTableGenerator">
 <table>
   <tr><th>Target type</th><th>Target values</th></tr>
 <?php
 foreach ($targets as $target) {
-  show_target_line($target);
+  toutrix_show_target_line($target);
 } 
 ?>
 </table>
@@ -17,7 +17,7 @@ foreach ($targets as $target) {
 //var_dump($targets);
 }
 
-function show_target_line($target) {
+function toutrix_show_target_line($target) {
   echo "  <tr><td>" . $target->target_type ."</td><td>";
   if ($target->target_type == 'country') {
     $first = true;
@@ -34,7 +34,7 @@ function show_target_line($target) {
   echo "</td></tr>";
 }
 
-function show_target_form($target) {
+function toutrix_show_target_form($target) {
 ?>
 <form method='POST'>
 <input type='hidden' name='target' value='yes'>

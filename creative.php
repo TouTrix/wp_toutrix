@@ -2,7 +2,7 @@
 defined( 'ABSPATH' ) or die( 'No script kiddies please!' );
 
 function toutrix_creative_page() {
-  global $adserver;
+  global $toutrix_adserver;
   toutrix_get_token();
 
   if (empty($_GET['creativeId'])) {
@@ -17,7 +17,7 @@ function toutrix_creative_page() {
       $fields->IsDeleted = 0;
       $fields->IsActive = 1;
       stripslashes_deep( $fields );
-      $creative = $adserver->creative_create($fields);
+      $creative = $toutrix_adserver->creative_create($fields);
 //var_dump($creative);
 ?>
 <div class="updated"><p><strong><?php _e('Creative added', 'menu-test' ); ?></strong></p></div>
@@ -26,7 +26,7 @@ function toutrix_creative_page() {
 
     echo "<h2>Creatives</h2>";
 
-    $creatives = $adserver->creatives_list(array());
+    $creatives = $toutrix_adserver->creatives_list(array());
 ?>
 <div class="CSSTableGenerator">
 <table>
@@ -42,7 +42,7 @@ function toutrix_creative_page() {
 <h2>Create a new creative</h2>
 <?php
     $new = new stdclass();
-    creative_form($new);
+    toutrix_creative_form($new);
   } elseif (!empty($_GET['creativeId'])) {
     if (!empty($_POST['b'])) {
       $fields = new stdclass();
@@ -55,7 +55,7 @@ function toutrix_creative_page() {
       stripslashes_deep( $fields );
 //var_dump($fields);
 //echo "<br/>";
-      $creative = $adserver->creative_update($fields);
+      $creative = $toutrix_adserver->creative_update($fields);
 //var_dump($creative);
 ?>
 <div class="updated"><p><strong><?php _e('Creative saved', 'menu-test' ); ?></strong></p></div>
@@ -63,18 +63,18 @@ function toutrix_creative_page() {
     }
     $fields = new stdclass();
     $fields->creativeId = $_GET['creativeId'];
-    $creative = $adserver->creative_get($fields)
+    $creative = $toutrix_adserver->creative_get($fields)
 ?>
 <h2>Update creative</h2>
 <?php
-    creative_form($creative);
+    toutrix_creative_form($creative);
     //var_dump($creative);
   }
 }
 
-function creative_form($creative) {
-  global $adserver;
-  $adtypes = $adserver->adtypes_get(array());
+function toutrix_creative_form($creative) {
+  global $toutrix_adserver;
+  $adtypes = $toutrix_adserver->adtypes_get(array());
 ?>
 <form method='POST'>
 <?php if (!empty($creative->id)) {?>

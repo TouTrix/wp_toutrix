@@ -1,12 +1,12 @@
 <?php
 defined( 'ABSPATH' ) or die( 'No script kiddies please!' );
 
-function mt_campaign_page() {
-  global $adserver;
+function mt_toutrix_campaign_page() {
+  global $toutrix_adserver;
   toutrix_get_token();
   
   if (!empty($_GET['flightId'])) {
-    flight();
+    toutrix_flight();
     return;
   }
 
@@ -18,7 +18,7 @@ function mt_campaign_page() {
       $fields->isDeleted = 0;
       $fields->isActive = 1;
       stripslashes_deep( $fields );
-      $campaign = $adserver->campaign_create($fields);
+      $campaign = $toutrix_adserver->campaign_create($fields);
 //var_dump($campaign);
 ?>
 <div class="updated"><p><strong><?php _e('Campaign added', 'menu-test' ); ?></strong></p></div>
@@ -27,14 +27,14 @@ function mt_campaign_page() {
 
     echo "<h2>Campaigns</h2>";
 
-    $campaigns = $adserver->campaigns_list(array());
+    $campaigns = $toutrix_adserver->campaigns_list(array());
 ?>
 <div class="CSSTableGenerator">
 <table>
   <tr><th>Id</th><th>Title</th><th>Action</th></tr>
 <?php
     foreach ($campaigns as $campaign) {
-      echo "<tr><td><a href='?page=mt_campaign&campaignId=" . $campaign->id . "'>" . $campaign->id ."</a></td><td>" . $campaign->name ."</td><td></td></tr>";
+      echo "<tr><td><a href='?page=mt_toutrix_campaign&campaignId=" . $campaign->id . "'>" . $campaign->id ."</a></td><td>" . $campaign->name ."</td><td></td></tr>";
     }
 ?>
 </table>
@@ -43,7 +43,7 @@ function mt_campaign_page() {
 <h2>Create a new campaign</h2>
 <?php
     $new = new stdclass();
-    campaign_form($new);
+    toutrix_campaign_form($new);
   } elseif (!empty($_GET['campaignId'])) {
     if (!empty($_POST['b']) && $_POST['target']=='yes') {
       $fields = new stdclass();
@@ -56,7 +56,7 @@ function mt_campaign_page() {
       stripslashes_deep( $fields );
 //var_dump($fields);
 //echo "<br/>";
-      $target = $adserver->target_create($fields);
+      $target = $toutrix_adserver->target_create($fields);
 //var_dump($target);
 ?>
 <div class="updated"><p><strong><?php _e('Target added', 'menu-test' ); ?></strong></p></div>
@@ -76,7 +76,7 @@ function mt_campaign_page() {
       stripslashes_deep( $fields );
 //var_dump($fields);
 //echo "<br/>";
-      $flight = $adserver->flight_create($fields);
+      $flight = $toutrix_adserver->flight_create($fields);
 //var_dump($flight);
     } elseif (!empty($_POST['b'])) {
       $fields = new stdclass();
@@ -85,7 +85,7 @@ function mt_campaign_page() {
       stripslashes_deep( $fields );
 //var_dump($fields);
 //echo "<br/>";
-      $campaign = $adserver->campaign_update($fields);
+      $campaign = $toutrix_adserver->campaign_update($fields);
 //var_dump($campaign);
 ?>
 <div class="updated"><p><strong><?php _e('Campaign saved', 'menu-test' ); ?></strong></p></div>
@@ -94,14 +94,14 @@ function mt_campaign_page() {
     $fields = new stdclass();
     $fields->campaignId = $_GET['campaignId'];
     //var_dump($fields); echo "<br/>";
-    $campaign = $adserver->campaign_get($fields);
+    $campaign = $toutrix_adserver->campaign_get($fields);
 ?>
 <h2>Update campaign</h2>
 <?php
-    campaign_form($campaign);
+    toutrix_campaign_form($campaign);
     //var_dump($campaign);
 
-    flights($campaign);
+    toutrix_flights($campaign);
 ?>
 <h2>Targeting for this campaign</h2>
 It applies to all flights.<br/>
@@ -109,16 +109,16 @@ It applies to all flights.<br/>
 
     $fields = new stdclass();
     $fields->campaignId = $_GET['campaignId'];
-    $targets = $adserver->campaign_targets($fields);
-    show_targets($targets);
+    $targets = $toutrix_adserver->campaign_targets($fields);
+    toutrix_show_targets($targets);
 
     echo "<h2>Add a new target</h2>";
-    show_target_form($fields);
+    toutrix_show_target_form($fields);
   }
 }
 
-function campaign_form($campaign) {
-  global $adserver;
+function toutrix_campaign_form($campaign) {
+  global $toutrix_adserver;
 ?>
 <form method='POST'>
 <?php if (!empty($campaign->id)) {?>
