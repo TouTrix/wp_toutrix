@@ -49,8 +49,8 @@ public function widget( $args, $instance ) {
 		
 // Widget Backend 
 public function form( $instance ) {
-  global $adserver;
-  $adtypes = $adserver->adtypes_get(array());
+  global $toutrix_adserver;
+  $adtypes = $toutrix_adserver->adtypes_get(array());
   //var_dump($channels);	
 
   if ( isset( $instance[ 'title' ] ) ) {
