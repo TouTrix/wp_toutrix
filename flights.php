@@ -123,9 +123,9 @@ function toutrix_flight() {
   foreach ($creative_flights as $creative_flight) {
     $i++;
     if ($creative_flight->IsActive)
-      $active = "<a href='?page=mt_toutrix_campaign&campaignId=17&flightId=2335&deactiveId=" . $creative_flight->id . "'>Yes</a>";
+      $active = "<a href='?page=mt_toutrix_campaign&campaignId=" . $_GET['campaignId'] . "&flightId=" . $_GET['flightId'] . "&deactiveId=" . $creative_flight->id . "'>Yes</a>";
     else
-      $active = "<a href='?page=mt_toutrix_campaign&campaignId=17&flightId=2335&activeId=" . $creative_flight->id . "'>No</a>";
+      $active = "<a href='?page=mt_toutrix_campaign&campaignId=" . $_GET['campaignId'] . "&flightId=" . $_GET['flightId'] . "&activeId=" . $creative_flight->id . "'>No</a>";
     echo "<tr><td>" . $creative_flight->id . "</td><td>" . $active ."</td><td>";
     $first = true;
 //echo "--";
