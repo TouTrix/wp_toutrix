@@ -73,6 +73,8 @@ function toutrix_flight() {
     $fields->isExcept = false;
     $fields->target_type = $_POST['target_type'];
     $fields->target_value = $_POST['target_value'];
+    stripslashes_deep( $fields );
+
     $target = $toutrix_adserver->target_create($fields);
     //var_dump($target);
 ?>
