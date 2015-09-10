@@ -47,6 +47,7 @@ Target type: <br/>
   <option value='city' <?php if ($target->target_type == 'city') echo "selected"; ?>>Target city</option>
   <option value='is_mobile' <?php if ($target->target_type == 'is_mobile') echo "selected"; ?>>Is mobile</option>
   <option value='channel' <?php if ($target->target_type == 'channel') echo "selected"; ?>>By channel</option>
+  <option value='language' <?php if ($target->target_type == 'language') echo "selected"; ?>>By user language</option>
 </select>
 <br/>
 Target value: <br/>
@@ -60,6 +61,7 @@ Country value exemple: ["US","FR"]<br/>
 Is mobile value example: true or false<br/>
 Channel value example: [2,3]<br/>
 City value example: ["Montreal","France"]<br/>
+Language value example: ["FR","EN","RU"]<br/>
 <br/>
 It's easier to delete a target and create one. You can't update a target yet.<br/>
 We are going to work on a better form. We understand it's not easily.
