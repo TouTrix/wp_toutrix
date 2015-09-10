@@ -44,6 +44,7 @@ function toutrix_show_target_form($target) {
 Target type: <br/>
 <select name='target_type'>
   <option value='country' <?php if ($target->target_type == 'country') echo "selected"; ?>>Target country</option>
+  <option value='city' <?php if ($target->target_type == 'city') echo "selected"; ?>>Target city</option>
   <option value='is_mobile' <?php if ($target->target_type == 'is_mobile') echo "selected"; ?>>Is mobile</option>
   <option value='channel' <?php if ($target->target_type == 'channel') echo "selected"; ?>>By channel</option>
 </select>
@@ -58,6 +59,7 @@ Target value: <br/>
 Country value exemple: ["US","FR"]<br/>
 Is mobile value example: true or false<br/>
 Channel value example: [2,3]<br/>
+City value example: ["Montreal","France"]<br/>
 <br/>
 It's easier to delete a target and create one. You can't update a target yet.<br/>
 We are going to work on a better form. We understand it's not easily.
