@@ -51,7 +51,7 @@ Target type: <br/>
 </select>
 <br/>
 Target value: <br/>
-<input type='text' name='target_value' value='<?php echo $target->target_value; ?>'><br/>
+<input type='text' name='target_value' value="<?php echo $target->target_value; ?>"><br/>
 <input type='submit' name='b' value='Save'>
 </form>
 <hr/>
