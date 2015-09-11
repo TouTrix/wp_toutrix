@@ -3,7 +3,7 @@
 Plugin Name: TouTrix AdServer
 Plugin URI:  http://toutrix.com/wp_toutrix
 Description: This plugin connect to TouTrix AdMedia Server, create zone to earn money to show ads. You can also ask a withdrawal without leaving your website.
-Version:     0.4
+Version:     0.5.25
 Author:      TouTrix
 Author URI:  http://toutrix.com/
 License:     GPL2

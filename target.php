@@ -46,7 +46,7 @@ Target type: <br/>
   <option value='country' <?php if ($target->target_type == 'country') echo "selected"; ?>>Target country</option>
   <option value='city' <?php if ($target->target_type == 'city') echo "selected"; ?>>Target city</option>
   <option value='is_mobile' <?php if ($target->target_type == 'is_mobile') echo "selected"; ?>>Is mobile</option>
-  <option value='channel' <?php if ($target->target_type == 'channel') echo "selected"; ?>>By channel</option>
+  <option value='channelId' <?php if ($target->target_type == 'channelId') echo "selected"; ?>>By channel</option>
   <option value='language' <?php if ($target->target_type == 'language') echo "selected"; ?>>By user language</option>
 </select>
 <br/>
