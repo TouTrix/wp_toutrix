@@ -186,7 +186,7 @@ function mt_toutrix_campaign_page() {
       toutrix_campaign_show_stats(campaign);
     } else {
 ?>
-<a href='?page=mt_toutrix_campaign&campaignId=<?php echo $_GET['campaignId'];?>&subpage=stats'></a>
+<a href='?page=mt_toutrix_campaign&campaignId=<?php echo $_GET['campaignId'];?>&subpage=stats'>Show stats</a>
 <h2>Update campaign</h2>
 <?php
       toutrix_campaign_form($campaign);
