@@ -120,7 +120,7 @@ function mt_toutrix_campaign_page() {
   <tr><th>Id</th><th>Title</th><th>Action</th></tr>
 <?php
     foreach ($campaigns as $campaign) {
-      echo "<tr><td><a href='?page=mt_toutrix_campaign&campaignId=" . $campaign->id . "'>" . $campaign->id ."</a></td><td>" . $campaign->name ."</td><td></td></tr>";
+      echo "<tr><td><a href='?page=mt_toutrix_campaign&campaignId=" . $campaign->id . "'>" . $campaign->id ."</a></td><td>" . $campaign->name ."</td><td><a href='?page=mt_toutrix_campaign&campaignId=" . $campaign->id . "&subpage=stats'>Stats</a></td></tr>";
     }
 ?>
 </table>
