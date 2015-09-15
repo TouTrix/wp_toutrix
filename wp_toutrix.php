@@ -28,6 +28,8 @@ require "target.php";
 require "widget.php";
 require "bank.php";
 require "stats.php";
+require "user.php";
+require "marketplace.php";
 include_once('classes/github-updater/updater.php');
 
     if (is_admin()) { // note the use of is_admin() to double check that this is happening in the admin
@@ -114,16 +116,6 @@ function toutrix_get_token() {
     return false;
 }
 
-function mt_toutrix_marketplace_page() {
-  global $toutrix_adserver;
-  $toutrix_adserver->toutrix_get_token();
-
-    if (empty($_GET['subpage'])) {
-      echo "<h2>Marketplace</h2>";
-      echo "Coming soon";
-    }
-}
-
 // mt_toplevel_page() displays the page content for the custom Test Toplevel menu
 function mt_toutrix_page() {
     global $toutrix_adserver;
@@ -134,7 +126,7 @@ function mt_toutrix_page() {
 
     echo "<h2>AdMedia configuration</h2>";
 
-    echo "Current version: " . toutrix_plugin_version . "<br/>";
+    echo "Current version: " . toutrix_plugin_version . "<br/><br/>";
 
     //must check that the user has the required capability 
     if (!current_user_can('manage_options'))
@@ -284,6 +276,7 @@ Fill-up the form to create your account now.<br/>
        }
     }
 
+    global $user;
     $user = $toutrix_adserver->get_user();
 
     echo "<font size='5'><b>Funds available: </b> <font color='green'>$" . number_format($user->funds,2) . "</font></font><br/>";
@@ -327,6 +320,8 @@ Fill-up the form to create your account now.<br/>
 
 <?php
     echo "</div>";
+
+    toutrix_user_form();
 }
 
 function mt_toutrix_stats_page() {

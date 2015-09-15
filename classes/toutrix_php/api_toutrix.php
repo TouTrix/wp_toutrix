@@ -1,5 +1,6 @@
 <?php
 // TODO - Add caching on some models like creatives
+// TODO - Also be able to use MemCached
 
 define("channel_mainstream",1);
 define("channel_adult",2);
@@ -76,6 +77,11 @@ class api_toutrix_adserver extends api_toutrix {
   function user_create($fields) {
      $path = $this->do_path($this->p_user, $fields);
      return $this->model_create($path, $fields);
+  }
+
+  function user_update($fields) {
+     $path = $this->do_path($this->p_user_one, $fields);
+     return $this->model_put($path, $fields);
   }
 
   function get_bitcoin_address($fields) {
