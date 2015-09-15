@@ -17,12 +17,14 @@ class api_toutrix_adserver extends api_toutrix {
   var $p_campaign = "/users/:userId/campaigns";
   var $p_campaign_target = "/campaigns/:campaignId/target";
   var $p_campaign_update = "/campaigns/:id";
+  var $p_campaign_report = "/campaigns/report?id=:id&start_date=:startDate&end_date=:endDate";
   var $p_campaign_flight = "/campaigns/:campaignId/flights/:flightId";
   var $p_creative = "/users/:userId/creatives";
   var $p_creative_update = "/creatives/:id";
   var $p_user_creative = "/users/:userId/creatives/:creativeId";
   var $p_user_campaign = "/users/:userId/campaigns/:campaignId";
   var $p_sites = "/users/:userId/sites";
+  var $p_site_report = "/sites/report?id=:id&start_date=:startDate&end_date=:endDate";
   var $p_zones = "/sites/:siteId/zones";
   var $p_flight_update = "/flights/:id";
   var $p_flight = "/campaigns/:campaignId/flights";
@@ -159,6 +161,11 @@ class api_toutrix_adserver extends api_toutrix {
      return $this->model_get($path, $fields);
   }
 
+  function campaign_report($fields) {
+     $path = $this->do_path($this->p_campaign_report, $fields);
+     return $this->model_get($path, $fields);
+  }
+
   // Creative
 
   function creative_create($fields) {
@@ -186,6 +193,11 @@ class api_toutrix_adserver extends api_toutrix {
   function site_create($fields) {
      $path = $this->do_path($this->p_sites, $fields);
      return $this->model_create($path, $fields);
+  }
+
+  function site_report($fields) {
+     $path = $this->do_path($this->p_site_report, $fields);
+     return $this->model_get($path, $fields);
   }
 
   // Zone
@@ -307,6 +319,11 @@ class api_toutrix {
       $result = str_replace(':creativeId', $fields->creativeId, $result);
     if (!empty($fields->flightId))
       $result = str_replace(':flightId', $fields->flightId, $result);
+    if (!empty($fields->startDate))
+      $result = str_replace(':startDate', $fields->startDate, $result);
+    if (!empty($fields->endDate))
+      $result = str_replace(':endDate', $fields->endDate, $result);
+
     return $result;
   }
 

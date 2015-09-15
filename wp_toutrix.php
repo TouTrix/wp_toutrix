@@ -25,6 +25,7 @@ require "flights.php";
 require "target.php";
 require "widget.php";
 require "bank.php";
+require "stats.php";
 
 add_option( 'ad_toutrix_username', '', '', 'yes' );
 add_option( 'ad_toutrix_password', '', '', 'yes' );
@@ -307,8 +308,6 @@ Fill-up the form to create your account now.<br/>
 }
 
 function mt_toutrix_stats_page() {
-  echo "<h2>Stats</h2>";
-
-  echo "Coming in a next update";
+  toutrix_site_show_stats(null);
 }
 ?>

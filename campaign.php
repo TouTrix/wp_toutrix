@@ -1,6 +1,92 @@
 <?php
 defined( 'ABSPATH' ) or die( 'No script kiddies please!' );
 
+function toutrix_campaign_show_stats($campaign) {
+  global $toutrix_adserver;
+  toutrix_get_token();
+
+  $fields = new stdClass();
+  $fields->id = $_GET['campaignId'];
+  if (isset($_GET['startDate'])) {
+    $fields->startDate = $_GET['startDate'];
+    $fields->endDate = $_GET['endDate'];
+  } else {
+    $fields->startDate = date("Y/m/01");
+    $fields->endDate = date("Y/m/t");
+  }
+  $stats = $toutrix_adserver->campaign_report($fields);
+?>
+<h1>Statistique</h1>
+
+<form method='GET'>
+<input type='hidden' name='page' value='mt_toutrix_campaign'>
+<input type='hidden' name='campaignId' value='<?php echo $_GET['campaignId'];?>'>
+<input type='hidden' name='subpage' value='stats'>
+Start date: <input type='text' name='startDate' value='<?php echo $fields->startDate; ?>'><br/>
+End date: <input type='text' name='endDate' value='<?php echo $fields->endDate; ?>'><br/>
+<input type='submit' name='b' value='Go'><br/>
+</form>
+
+<h2>Per day</h2>
+<?php
+  //var_dump($stats->stats);
+  //echo "<hr/>";
+  $stats_per_day = $stats->stats->per_day;
+?>
+<div class="CSSTableGenerator">
+<table>
+  <tr><th>Day</th><th>Nbr. impressions</th><th>Nbr. clicks</th><th>Own impressions</th><th>Own clicks</th><th>Cost</th></tr>
+<?php
+  $total_nbr_impressions = 0;
+  $total_nbr_clicks = 0;
+  $total_own_clicks = 0;
+  $total_own_impressions = 0;
+  $total_cost = 0;
+  foreach ($stats_per_day as $day => $country) {
+    $total_nbr_impressions += $country->nbr_impressions;
+    $total_nbr_clicks += $country->nbr_clicks;
+    $total_own_clicks += $country->own_clicks;
+    $total_own_impressions += $country->own_impressions;
+    $total_cost += $country->cost;
+
+    echo "  <tr><td>" . $day . "</td><td>" . $country->nbr_impressions . "</td><td>" . $country->nbr_clicks . "</td><td>" . $country->own_impressions . "</td><td>" . $country->own_clicks . "</td><td>$" . number_format($country->cost,4) . "</td></tr>";
+  }
+  echo "  <tr><td>Total:</td><td>" . $total_nbr_impressions . "</td><td>" . $total_nbr_clicks . "</td><td>" . $total_own_impressions . "</td><td>" . $total_own_clicks . "</td><td>$" . number_format($total_cost,4) . "</td></tr>";
+?>
+</table>
+</div>
+
+<h2>Per country</h2>
+<?php
+  //var_dump($stats->stats);
+  //echo "<hr/>";
+  $stats_per_day = $stats->stats->per_country;
+?>
+<div class="CSSTableGenerator">
+<table>
+  <tr><th>Country</th><th>Nbr. impressions</th><th>Nbr. clicks</th><th>Own impressions</th><th>Own clicks</th><th>Cost</th></tr>
+<?php
+  $total_nbr_impressions = 0;
+  $total_nbr_clicks = 0;
+  $total_own_clicks = 0;
+  $total_own_impressions = 0;
+  $total_cost = 0;
+  foreach ($stats_per_day as $country_code => $country) {
+    $total_nbr_impressions += $country->nbr_impressions;
+    $total_nbr_clicks += $country->nbr_clicks;
+    $total_own_clicks += $country->own_clicks;
+    $total_own_impressions += $country->own_impressions;
+    $total_cost += $country->cost;
+
+    echo "  <tr><td>" .$country_code . " <img src='" . plugins_url( 'flags/' . strtolower($country_code) . '.png', __FILE__ ) . "'></td><td>" . $country->nbr_impressions . "</td><td>" . $country->nbr_clicks . "</td><td>" . $country->own_impressions . "</td><td>" . $country->own_clicks . "</td><td>$" . number_format($country->cost,4) . "</td></tr>";
+  }
+  echo "  <tr><td>Total:</td><td>" . $total_nbr_impressions . "</td><td>" . $total_nbr_clicks . "</td><td>" . $total_own_impressions . "</td><td>" . $total_own_clicks . "</td><td>$" . number_format($total_cost,4) . "</td></tr>";
+?>
+</table>
+</div>
+<?php
+}
+
 function mt_toutrix_campaign_page() {
   global $toutrix_adserver;
   toutrix_get_token();
@@ -95,25 +181,31 @@ function mt_toutrix_campaign_page() {
     $fields->campaignId = $_GET['campaignId'];
     //var_dump($fields); echo "<br/>";
     $campaign = $toutrix_adserver->campaign_get($fields);
+
+    if (isset($_GET['subpage']) && $_GET['subpage']== 'stats') {
+      toutrix_campaign_show_stats(campaign);
+    } else {
 ?>
+<a href='?page=mt_toutrix_campaign&campaignId=<?php echo $_GET['campaignId'];?>&subpage=stats'></a>
 <h2>Update campaign</h2>
 <?php
-    toutrix_campaign_form($campaign);
-    //var_dump($campaign);
+      toutrix_campaign_form($campaign);
+      //var_dump($campaign);
 
-    toutrix_flights($campaign);
+      toutrix_flights($campaign);
 ?>
 <h2>Targeting for this campaign</h2>
 It applies to all flights.<br/>
 <?php
 
-    $fields = new stdclass();
-    $fields->campaignId = $_GET['campaignId'];
-    $targets = $toutrix_adserver->campaign_targets($fields);
-    toutrix_show_targets($targets);
+      $fields = new stdclass();
+      $fields->campaignId = $_GET['campaignId'];
+      $targets = $toutrix_adserver->campaign_targets($fields);
+      toutrix_show_targets($targets);
 
-    echo "<h2>Add a new target</h2>";
-    toutrix_show_target_form($fields);
+      echo "<h2>Add a new target</h2>";
+      toutrix_show_target_form($fields);
+    }
   }
 }
 
