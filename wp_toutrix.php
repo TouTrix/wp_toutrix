@@ -3,7 +3,7 @@
 Plugin Name: TouTrix AdServer
 Plugin URI:  http://toutrix.com/wp_toutrix
 Description: This plugin connect to TouTrix AdMedia Server, create zone to earn money to show ads. You can also ask a withdrawal without leaving your website.
-Version:     0.5.25
+Version:     0.5.26
 Author:      TouTrix
 Author URI:  http://toutrix.com/
 License:     GPL2
@@ -11,6 +11,8 @@ License URI: https://www.gnu.org/licenses/gpl-2.0.html
 Domain Path: /languages
 Text Domain: toutrix-adserver
 */
+
+define('toutrix_plugin_version','0.5.26');
 
 // TODO - Error manager from the API. We don't check for error at all for the moment.
 // TODO - Validation before submiting
@@ -26,6 +28,24 @@ require "target.php";
 require "widget.php";
 require "bank.php";
 require "stats.php";
+include_once('classes/github-updater/updater.php');
+
+    if (is_admin()) { // note the use of is_admin() to double check that this is happening in the admin
+        $config = array(
+            'slug' => plugin_basename(__FILE__), // this is the slug of your plugin
+            'proper_folder_name' => 'wp_toutrix', // this is the name of the folder your plugin lives in
+            'api_url' => 'https://api.github.com/repos/TouTrix/wp_toutrix', // the GitHub API url of your GitHub repo
+            'raw_url' => 'https://raw.github.com/TouTrix/wp_toutrix/master', // the GitHub raw url of your GitHub repo
+            'github_url' => 'https://github.com/TouTrix/wp_toutrix', // the GitHub url of your GitHub repo
+            'zip_url' => 'https://github.com/TouTrix/wp_toutrix/zipball/master', // the zip url of the GitHub repo
+            'sslverify' => true, // whether WP should check the validity of the SSL cert when getting an update, see https://github.com/jkudish/WordPress-GitHub-Plugin-Updater/issues/2 and https://github.com/jkudish/WordPress-GitHub-Plugin-Updater/issues/4 for details
+            'requires' => '3.0', // which version of WordPress does your plugin require?
+            'tested' => '3.3', // which version of WordPress is your plugin tested up to?
+            'readme' => 'README.md', // which file to use as the readme for the version number
+            'access_token' => '', // Access private repositories by authorizing under Appearance > GitHub Updates when this example plugin is installed
+        );
+        new WP_GitHub_Updater($config);
+    }
 
 add_option( 'ad_toutrix_username', '', '', 'yes' );
 add_option( 'ad_toutrix_password', '', '', 'yes' );
@@ -113,6 +133,8 @@ function mt_toutrix_page() {
     echo "<center><a href='http://toutrix.com/2015/09/07/we-are-looking-for-developpers/'>We are looking for developpers</a></center><br/>";
 
     echo "<h2>AdMedia configuration</h2>";
+
+    echo "Current version: " . toutrix_plugin_version . "<br/>";
 
     //must check that the user has the required capability 
     if (!current_user_can('manage_options'))
