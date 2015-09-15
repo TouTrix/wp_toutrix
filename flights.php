@@ -91,9 +91,12 @@ function toutrix_flight() {
   $fields->campaignId = $_GET['campaignId'];
   $fields->flightId = $_GET['flightId'];
   $flight = $toutrix_adserver->flights_get($fields);
-//echo "Current flight:<br/>";
-//var_dump($flight);
-//echo "<br/>";
+
+  if (isset($_GET['b'])) {
+    $flight->Price = $_GET['Price'];
+    $flight->MaxPerIp = $_GET['MaxPerIp'];
+    $flight = $toutrix_adserver->flight_update($flight);
+  }
 
   if (isset($_POST['creative']) && $_POST['creative']=='Y') {
     $fields = new stdclass();
@@ -112,9 +115,18 @@ function toutrix_flight() {
   $creative_flights = $toutrix_adserver->creative_flight_get($fields);
 //var_dump($creative_flights);
 
+  echo "<h1>Update flight for " . $campaign->name . "</h1>";
+?>
+<form>
+<input type='hidden' name='page' value='mt_toutrix_campaign'>
+<input type='hidden' name='campaignId' value='<?php echo $_GET['campaignId']; ?>'>
+<input type='hidden' name='flightId' value='<?php echo $_GET['flightId']; ?>'>
+Price: $<input type='text' name='Price' value='<?php echo $flight->Price; ?>'> (CPM price)<br/>
+Max Per IP: <input type='text' name='MaxPerIp' value='<?php echo $flight->MaxPerIp; ?>'><br/>
+<input type='submit' name='b' value='Save'>
+</form>
+<?php
   echo "<h2>Creatives for " . $campaign->name . "</h2>";
-
-  echo "<b>Price:</b> $" . $flight->Price . "<br/>";
 ?>
 <div class="CSSTableGenerator">
 <table>

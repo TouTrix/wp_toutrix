@@ -11,8 +11,8 @@ function toutrix_site_show_stats($site) {
     $fields->startDate = $_GET['startDate'];
     $fields->endDate = $_GET['endDate'];
   } else {
-    $fields->startDate = date("Y/m/01");
-    $fields->endDate = date("Y/m/t");
+    $fields->startDate = date("m/01/Y");
+    $fields->endDate = date("m/t/Y");
   }
   $stats = $toutrix_adserver->site_report($fields);
 ?>

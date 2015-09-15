@@ -11,8 +11,8 @@ function toutrix_campaign_show_stats($campaign) {
     $fields->startDate = $_GET['startDate'];
     $fields->endDate = $_GET['endDate'];
   } else {
-    $fields->startDate = date("Y/m/01");
-    $fields->endDate = date("Y/m/t");
+    $fields->startDate = date("m/01/Y");
+    $fields->endDate = date("m/t/Y");
   }
   $stats = $toutrix_adserver->campaign_report($fields);
 ?>
