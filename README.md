@@ -1,5 +1,6 @@
 # wp_toutrix
 TouTrix WordPress Plugin
+~Current Version:0.5.27~
 
 You can create your TouTrix account, add Ads Widget to your page for showing ads without never leaving your website.
 
