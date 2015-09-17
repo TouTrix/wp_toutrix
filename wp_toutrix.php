@@ -258,13 +258,13 @@ Fill-up the form to create your account now.<br/>
           if (strlen($toutrix_zone_id)==0 && strlen($toutrix_website_id)>0) {
               //echo "Creating zone...<br/>";
               $zone = new stdClass();
-              $zone->Name = get_bloginfo();;
+              $zone->Name = get_bloginfo();
               $zone->siteId = $toutrix_website_id;
               $zone->channelId = channel_mainstream;
 
               $zone = $toutrix_adserver->zone_create($zone);
-              //echo "Create zone: ";
-              //var_dump($zone);
+              echo "Create zone: ";
+              var_dump($zone);
               if ($zone->id > 0) {
                 update_option( "ad_toutrix_zone_id", $zone->id);
                 $toutrix_zone_id = $zone->id;
