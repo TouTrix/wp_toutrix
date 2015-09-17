@@ -264,7 +264,7 @@ Fill-up the form to create your account now.<br/>
 
               $zone = $toutrix_adserver->zone_create($zone);
               echo "Create zone: ";
-              var_dump($zone);
+              //var_dump($zone);
               if ($zone->id > 0) {
                 update_option( "ad_toutrix_zone_id", $zone->id);
                 $toutrix_zone_id = $zone->id;
