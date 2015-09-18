@@ -20,6 +20,7 @@ function mt_toutrix_marketplace_page() {
 
     if (empty($_GET['subpage'])) {
       echo "<h2>Marketplace</h2>";
+      echo "The volume may be little higher because it's only sold volume.";
       $marketplace = $toutrix_adserver->marketplace_list(null);
 ?>
 <div class="CSSTableGenerator">
