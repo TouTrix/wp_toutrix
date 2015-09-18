@@ -28,6 +28,7 @@ class api_toutrix_adserver extends api_toutrix {
   var $p_site_report = "/sites/report?id=:id&start_date=:startDate&end_date=:endDate";
   var $p_zones = "/sites/:siteId/zones";
   var $p_zone_one = "/zones";
+  var $p_zone_get = "/zones/:id";
   var $p_flight_update = "/flights/:id";
   var $p_flight = "/campaigns/:campaignId/flights";
   var $p_flight_target = "/flights/:flightId/targets";
@@ -35,6 +36,7 @@ class api_toutrix_adserver extends api_toutrix {
   var $p_creatives_flight = "/flights/:flightId/creative_flight";
   var $p_creative_flight_one = "/creatives_flight/:id";
   var $p_target = "/targetings";
+  var $p_marketplace = "/marketplaces";
 
   // Users
 
@@ -216,6 +218,12 @@ class api_toutrix_adserver extends api_toutrix {
      return $this->model_create($path, $fields);
   }
 
+  function zone_get($fields) {  
+    $path = $this->do_path($this->p_zone_get, $fields);
+    return $this->model_get($path, $fields);
+  }
+
+
   // Flight
 
   function flight_create($fields) {
@@ -282,6 +290,13 @@ class api_toutrix_adserver extends api_toutrix {
 
   function targeting_get($fields) {
      $path = $this->do_path($this->p_target, $fields);
+     return $this->model_get($path, $fields);
+  }
+
+  // Marketplace
+
+  function marketplace_list($fields) {
+     $path = $this->do_path($this->p_marketplace, $fields);
      return $this->model_get($path, $fields);
   }
 }
