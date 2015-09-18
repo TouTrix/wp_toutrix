@@ -20,7 +20,8 @@ define('toutrix_plugin_version','0.5.29');
 
 defined( 'ABSPATH' ) or die( 'No script kiddies please!' );
 
-require_once "classes/toutrix_php/api_toutrix.php";
+require "config.php";
+require "classes/toutrix_php/api_toutrix.php";
 require "creative.php";
 require "campaign.php";
 require "flights.php";
@@ -195,7 +196,7 @@ function mt_toutrix_page() {
 Fill-up the form to create your account now.<br/>
 <form name="form1" method="post" action="">
 <input type="hidden" name="signup" value="Y">
-<input type="hidden" name="refererId" value="1">
+<input type="hidden" name="refererId" value="<?php echo referer_id; ?>">
 
 <p><?php _e("Username:", 'menu-test' ); ?> 
 <input type="text" name="ad_toutrix_username" value="<?php echo $toutrix_username; ?>" size="20">
