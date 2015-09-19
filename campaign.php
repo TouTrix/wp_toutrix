@@ -107,7 +107,7 @@ function mt_toutrix_campaign_page() {
       $campaign = $toutrix_adserver->campaign_create($fields);
 //var_dump($campaign);
 ?>
-<div class="updated"><p><strong><?php _e('Campaign added', 'menu-test' ); ?></strong></p></div>
+<div class="updated"><p><strong><?php _e('Campaign added', 'wp-toutrix' ); ?></strong></p></div>
 <?php
     }
 
@@ -145,7 +145,7 @@ function mt_toutrix_campaign_page() {
       $target = $toutrix_adserver->target_create($fields);
 //var_dump($target);
 ?>
-<div class="updated"><p><strong><?php _e('Target added', 'menu-test' ); ?></strong></p></div>
+<div class="updated"><p><strong><?php _e('Target added', 'wp-toutrix' ); ?></strong></p></div>
 <?php
     } elseif (!empty($_POST['b']) && $_POST['flight']=='yes') {
       $fields = new stdclass();
@@ -174,7 +174,7 @@ function mt_toutrix_campaign_page() {
       $campaign = $toutrix_adserver->campaign_update($fields);
 //var_dump($campaign);
 ?>
-<div class="updated"><p><strong><?php _e('Campaign saved', 'menu-test' ); ?></strong></p></div>
+<div class="updated"><p><strong><?php _e('Campaign saved', 'wp-toutrix' ); ?></strong></p></div>
 <?php
     }
     $fields = new stdclass();

@@ -71,17 +71,17 @@ global $toutrix_zoneId;
 
 // action function for above hook
 function toutrix_add_pages() {
-    add_menu_page(__('TouTrix','menu-toutrix'), __('TouTrix','menu-toutrix'), 'manage_options', 'mt_toutrix_page-handle', 'mt_toutrix_page');
+    add_menu_page(__('TouTrix','menu-toutrix'), __('TouTrix','wp-toutrix'), 'manage_options', 'mt_toutrix_page-handle', 'mt_toutrix_page');
 
-    add_submenu_page('mt_toutrix_page-handle', __('Stats','menu-stats'), __('Stats','menu-stats'), 'manage_options', 'mt_toutrix_stats_page', 'mt_toutrix_stats_page');
+    add_submenu_page('mt_toutrix_page-handle', __('Stats','wp-toutrix'), __('Stats','wp-toutrix'), 'manage_options', 'mt_toutrix_stats_page', 'mt_toutrix_stats_page');
 
-    add_submenu_page('mt_toutrix_page-handle', __('Creatives','menu-stats'), __('Creatives','menu-stats'), 'manage_options', 'toutrix_creative', 'toutrix_creative_page');
+    add_submenu_page('mt_toutrix_page-handle', __('Creatives','wp-toutrix'), __('Creatives','wp-toutrix'), 'manage_options', 'toutrix_creative', 'toutrix_creative_page');
 
-    add_submenu_page('mt_toutrix_page-handle', __('Campaigns','menu-stats'), __('Campaigns','menu-stats'), 'manage_options', 'mt_toutrix_campaign', 'mt_toutrix_campaign_page');
+    add_submenu_page('mt_toutrix_page-handle', __('Campaigns','wp-toutrix'), __('Campaigns','wp-toutrix'), 'manage_options', 'mt_toutrix_campaign', 'mt_toutrix_campaign_page');
 
-    add_submenu_page('mt_toutrix_page-handle', __('Marketplace','menu-stats'), __('Marketplace','menu-stats'), 'manage_options', 'mt_toutrix_marketplace', 'mt_toutrix_marketplace_page');
+    add_submenu_page('mt_toutrix_page-handle', __('Marketplace','wp-toutrix'), __('Marketplace','wp-toutrix'), 'manage_options', 'mt_toutrix_marketplace', 'mt_toutrix_marketplace_page');
 
-    add_submenu_page('mt_toutrix_page-handle', __('Bank','menu-stats'), __('Bank','menu-stats'), 'manage_options', 'mt_toutrix_bank', 'mt_toutrix_bank_page');
+    add_submenu_page('mt_toutrix_page-handle', __('Bank','wp-toutrix'), __('Bank','wp-toutrix'), 'manage_options', 'mt_toutrix_bank', 'mt_toutrix_bank_page');
 }
 
 function toutrix_get_channels() {

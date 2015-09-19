@@ -20,7 +20,7 @@ function toutrix_creative_page() {
       $creative = $toutrix_adserver->creative_create($fields);
 //var_dump($creative);
 ?>
-<div class="updated"><p><strong><?php _e('Creative added', 'menu-test' ); ?></strong></p></div>
+<div class="updated"><p><strong><?php _e('Creative added', 'wp-toutrix' ); ?></strong></p></div>
 <?php
     }
 
@@ -58,7 +58,7 @@ function toutrix_creative_page() {
       $creative = $toutrix_adserver->creative_update($fields);
 //var_dump($creative);
 ?>
-<div class="updated"><p><strong><?php _e('Creative saved', 'menu-test' ); ?></strong></p></div>
+<div class="updated"><p><strong><?php _e('Creative saved', 'wp-toutrix' ); ?></strong></p></div>
 <?php
     }
     $fields = new stdclass();

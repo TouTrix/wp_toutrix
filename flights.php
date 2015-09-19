@@ -40,7 +40,7 @@ function toutrix_flight() {
     $fields->IsActive = true;
     $target = $toutrix_adserver->creative_flight_save($fields);
 ?>
-<div class="updated"><p><strong><?php _e('Creative started', 'menu-test' ); ?></strong></p></div>
+<div class="updated"><p><strong><?php _e('Creative started', 'wp-toutrix' ); ?></strong></p></div>
 <?php
   }
 
@@ -50,7 +50,7 @@ function toutrix_flight() {
     $fields->IsActive = false;
     $target = $toutrix_adserver->creative_flight_save($fields);
 ?>
-<div class="updated"><p><strong><?php _e('Creative stopped', 'menu-test' ); ?></strong></p></div>
+<div class="updated"><p><strong><?php _e('Creative stopped', 'wp-toutrix' ); ?></strong></p></div>
 <?php
   }
 
@@ -61,7 +61,7 @@ function toutrix_flight() {
     $fields->IsActive = false;
     $target = $toutrix_adserver->creative_flight_save($fields);
 ?>
-<div class="updated"><p><strong><?php _e('Creative removed', 'menu-test' ); ?></strong></p></div>
+<div class="updated"><p><strong><?php _e('Creative removed', 'wp-toutrix' ); ?></strong></p></div>
 <?php
   }
 
@@ -78,7 +78,7 @@ function toutrix_flight() {
     $target = $toutrix_adserver->target_create($fields);
     //var_dump($target);
 ?>
-<div class="updated"><p><strong><?php _e('Flight target added', 'menu-test' ); ?></strong></p></div>
+<div class="updated"><p><strong><?php _e('Flight target added', 'wp-toutrix' ); ?></strong></p></div>
 <?php
   }
 
@@ -106,7 +106,7 @@ function toutrix_flight() {
     $creative_flights = $toutrix_adserver->creative_flight_create($fields);
     //var_dump($creative_flights);
 ?>
-<div class="updated"><p><strong><?php _e('Creative added to the flight', 'menu-test' ); ?></strong></p></div>
+<div class="updated"><p><strong><?php _e('Creative added to the flight', 'wp-toutrix' ); ?></strong></p></div>
 <?php
   }
 
