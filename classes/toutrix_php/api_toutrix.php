@@ -38,6 +38,15 @@ class api_toutrix_adserver extends api_toutrix {
   var $p_target = "/targetings";
   var $p_marketplace = "/marketplaces";
 
+  var $p_inventory = "http://serv.toutrix.com/status/inventory";
+
+  // Inventory
+
+  function inventory() {
+    $output = file_get_contents($this->p_inventory);
+    return json_decode($output,false);
+  }
+
   // Users
 
   function login($username, $password) {

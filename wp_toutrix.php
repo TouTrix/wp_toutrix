@@ -3,7 +3,7 @@
 Plugin Name: TouTrix AdServer
 Plugin URI:  http://toutrix.com/wp_toutrix
 Description: This plugin connect to TouTrix AdMedia Server, create zone to earn money to show ads. You can also ask a withdrawal without leaving your website.
-Version:     0.5.29
+Version:     0.5.30
 Author:      TouTrix
 Author URI:  http://toutrix.com/
 License:     GPL2
@@ -12,7 +12,7 @@ Domain Path: /languages
 Text Domain: toutrix-adserver
 */
 
-define('toutrix_plugin_version','0.5.29');
+define('toutrix_plugin_version','0.5.30');
 
 // TODO - Error manager from the API. We don't check for error at all for the moment.
 // TODO - Validation before submiting
@@ -31,7 +31,15 @@ require "bank.php";
 require "stats.php";
 require "user.php";
 require "marketplace.php";
+require "content.php";
+require "inventory.php";
 include_once('classes/github-updater/updater.php');
+
+add_action('plugins_loaded', 'wan_load_textdomain');
+function wan_load_textdomain() {
+	load_plugin_textdomain( 'wp-toutrix', false, dirname( plugin_basename(__FILE__) ) . '/lang/' );
+}
+
 
     if (is_admin()) { // note the use of is_admin() to double check that this is happening in the admin
         $config = array(
@@ -82,6 +90,8 @@ function toutrix_add_pages() {
     add_submenu_page('mt_toutrix_page-handle', __('Marketplace','wp-toutrix'), __('Marketplace','wp-toutrix'), 'manage_options', 'mt_toutrix_marketplace', 'mt_toutrix_marketplace_page');
 
     add_submenu_page('mt_toutrix_page-handle', __('Bank','wp-toutrix'), __('Bank','wp-toutrix'), 'manage_options', 'mt_toutrix_bank', 'mt_toutrix_bank_page');
+
+    add_submenu_page('mt_toutrix_page-handle', __('Inventory','wp-toutrix'), __('Inventory','wp-toutrix'), 'manage_options', 'mt_toutrix_inventory', 'mt_toutrix_inventory_page');
 }
 
 function toutrix_get_channels() {
