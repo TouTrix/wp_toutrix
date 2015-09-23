@@ -92,3 +92,8 @@ function wpb_load_widget() {
 	register_widget( 'TouTrix_Widget' );
 }
 add_action( 'widgets_init', 'wpb_load_widget' );
+
+function toutrix_show_300x250() {
+  $toutrix_zone_id  = get_option("ad_toutrix_zone_id");
+  echo "<script src='http://serv.toutrix.com/js/creative?zone_id=" . $toutrix_zone_id . "&adtypeId=2'></script>";
+}
