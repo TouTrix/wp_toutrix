@@ -7,6 +7,12 @@ function get_adtype_name($adtypeId) {
     return "300x250";
 }
 
+function VolumeSort($item1,$item2)
+{
+    if ($item1->nbr_impressions == $item2->nbr_impressions) return 0;
+    return ($item1->nbr_impressions < $item2->nbr_impressions) ? 1 : -1;
+}
+
 function mt_toutrix_marketplace_page() {
   global $toutrix_adserver;
   toutrix_get_token();
@@ -22,6 +28,9 @@ function mt_toutrix_marketplace_page() {
       echo "<h2>Marketplace</h2>";
       echo "The volume may be little higher because it's only sold volume.";
       $marketplace = $toutrix_adserver->marketplace_list(null);
+
+usort($marketplace,'VolumeSort');
+
 ?>
 <div class="CSSTableGenerator">
 <table>
