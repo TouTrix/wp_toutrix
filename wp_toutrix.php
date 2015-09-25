@@ -243,9 +243,10 @@ Fill-up the form to create your account now.<br/>
           //echo "Got Token<br/>";
           $toutrix_access_token  = get_option("ad_toutrix_access_token");
           $toutrix_website_id  = get_option("ad_toutrix_website_id");
+          $toutrix_channel_id  = get_option("ad_channel_id");
+
           if (strlen($toutrix_website_id)==0) {
-              echo "Creating website...<br/>";
-              $toutrix_channel_id  = get_option("ad_channel_id");
+              echo "Creating website...<br/>";              
 
               $site = new stdClass();
               $site->Title = get_bloginfo();;
@@ -271,7 +272,7 @@ Fill-up the form to create your account now.<br/>
               $zone = new stdClass();
               $zone->Name = get_bloginfo();
               $zone->siteId = $toutrix_website_id;
-              $zone->channelId = channel_mainstream;
+              $zone->channelId = $toutrix_channel_id;
 
               $zone = $toutrix_adserver->zone_create($zone);
               echo "Create zone: ";
