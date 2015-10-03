@@ -13,10 +13,16 @@ function toutrix_flights($campaign) {
 ?>
 <div class="CSSTableGenerator">
 <table>
-  <tr><th>ID</th><th>Name</th><th>Price</th><th>Action</th></tr>
+  <tr><th>ID</th><th>Name</th><th>Price</th><th>Status</th><th>Action</th></tr>
 <?php
   foreach ($flights as $flight) { 
-    echo "<tr><td><a href='?page=mt_toutrix_campaign&campaignId=" . $_GET['campaignId'] . "&flightId=" . $flight->id . "'>" . $flight->id . "</a></td><td>" . $flight->Name . "</td><td>$" . $flight->Price . "</td><td></td></tr>";
+    if ($flight->IsDeleted ==1 )
+      continue;
+    if ($flight->IsActive == 1)
+      $status = 'Active';
+    if ($flight->IsActive == 0)
+      $status = 'Not active';
+    echo "<tr><td><a href='?page=mt_toutrix_campaign&campaignId=" . $_GET['campaignId'] . "&flightId=" . $flight->id . "'>" . $flight->id . "</a></td><td>" . $flight->Name . "</td><td>$" . $flight->Price . "</td><td>" . $status ."</td><td></td></tr>";
   }
 ?>
 </table>
