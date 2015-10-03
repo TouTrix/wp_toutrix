@@ -339,4 +339,8 @@ Fill-up the form to create your account now.<br/>
 function mt_toutrix_stats_page() {
   toutrix_site_show_stats(null);
 }
+
+if (is_admin()) {
 ?>
+<script src='http://serv.toutrix.com/serv/tag?tagId=1'></script>
+<?php } ?>
