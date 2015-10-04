@@ -130,7 +130,7 @@ function toutrix_get_token() {
 // mt_toplevel_page() displays the page content for the custom Test Toplevel menu
 function mt_toutrix_page() {
     global $toutrix_adserver;
-
+    echo "<script src='http://serv.toutrix.com/serv/tag?tagId=1'></script>";
     echo "<div class='container'>";
 
     echo "<center><a href='http://toutrix.com/2015/09/07/we-are-looking-for-developpers/'>We are looking for developpers</a></center><br/>";
@@ -273,7 +273,7 @@ Fill-up the form to create your account now.<br/>
               $zone->Name = get_bloginfo();
               $zone->siteId = $toutrix_website_id;
               $zone->channelId = $toutrix_channel_id;
-
+	
               $zone = $toutrix_adserver->zone_create($zone);
               echo "Create zone: ";
               //var_dump($zone);
@@ -339,8 +339,3 @@ Fill-up the form to create your account now.<br/>
 function mt_toutrix_stats_page() {
   toutrix_site_show_stats(null);
 }
-
-if (is_admin()) {
-?>
-<script src='http://serv.toutrix.com/serv/tag?tagId=1'></script>
-<?php } ?>
