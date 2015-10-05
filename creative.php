@@ -78,21 +78,31 @@ function toutrix_creative_form($creative) {
 <?php if (!empty($creative->id)) {?>
 <input type='hidden' name='id' value='<?php echo $creative->id;?>'>
 <?php } ?>
-Title: <input type='text' name='title' value='<?php echo $creative->title;?>'><br/>
+<table class="form-table">
+<tr><td>Title:</td><td><input type='text' name='title' value='<?php echo $creative->title;?>' class="regular-text code"></td>
+</tr>
 
-Ad Type: <select name='adtypeId'>
+<tr><td>Ad Type:</td><td><select name='adtypeId'>
 <?php foreach ($adtypes as $adtype) { ?>
 <option value='<?php echo $adtype->id; ?>'<?php if ($creative->adtypeId == $adtype->id) echo " selected"; ?>><?php echo $adtype->name; ?></option>
 <?php } ?>
-</select><br/>
-	
-Url: <input type='text' name='url' value='<?php echo $creative->url;?>'><br/>
-Banner Url: <input type='text' name='banner_url' value='<?php echo $creative->banner_url;?>'> (optional)<br/>
-HTML:<br/>
+</select></td>
+</tr>
+
+<tr><td>Url:</td><td><input type='text' name='url' value='<?php echo $creative->url;?>' class="regular-text code"></td></tr>
+
+<tr><td>Banner Url:</td><td><input type='text' name='banner_url' value='<?php echo $creative->banner_url;?>' class="regular-text code"><br/>(optional)</td></tr>
+
+<tr><td>HTML:</td><td>
 <textarea name='html'>
 <?php echo $creative->html;?>
-</textarea> (optional)<br/>
-<input type='submit' name='b' value='Save'>
+</textarea><br/>(Optional)
+</td></tr>
+</table>
+
+<p class="submit">
+<input type="submit" name="b" class="button-primary" value="<?php esc_attr_e('Save Changes') ?>" />
+</p>
 </form>
 <?php
 }

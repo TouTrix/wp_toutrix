@@ -319,16 +319,21 @@ Fill-up the form to create your account now.<br/>
 <?php
     echo '<div class="wrap">';
     ?>
+
 <form name="form1" method="post" action="">
 <input type="hidden" name="config" value="Y">
 
-<p><?php _e("TouTrix Username:", 'menu-test' ); ?> 
-<input type="text" name="ad_toutrix_username"" value="<?php echo $toutrix_username; ?>" size="20">
-</p>
+<table class="form-table">
 
-<p><?php _e("TouTrix password:", 'menu-test' ); ?> 
-<input type="text" name="ad_toutrix_password" value="<?php echo $toutrix_password; ?>" size="20">
-</p>
+<tr><td><?php _e("TouTrix Username:", 'menu-test' ); ?></td>
+<td><input type="text" name="ad_toutrix_username"" value="<?php echo $toutrix_username; ?>" size="20"></td>
+</tr>
+
+<tr><td><?php _e("TouTrix password:", 'menu-test' ); ?></td>
+<td><input type="text" name="ad_toutrix_password"" value="<?php echo $toutrix_password; ?>" size="20"></td>
+</tr>
+
+</table>
 
 <p><?php _e("Access Token:", 'menu-test' ); ?> 
 <?php echo $toutrix_access_token; ?>
@@ -349,7 +354,6 @@ Fill-up the form to create your account now.<br/>
 </p>
 
 </form>
-</div>
 
 <?php
     echo "</div>";

@@ -21,9 +21,19 @@ function toutrix_user_form() {
 <h2>User profile</h2>
 <form>
 <input type='hidden' name='page' value='mt_toutrix_page-handle'>
-Withdrawal bitcoin address: <input type='text' name='withdraw_bitcoin' value='<?php echo $user->withdraw_bitcoin; ?>'><br/>
-Automatic withdrawal after: $<input type='text' name='withdraw_at' value='<?php echo $user->withdraw_at; ?>' length='4'> (A payment will be sent when your account will be at that amount)<br/>
-<input type='submit' name='b' value='Save'>
+<table class="form-table">
+<tr><td>Withdrawal bitcoin address:</td><td><input type='text' name='withdraw_bitcoin' value='<?php echo $user->withdraw_bitcoin; ?>'></td>
+</tr>
+<tr>
+<td>Automatic withdrawal after:</td><td>$<input type='text' name='withdraw_at' value='<?php echo $user->withdraw_at; ?>' length='4'>
+<br/>A payment will be sent when your account will be at that amount)</td>
+</tr>
+</table>
+
+<p class="submit">
+<input type="submit" name="Submit" name="b" class="button-primary" value="<?php esc_attr_e('Save Changes') ?>" />
+</p>
+
 </form>
 <?php
 }
