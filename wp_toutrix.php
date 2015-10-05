@@ -14,16 +14,17 @@ Text Domain: toutrix-adserver
 
 define('toutrix_plugin_version','0.5.33');
 
-require_once( 'classes/github-updater.php' );
-if ( is_admin() ) {
-    new GitHubPluginUpdater( __FILE__, 'TouTrix', "wp_toutrix" );
-}
 
 // TODO - Error manager from the API. We don't check for error at all for the moment.
 // TODO - Validation before submiting
 // TODO - Add ads inside article
 
 defined( 'ABSPATH' ) or die( 'No script kiddies please!' );
+
+require_once( 'classes/github-updater.php' );
+if ( is_admin() ) {
+    new GitHubPluginUpdater( __FILE__, 'TouTrix', "wp_toutrix" );
+}
 
 require "config.php";
 require "classes/toutrix_php/api_toutrix.php";
@@ -74,22 +75,6 @@ add_option( 'ad_toutrix_zone_id', '', '', 'yes' );
 add_action('admin_menu', 'toutrix_add_pages');
 
 //wp_enqueue_style('admin_css_toutrix', plugins_url( 'css/toutrix.css', __FILE__ ), false, '1.0.0', 'all');
-
-if(is_admin()) define('SAM_IS_ADMIN', true);
-
-//include_once('ad.class.php');
-include_once('toutrix.class.php');
-
-if (is_admin()) {
-  include_once('admin.class.php');
-	if (class_exists("ToutrixAdmin") && class_exists("ToutrixManager")) 
-		$samObject = new ToutrixManager();
-}
-else {
-	if (class_exists("ToutrixManager")) $samObject = new ToutrixManager();
-}
-
-
 
 //add_action( 'widgets_init', 'register_my_widget' );
 
