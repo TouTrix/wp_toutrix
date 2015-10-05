@@ -60,7 +60,10 @@ End date: <input type='text' name='endDate' value='<?php echo $fields->endDate; 
   $stats_per_day = $stats->stats->per_country;
 ?>
 <table class="wp-list-table widefat fixed striped posts">
-  <tr><th>Country</th><th>Nbr. impressions</th><th>Nbr. clicks</th><th>Own impressions</th><th>Own clicks</th><th>Revenu</th></tr>
+ <thead>
+  <tr><th>Country</th><th scope="col" id='nbr_impressions' class='manage-column column-title column-primary sortable desc'>Nbr. impressions</th><th>Nbr. clicks</th><th>Own impressions</th><th>Own clicks</th><th>Revenu</th></tr>
+ </thead>
+ <tbody id="the-list">
 <?php
   $total_nbr_impressions = 0;
   $total_nbr_clicks = 0;
@@ -78,6 +81,7 @@ End date: <input type='text' name='endDate' value='<?php echo $fields->endDate; 
   }
   echo "  <tr><td>Total:</td><td>" . $total_nbr_impressions . "</td><td>" . $total_nbr_clicks . "</td><td>" . $total_own_impressions . "</td><td>" . $total_own_clicks . "</td><td>$" . number_format($total_cost,4) . "</td></tr>";
 ?>
+  </tbody>
 </table>
 <?php
 }
