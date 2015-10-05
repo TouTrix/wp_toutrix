@@ -33,8 +33,7 @@ End date: <input type='text' name='endDate' value='<?php echo $fields->endDate; 
   //echo "<hr/>";
   $stats_per_day = $stats->stats->per_day;
 ?>
-<div class="CSSTableGenerator">
-<table>
+<table class="wp-list-table widefat fixed striped posts">
   <tr><th>Day</th><th>Nbr. impressions</th><th>Nbr. clicks</th><th>Own impressions</th><th>Own clicks</th><th>Cost</th></tr>
 <?php
   $total_nbr_impressions = 0;
@@ -54,7 +53,6 @@ End date: <input type='text' name='endDate' value='<?php echo $fields->endDate; 
   echo "  <tr><td>Total:</td><td>" . $total_nbr_impressions . "</td><td>" . $total_nbr_clicks . "</td><td>" . $total_own_impressions . "</td><td>" . $total_own_clicks . "</td><td>$" . number_format($total_cost,4) . "</td></tr>";
 ?>
 </table>
-</div>
 
 <h2>Per country</h2>
 <?php
@@ -62,8 +60,7 @@ End date: <input type='text' name='endDate' value='<?php echo $fields->endDate; 
   //echo "<hr/>";
   $stats_per_day = $stats->stats->per_country;
 ?>
-<div class="CSSTableGenerator">
-<table>
+<table class="wp-list-table widefat fixed striped posts">
   <tr><th>Country</th><th>Nbr. impressions</th><th>Nbr. clicks</th><th>Own impressions</th><th>Own clicks</th><th>Cost</th></tr>
 <?php
   $total_nbr_impressions = 0;
@@ -83,7 +80,6 @@ End date: <input type='text' name='endDate' value='<?php echo $fields->endDate; 
   echo "  <tr><td>Total:</td><td>" . $total_nbr_impressions . "</td><td>" . $total_nbr_clicks . "</td><td>" . $total_own_impressions . "</td><td>" . $total_own_clicks . "</td><td>$" . number_format($total_cost,4) . "</td></tr>";
 ?>
 </table>
-</div>
 <?php
 }
 
@@ -115,8 +111,7 @@ function mt_toutrix_campaign_page() {
 
     $campaigns = $toutrix_adserver->campaigns_list(array());
 ?>
-<div class="CSSTableGenerator">
-<table>
+<table class="wp-list-table widefat fixed striped posts">
   <tr><th>Id</th><th>Title</th><th>Action</th></tr>
 <?php
     foreach ($campaigns as $campaign) {
@@ -124,7 +119,6 @@ function mt_toutrix_campaign_page() {
     }
 ?>
 </table>
-</div>
 
 <h2>Create a new campaign</h2>
 <?php

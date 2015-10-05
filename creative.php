@@ -28,8 +28,7 @@ function toutrix_creative_page() {
 
     $creatives = $toutrix_adserver->creatives_list(array());
 ?>
-<div class="CSSTableGenerator">
-<table>
+<table class="wp-list-table widefat fixed striped posts">
   <tr><th>Id</th><th>Title</th><th>Action</th></tr>
 <?php
     foreach ($creatives as $creative) {
@@ -37,7 +36,6 @@ function toutrix_creative_page() {
     }
 ?>
 </table>
-</div>
 
 <h2>Create a new creative</h2>
 <?php

@@ -21,8 +21,7 @@ function PriceSort($item1,$item2)
 usort($inventories,'PriceSort');
 
 ?>
-<div class="CSSTableGenerator">
-<table>
+<table class="wp-list-table widefat fixed striped posts">
   <tr><th>Ad Type</th><th>Title</th><th>Price</th><th>Targets</th></tr>
 <?php
 foreach ($inventories as $num => $inv) {
@@ -73,8 +72,6 @@ foreach ($inventories as $num => $inv) {
 } 
 ?>
 </table>
-</div>
-
 <?php
 }
 

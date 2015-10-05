@@ -32,7 +32,6 @@ class GitHubPluginUpdater {
  
     // Get information regarding our plugin from GitHub
     private function getRepoReleaseInfo() {
-        // code here
         // Only do this once
         if ( ! empty( $this->githubAPIResult ) ) {
           return;
@@ -40,6 +39,7 @@ class GitHubPluginUpdater {
 
 	// Query the GitHub API
 	$url = "https://api.github.com/repos/{$this->username}/{$this->repo}/releases";
+//echo $url . "<br/>";
  
 	// We need the access token for private repos
 	if ( ! empty( $this->accessToken ) ) {
@@ -56,6 +56,7 @@ class GitHubPluginUpdater {
 	if ( is_array( $this->githubAPIResult ) ) {
 	    $this->githubAPIResult = $this->githubAPIResult[0];
 	}
+//var_dump($this->githubAPIResult);
     }
  
     // Push in plugin version information to get the update notification
@@ -71,6 +72,13 @@ class GitHubPluginUpdater {
 
 	// Check the versions if we need to do an update
 	$doUpdate = version_compare( $this->githubAPIResult->tag_name, $transient->checked[$this->slug] );
+/*
+echo "Comparing " . $this->githubAPIResult->tag_name . " with " . $transient->checked[$this->slug] . "<br/>";
+echo "Do update: " . $doUpdate . "";
+die();
+
+$doUpdate = 1 ;
+*/
 
 	// Update the transient to include our updated plugin data
 	if ( $doUpdate == 1 ) {
@@ -88,7 +96,6 @@ class GitHubPluginUpdater {
 	    $obj->package = $package;
 	    $transient->response[$this->slug] = $obj;
 	}
-
         return $transient;
     }
  

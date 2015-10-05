@@ -32,8 +32,7 @@ function mt_toutrix_marketplace_page() {
 usort($marketplace,'VolumeSort');
 
 ?>
-<div class="CSSTableGenerator">
-<table>
+<table class="wp-list-table widefat fixed striped posts">
   <tr><th>Domain</th><th>Ad Type</th><th>Last 24 hours impressions</th><th>Last 24 hours clicks</th><th>Last 24 hours leads</th></tr>
 <?php
       //var_dump($marketplace);
@@ -44,7 +43,7 @@ usort($marketplace,'VolumeSort');
     }
 ?>
 </table>
-</div>
+
 <?php
 }
 ?>

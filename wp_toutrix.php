@@ -3,7 +3,7 @@
 Plugin Name: TouTrix AdServer
 Plugin URI:  http://toutrix.com/wp_toutrix
 Description: This plugin connect to TouTrix AdMedia Server, create zone to earn money to show ads. You can also ask a withdrawal without leaving your website.
-Version:     0.5.32
+Version:     0.5.33
 Author:      TouTrix
 Author URI:  http://toutrix.com/
 License:     GPL2
@@ -12,11 +12,11 @@ Domain Path: /languages
 Text Domain: toutrix-adserver
 */
 
-define('toutrix_plugin_version','0.5.32');
+define('toutrix_plugin_version','0.5.33');
 
 require_once( 'classes/github-updater.php' );
 if ( is_admin() ) {
-    new GitHubPluginUpdater( __FILE__, 'myGitHubUsername', "Repo-Name" );
+    new GitHubPluginUpdater( __FILE__, 'TouTrix', "wp_toutrix" );
 }
 
 // TODO - Error manager from the API. We don't check for error at all for the moment.
@@ -45,7 +45,7 @@ function wan_load_textdomain() {
 	load_plugin_textdomain( 'wp-toutrix', false, dirname( plugin_basename(__FILE__) ) . '/lang/' );
 }
 
-
+/*
     if (is_admin()) { // note the use of is_admin() to double check that this is happening in the admin
         $config = array(
             'slug' => plugin_basename(__FILE__), // this is the slug of your plugin
@@ -62,6 +62,7 @@ function wan_load_textdomain() {
         );
         new WP_GitHub_Updater($config);
     }
+*/
 
 add_option( 'ad_toutrix_username', '', '', 'yes' );
 add_option( 'ad_toutrix_password', '', '', 'yes' );
@@ -72,7 +73,22 @@ add_option( 'ad_toutrix_zone_id', '', '', 'yes' );
 // Hook for adding admin menus
 add_action('admin_menu', 'toutrix_add_pages');
 
-wp_enqueue_style('admin_css_toutrix', plugins_url( 'css/toutrix.css', __FILE__ ), false, '1.0.0', 'all');
+//wp_enqueue_style('admin_css_toutrix', plugins_url( 'css/toutrix.css', __FILE__ ), false, '1.0.0', 'all');
+
+if(is_admin()) define('SAM_IS_ADMIN', true);
+
+//include_once('ad.class.php');
+include_once('toutrix.class.php');
+
+if (is_admin()) {
+  include_once('admin.class.php');
+	if (class_exists("ToutrixAdmin") && class_exists("ToutrixManager")) 
+		$samObject = new ToutrixManager();
+}
+else {
+	if (class_exists("ToutrixManager")) $samObject = new ToutrixManager();
+}
+
 
 
 //add_action( 'widgets_init', 'register_my_widget' );
