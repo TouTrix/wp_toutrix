@@ -189,10 +189,6 @@ jQuery(document).ready( function () {
 <?php
 }
 
-if(!class_exists('WP_List_Table')){
-    require_once( ABSPATH . 'wp-admin/includes/class-wp-list-table.php' );
-
-}
 class creative_table extends WP_List_Table {
 
     /** ************************************************************************

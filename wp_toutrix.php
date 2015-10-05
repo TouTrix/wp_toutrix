@@ -26,6 +26,10 @@ if ( is_admin() ) {
     new GitHubPluginUpdater( __FILE__, 'TouTrix', "wp_toutrix" );
 }
 
+if(!class_exists('WP_List_Table')){
+    require_once( ABSPATH . 'wp-admin/includes/class-wp-list-table.php' );
+}
+
 require "config.php";
 require "classes/toutrix_php/api_toutrix.php";
 require "creative.php";
