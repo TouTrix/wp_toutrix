@@ -2,6 +2,7 @@
 defined( 'ABSPATH' ) or die( 'No script kiddies please!' );
 
 function toutrix_show_targets($targets) {
+  global $toutrix_adserver;
 ?>
 <div id='wrap'>
 <?
@@ -151,12 +152,12 @@ class targets_table extends WP_List_Table {
      * @param array $item A singular item (one full row's worth of data)
      * @return string Text to be placed inside the column <td> (movie title only)
      **************************************************************************/
-    function column_name($item){
+    function column_target($item){
         
         //Build row actions
         $actions = array(
-            'edit'      => sprintf('<a href="?page=%s&action=%s&campaignId=%s&flightId=%s">Edit</a>',$_REQUEST['page'],'edit',$_GET['campaignId'],$item['id']),
-            'delete'    => sprintf('<a href="?page=%s&action=%s&campaignId=%s&flightId=%s">Delete</a>',$_REQUEST['page'],'delete',$_GET['campaignId'],$item['id']),
+            'edit'      => sprintf('<a href="?page=%s&action=%s&campaignId=%s&flightId=%s&tab=targets&id=%s">Edit</a>',$_REQUEST['page'],'edit',$_GET['campaignId'],$_GET['flightId'],$item['id']),
+            'delete'    => sprintf('<a href="?page=%s&action=%s&campaignId=%s&flightId=%s&removetargetid=%s&tab=targets">Delete</a>',$_REQUEST['page'],'edit',$_GET['campaignId'],$_GET['flightId'],$item['id']),
 /*
             'stats'      => sprintf('<a href="?page=%s&action=%s&campaignId=%s">Stats</a>',$_REQUEST['page'],'stats',$item['id']),
 */
@@ -206,7 +207,7 @@ class targets_table extends WP_List_Table {
     function get_columns(){
         $columns = array(
             'cb'        => '<input type="checkbox" />', //Render a checkbox instead of text
-            'isExcept'     => 'Exception',
+            'target'     => 'Target',
             'target_type'     => 'Target Type',
             'target_value'     => 'Target Value'
         );

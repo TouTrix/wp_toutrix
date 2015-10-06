@@ -48,6 +48,18 @@ function toutrix_flight() {
 <?php
   }
 
+  if (isset($_GET['removetargetid']) && isset($_GET['flightId'])) {
+    $fields = new stdclass();
+    $fields->flightId = $_GET['flightId'];
+    $fields->id = $_GET['removetargetid'];
+
+    $response = $toutrix_adserver->flight_targets_delete($fields);
+?>
+<div class="updated"><p><strong><?php _e('Creative flight deleted', 'wp-toutrix' ); ?></strong></p></div>
+<?php
+  }
+
+
   if (isset($_GET['deactiveId']) && $_GET['deactiveId'] > 0) {
     $fields = new stdclass();
     $fields->id = $_GET['deactiveId'];
@@ -310,8 +322,8 @@ class creatives_table extends WP_List_Table {
         );
         
         //Return the title contents
-        return sprintf('%2$s<br/>%3$s',
-            /*$2%s*/ $item['id'],
+        return sprintf('%1$s<br/>%2$s',
+      	    /*$2%s*/ //$item['id'],
             /*$1%s*/ $item['html'],
             /*$3%s*/ $this->row_actions($actions)
         );

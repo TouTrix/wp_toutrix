@@ -31,11 +31,15 @@ class api_toutrix_adserver extends api_toutrix {
   var $p_zone_get = "/zones/:id";
   var $p_flight_update = "/flights/:id";
   var $p_flight = "/campaigns/:campaignId/flights";
+  var $p_flight_find = "/flights/filter:filter";
   var $p_flight_target = "/flights/:flightId/targets";
+  var $p_flight_target_one = "/flights/:flightId/targets/:id";
+  var $p_flights = "/flights";
   var $p_creative_flight = "/creatives_flight";
   var $p_creatives_flight = "/flights/:flightId/creative_flight";
   var $p_creative_flight_one = "/creatives_flight/:id";
   var $p_target = "/targetings";
+  var $p_target_one = "/targetings/:id";
   var $p_marketplace = "/marketplaces";
 
   var $p_inventory = "http://serv.toutrix.com/status/inventory";
@@ -124,6 +128,16 @@ class api_toutrix_adserver extends api_toutrix {
                    );
      $output = $this->launch_request($datas);
      return json_decode($output, false);
+  }
+
+  function model_delete($path,$fields) {
+     $datas = array('path'=> $path,
+                    'method'=> 'DELETE',
+                    'fields'=> $fields
+                   );
+     $output = $this->launch_request($datas);
+     return $output;
+     //return json_decode($output, false);
   }
 
   function model_put($path,$fields) {
@@ -250,6 +264,18 @@ class api_toutrix_adserver extends api_toutrix {
     //echo $path . "<br/>";
     return $this->model_get($path, $fields);
   }
+/*
+  // It.s not working
+  function flight_find($fields) {
+    $path = $this->do_path($this->p_flight_find, $fields);
+    return $this->model_get($path, $fields);
+  }
+*/
+
+  function flight_lists($fields) {
+    $path = $this->do_path($this->p_flights, $fields);
+    return $this->model_get($path, $fields);
+  }
 
   function flight_update($fields) {
      $path = $this->do_path($this->p_flight_update, $fields);
@@ -269,6 +295,13 @@ class api_toutrix_adserver extends api_toutrix {
      return $this->model_get($path, $fields);
   }
 
+  function flight_targets_delete($fields) {
+     $path = $this->do_path($this->p_flight_target_one, $fields);
+     //echo $path . "<br/>";
+     return $this->model_delete($path, null);
+  }
+
+
   // Creative Flight
 
   function creative_flight_create($fields) {
@@ -279,6 +312,11 @@ class api_toutrix_adserver extends api_toutrix {
   function creative_flight_get($fields) {
      $path = $this->do_path($this->p_creatives_flight . "?filter[where][IsDeleted][neq]=1", $fields);
      return $this->model_get($path, $fields);
+  }
+
+  function creative_flight_delete($fields) {
+     $path = $this->do_path($this->p_creative_flight_one, $fields);
+     return $this->model_delete($path, null);
   }
 
   function creative_flight_save($fields) {
@@ -300,6 +338,11 @@ class api_toutrix_adserver extends api_toutrix {
   function targeting_get($fields) {
      $path = $this->do_path($this->p_target, $fields);
      return $this->model_get($path, $fields);
+  }
+
+  function targeting_delete($fields) {
+     $path = $this->do_path($this->p_target_one, $fields);
+     return $this->model_delete($path, null);
   }
 
   // Marketplace
@@ -354,6 +397,8 @@ class api_toutrix {
       $result = str_replace(':flightId', $fields->flightId, $result);
     if (!empty($fields->startDate))
       $result = str_replace(':startDate', $fields->startDate, $result);
+    if (!empty($fields->filter))
+      $result = str_replace(':filter', $fields->filter, $result);
     if (!empty($fields->endDate))
       $result = str_replace(':endDate', $fields->endDate, $result);
 
@@ -372,23 +417,29 @@ class api_toutrix {
         $url .= "?access_token=" . $this->access_token;
       }
 
-//echo "URL : " . $url . "<br/>\n";
-
-    $fields = json_encode($datas['fields']);
+//      echo "URL : " . $url . "<br/>\n";
+      if ($datas['fields'] <> null) {
+//        echo "Fields : [" . $fields . "]<br\>\n";
+        $fields = json_encode($datas['fields']);
+      } else {
+        $fields = null;
+      }
 //echo "Fields: " . $fields . "\n";
 //echo "Methode used: " . $datas['method'] . "\n";
 
     curl_setopt($this->ch, CURLOPT_URL, $url); 
-    if ($datas['method'] == 'POST' || $datas['method'] == 'PUT') {
-      curl_setopt($this->ch, CURLOPT_CUSTOMREQUEST, $datas['method']);   
-      curl_setopt($this->ch, CURLOPT_POSTFIELDS, $fields);
+    if ($datas['method'] == 'POST' || $datas['method'] == 'PUT' || $datas['method'] == 'DELETE') {
+      curl_setopt($this->ch, CURLOPT_CUSTOMREQUEST, $datas['method']);
+      if ($fields <> null) {
+//echo "Insert fields<br/>";
+        curl_setopt($this->ch, CURLOPT_POSTFIELDS, $fields);
+      }
       curl_setopt($this->ch, CURLOPT_HTTPHEADER, array(                                                                          
         'Content-Type: application/json',                                                                                
         'Content-Length: ' . strlen($fields))                                                                       
       );
     } elseif ($datas['method'] == 'GET') {
       curl_setopt($this->ch, CURLOPT_CUSTOMREQUEST, $datas['method']);   
-      //curl_setopt($this->ch, CURLOPT_POSTFIELDS, $fields);
       curl_setopt($this->ch, CURLOPT_HTTPHEADER, array(                                                                          
         'Content-Type: application/json')
       );
