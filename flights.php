@@ -112,6 +112,7 @@ function toutrix_flight() {
     $fields->flightId = $_GET['flightId'];
     $fields->campaignId = $_GET['campaignId'];
     $fields->creativeId = $_POST['creativeId'];
+    $fields->IsActive = true;
     $creative_flights = $toutrix_adserver->creative_flight_create($fields);
     //var_dump($creative_flights);
 ?>

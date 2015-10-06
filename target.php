@@ -181,17 +181,8 @@ jQuery(document).ready( function () {
 <input type='submit' name='b' value='Save'>
 </form>
 <hr/>
-<h3>Target values</h3>
-
-Country value exemple: ["US","FR"]<br/>
-Is mobile value example: true or false<br/>
-Channel value example: [2,3]<br/>
-City value example: ["Montreal","France"]<br/>
-Language value example: ["FR","EN","RU"]<br/>
-<br/>
-It's easier to delete a target and create one. You can't update a target yet.<br/>
+It's easier to delete a target and create a one. You can't update a target yet.<br/>
 We are going to work on a better form. We understand it's not easily.
-
 <?php
 }
 
