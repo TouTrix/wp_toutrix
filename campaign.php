@@ -54,7 +54,7 @@ function mt_toutrix_campaign_page() {
     return;
   }
 
-  if ($_GET['action']=='new') {
+  if ($_GET['action']=='new' && !isset($_GET['tab'])) {
 ?>
 <h2>Create a new campaign</h2>
 <?php
@@ -141,13 +141,31 @@ function mt_toutrix_campaign_page() {
       toutrix_campaign_show_stats(campaign);
     } else {
 ?>
-<a href='?page=mt_toutrix_campaign&campaignId=<?php echo $_GET['campaignId'];?>&action=stats'>Show stats</a>
+
+<?php
+    $cur_tab = 'homepage';	
+    if (isset($_GET['tab']))
+      $cur_tab = $_GET['tab'];
+
+    $tabs = array( 'homepage' => 'Settings', 'flights' => 'Flights', 'targets' => 'Targets', 'stats' => 'Stats' );
+    echo '<div id="icon-themes" class="icon32"><br></div>';
+    echo '<h2 class="nav-tab-wrapper">';
+    foreach( $tabs as $tab => $name ){
+        $class = ( $tab == $cur_tab ) ? ' nav-tab-active' : '';
+        echo "<a class='nav-tab$class' href='?page=mt_toutrix_campaign&action=edit&campaignId=" . $_GET['campaignId'] . "&&tab=$tab'>$name</a>";
+    }
+
+    echo '</h2>';
+
+   if ($cur_tab == 'homepage') {
+?>
+
 <h2>Update campaign</h2>
 <?php
       toutrix_campaign_form($campaign);
-      //var_dump($campaign);
-
+  } elseif ($cur_tab=='flights') {
       toutrix_flights($campaign);
+  } else {
 ?>
 <h2>Targeting for this campaign</h2>
 It applies to all flights.<br/>
@@ -160,6 +178,7 @@ It applies to all flights.<br/>
 
       echo "<h2>Add a new target</h2>";
       toutrix_show_target_form($fields);
+  }
     }
   }
 }
