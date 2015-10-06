@@ -152,7 +152,7 @@ function mt_toutrix_campaign_page() {
     echo '<h2 class="nav-tab-wrapper">';
     foreach( $tabs as $tab => $name ){
         $class = ( $tab == $cur_tab ) ? ' nav-tab-active' : '';
-        echo "<a class='nav-tab$class' href='?page=mt_toutrix_campaign&action=edit&campaignId=" . $_GET['campaignId'] . "&&tab=$tab'>$name</a>";
+        echo "<a class='nav-tab$class' href='?page=mt_toutrix_campaign&action=edit&campaignId=" . $_GET['campaignId'] . "&tab=$tab'>$name</a>";
     }
 
     echo '</h2>';
