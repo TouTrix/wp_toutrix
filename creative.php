@@ -189,7 +189,7 @@ jQuery(document).ready( function () {
 <?php
 }
 
-class creative_table extends WP_List_Table {
+class creative_table extends toutrix_table {
 
     /** ************************************************************************
      * REQUIRED. Set up a constructor that references the parent constructor. We 
@@ -232,7 +232,11 @@ class creative_table extends WP_List_Table {
     function column_default($item, $column_name){
         switch($column_name){
             case 'the_status':
-                return $item[$column_name];
+                if ($item['isActive']) {
+                  return "Active";
+                } else {
+                  return "Not active";
+                }
             default:
                 return print_r($item,true); //Show the whole array for troubleshooting purposes
         }
@@ -268,24 +272,6 @@ class creative_table extends WP_List_Table {
             /*$1%s*/ $item['title'],
             /*$2%s*/ $item['id'],
             /*$3%s*/ $this->row_actions($actions)
-        );
-    }
-
-
-    /** ************************************************************************
-     * REQUIRED if displaying checkboxes or using bulk actions! The 'cb' column
-     * is given special treatment when columns are processed. It ALWAYS needs to
-     * have it's own method.
-     * 
-     * @see WP_List_Table::::single_row_columns()
-     * @param array $item A singular item (one full row's worth of data)
-     * @return string Text to be placed inside the column <td> (movie title only)
-     **************************************************************************/
-    function column_cb($item){
-        return sprintf(
-            '<input type="checkbox" name="%1$s[]" value="%2$s" />',
-            /*$1%s*/ $this->_args['singular'],  //Let's simply repurpose the table's singular label ("movie")
-            /*$2%s*/ $item['ID']                //The value of the checkbox should be the record's id
         );
     }
 
@@ -338,44 +324,6 @@ class creative_table extends WP_List_Table {
         return $sortable_columns;
     }
 
-
-    /** ************************************************************************
-     * Optional. If you need to include bulk actions in your list table, this is
-     * the place to define them. Bulk actions are an associative array in the format
-     * 'slug'=>'Visible Title'
-     * 
-     * If this method returns an empty value, no bulk action will be rendered. If
-     * you specify any bulk actions, the bulk actions box will be rendered with
-     * the table automatically on display().
-     * 
-     * Also note that list tables are not automatically wrapped in <form> elements,
-     * so you will need to create those manually in order for bulk actions to function.
-     * 
-     * @return array An associative array containing all the bulk actions: 'slugs'=>'Visible Titles'
-     **************************************************************************/
-    function get_bulk_actions() {
-        $actions = array(
-//            'delete'    => 'Delete'
-        );
-        return $actions;
-    }
-
-
-    /** ************************************************************************
-     * Optional. You can handle your bulk actions anywhere or anyhow you prefer.
-     * For this example package, we will handle it in the class to keep things
-     * clean and organized.
-     * 
-     * @see $this->prepare_items()
-     **************************************************************************/
-    function process_bulk_action() {
-        
-        //Detect when a bulk action is being triggered...
-        if( 'delete'===$this->current_action() ) {
-            wp_die('Items deleted (or they would be if we had items to delete)!');
-        }
-        
-    }
 
 
     /** ************************************************************************
@@ -450,7 +398,7 @@ class creative_table extends WP_List_Table {
           $new_crea = array('id'=>$creative->id, 'title'=>$creative->title, 'the_status'=>$status2);
           $arr[] = $new_crea;
         }
-        $data = $arr;        
+        $data = $arr;
         
         /**
          * This checks for sorting input and sorts the data in our array accordingly.

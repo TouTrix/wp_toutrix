@@ -236,7 +236,7 @@ class creatives_table extends WP_List_Table {
 
         $arr = array();
         foreach ($stats as $cr_fl) {
-          $new_crea = array('id'=>$cr_fl->id, 'flightId' => $cr_fl->flightId, 'creativeId' => $cr_fl->creativeId, 'isactive'=>$cr_fl->IsActive);
+          $new_crea = array('id'=>$cr_fl->id, 'flightId' => $cr_fl->flightId, 'creativeId' => $cr_fl->creativeId, 'isActive'=>$cr_fl->IsActive);
 
           $creative = new stdclass();
           $creative->creativeId = $cr_fl->creativeId;
@@ -284,7 +284,7 @@ class creatives_table extends WP_List_Table {
     function column_default($item, $column_name){
         switch($column_name){
             case 'status':
-                if ($item[$column_name]==1) {
+                if ($item['isActive']==1) {
                   return "Active";
                 } else {
                   return "Not active";
@@ -566,7 +566,7 @@ class flights_table extends WP_List_Table {
     function set_datas($stats) {
         $arr = array();
         foreach ($stats as $flight) {
-          $new_crea = array('id'=>$flight->id, 'name' => $flight->Name, 'price' => $flight->Price, 'isactive'=>$flight->IsActive);
+          $new_crea = array('id'=>$flight->id, 'name' => $flight->Name, 'price' => $flight->Price, 'IsActive'=>$flight->IsActive);
           $arr[] = $new_crea;
         }
         $this->datas = $arr;
@@ -601,7 +601,7 @@ class flights_table extends WP_List_Table {
             case 'price':
                 return '$' . $item[$column_name];
             case 'status':
-                if ($item[$column_name]==1) {
+                if ($item['IsActive']==1) {
                   return "Active";
                 } else {
                   return "Not active";
