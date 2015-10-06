@@ -392,10 +392,7 @@ class creative_table extends toutrix_table {
         $creatives = $toutrix_adserver->creatives_list(array());
         $arr = array();
         foreach ($creatives as $creative) {
-          $status2 = 'Not active';
-          if ($creative->IsActive==1)
-            $status2 = 'Active';
-          $new_crea = array('id'=>$creative->id, 'title'=>$creative->title, 'the_status'=>$status2);
+          $new_crea = array('id'=>$creative->id, 'title'=>$creative->title, 'isActive'=>$creative->IsActive);
           $arr[] = $new_crea;
         }
         $data = $arr;
