@@ -123,6 +123,9 @@ function mt_toutrix_campaign_page() {
       $fields = new stdclass();
       $fields->id = $_POST['id'];
       $fields->name = $_POST['name'];
+      $fields->isActive = 0;
+      if ($_POST['isActive'] == 'on')
+        $fields->isActive = 1;
       stripslashes_deep( $fields );
 //var_dump($fields);
 //echo "<br/>";
@@ -190,6 +193,7 @@ function toutrix_campaign_form($campaign) {
 <?php if (!empty($campaign->id)) {?>
 <input type='hidden' name='id' value='<?php echo $campaign->id;?>'>
 <?php } ?>
+Enabled: <input type='checkbox' name='isActive' <?php if ($campaign->isActive) echo "checked";?>><br/>
 Name: <input type='text' name='name' value='<?php echo $campaign->name;?>'><br/>
 
 <input type='submit' name='b' value='Save'>
