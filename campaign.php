@@ -62,6 +62,18 @@ function mt_toutrix_campaign_page() {
     toutrix_campaign_form($new);
   }
 
+  if (isset($_GET['removetargetid']) && !isset($_GET['flightId']) && isset($_GET['campaignId'])) {
+    $fields = new stdclass();
+    $fields->campaignId = $_GET['campaignId'];
+    $fields->id = $_GET['removetargetid'];
+
+    $response = $toutrix_adserver->campaign_targets_delete($fields);
+?>
+<div class="updated"><p><strong><?php _e('Targeting deleted', 'wp-toutrix' ); ?></strong></p></div>
+<?php
+  }
+
+
   if (empty($_GET['campaignId'])) {
     if (!empty($_POST['b'])) {
       $fields = new stdclass();
@@ -87,14 +99,7 @@ function mt_toutrix_campaign_page() {
 <?php
   } elseif (!empty($_GET['campaignId'])) {
     if (!empty($_POST['b']) && $_POST['target']=='yes') {
-      $fields = new stdclass();
-      if (!empty($_POST['id']))
-        $fields->id = $_POST['id'];
-      $fields->campaignId = $_GET['campaignId'];
-      $fields->target_type = $_POST['target_type'];
-      $fields->target_value = $_POST['target_value']; 
-      $fields->isExcept = false;     
-      stripslashes_deep( $fields );
+      $fields = get_form_target();
 //var_dump($fields);
 //echo "<br/>";
       $target = $toutrix_adserver->target_create($fields);

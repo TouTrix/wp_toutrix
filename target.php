@@ -1,6 +1,46 @@
 <?php
 defined( 'ABSPATH' ) or die( 'No script kiddies please!' );
 
+function get_form_target() {
+  $fields = new stdclass();
+  if (!empty($_POST['id']))
+    $fields->id = $_POST['id'];
+  if (isset($_GET['flightId'])) {
+    $fields->flightId = $_GET['flightId'];
+  } else {
+    $fields->campaignId = $_GET['campaignId'];
+  }
+  $fields->target_type = $_POST['target_type'];
+  if ($fields->target_type == 'country') {
+    $countries = array();
+    foreach ($_POST['country_code'] as $num => $country_code) {
+      $countries[] = $country_code;
+    }
+    $countries = json_encode($countries);
+    $fields->target_value = $countries;
+  } else if ($fields->target_type == 'language') {
+    $langs = array();
+    foreach ($_POST['language'] as $num => $lang) {
+      $langs[] = $lang;
+    }
+    $langs = json_encode($langs);
+    $fields->target_value = $langs;
+  } else if ($fields->target_type == 'channelId') {
+    foreach ($_POST['channel_ids'] as $num => $chanId) {
+      $channels[] = $chanId;
+    }
+    $channels = json_encode($channels);
+    $fields->target_value = $channels;
+  } else if ($fields->target_type == 'is_mobile') {
+    $fields->target_value = $_POST['true_false'];
+  } else {
+    $fields->target_value = $_POST['target_value']; 
+  }
+  $fields->isExcept = false;
+  stripslashes_deep( $fields );
+  return $fields;
+}
+
 function toutrix_show_targets($targets) {
   global $toutrix_adserver;
 ?>
@@ -34,23 +74,110 @@ function toutrix_show_target_line($target) {
 }
 
 function toutrix_show_target_form($target) {
+  global $_countries;
+  global $_languages;
 ?>
 <form method='POST'>
 <input type='hidden' name='target' value='yes'>
 <?php if (!empty($target->id)) { ?>
 <input type='hidden' name='id' value='<?php echo $target->id; ?>'>
-<?php } ?>
 Target type: <br/>
-<select name='target_type'>
+<?php echo $target->target_type . "<br/>"; ?>
+<input type='hidden' name='target_type' id='target_type' value='<?php echo $target->target_type; ?>'>
+<?php }  else { ?>
+Exception: <br/>
+<input type='checkbox' name='exception'><br/>
+Target type: <br/>
+<select id='sel_target_type' name='target_type'>
+  <option value='choose'>Select a targeting type</option>
   <option value='country' <?php if ($target->target_type == 'country') echo "selected"; ?>>Target country</option>
-  <option value='city' <?php if ($target->target_type == 'city') echo "selected"; ?>>Target city</option>
+<!--  <option value='city' <?php if ($target->target_type == 'city') echo "selected"; ?>>Target city</option> -->
   <option value='is_mobile' <?php if ($target->target_type == 'is_mobile') echo "selected"; ?>>Is mobile</option>
   <option value='channelId' <?php if ($target->target_type == 'channelId') echo "selected"; ?>>By channel</option>
   <option value='language' <?php if ($target->target_type == 'language') echo "selected"; ?>>By user language</option>
 </select>
 <br/>
+<?php } ?>
+<div id='target_table_value'>
 Target value: <br/>
 <input type='text' name='target_value' value="<?php echo $target->target_value; ?>"><br/>
+</div>
+<div id='target_countries'>
+<?php 
+foreach ($_countries as $country_code => $country_name) {
+  echo "<input type='checkbox' name='country_code[]' value='" . $country_code . "'> ";
+  echo "<img src= '" . plugins_url( 'flags/' . strtolower($country_code) . '.png', __FILE__ ) . "'> ";
+  echo $country_code . " " . $country_name . "<br/>";
+}
+?>
+</div>
+<div id='target_language'>
+<?php 
+foreach ($_languages as $lang_code => $lang) {
+  echo "<input type='checkbox' name='language[]' value='" . $lang_code . "'> ";
+  echo $lang . "<br/>";
+}
+?>
+</div>
+<div id='target_true_false'>
+<select name='true_false'>
+  <option value='true'>True</option>
+  <option value='false'>False</option>
+</select>
+</div>
+<div id='target_channels'>
+<?php
+$channels = toutrix_get_channels();
+foreach ($channels as $channel) {
+  echo "<input type='checkbox' name='channel_ids[]' value='" . $channel->id . "'> ";
+  echo $channel->Title . "<br/>";
+}
+?>
+</div>
+<script type="text/javascript">
+jQuery(document).ready( function () { 
+  updateForm();
+
+  jQuery('#sel_target_type').change(function() {
+    updateForm();
+  });
+
+  function updateForm() {
+    var target_type = jQuery('#sel_target_type').find(":selected").val();
+    if (target_type == 'country') {
+      jQuery("#target_table_value").hide();
+      jQuery("#target_countries").show();
+      jQuery("#target_channels").hide();
+      jQuery("#target_language").hide();
+      jQuery("#target_true_false").hide();
+    } else if (target_type == 'channelId') {
+      jQuery("#target_table_value").hide();
+      jQuery("#target_countries").hide();
+      jQuery("#target_channels").show();
+      jQuery("#target_language").hide();
+      jQuery("#target_true_false").hide();
+    } else if (target_type == 'language') {
+      jQuery("#target_table_value").hide();
+      jQuery("#target_countries").hide();
+      jQuery("#target_channels").hide();
+      jQuery("#target_language").show();
+      jQuery("#target_true_false").hide();
+    } else if (target_type == 'is_mobile') {
+      jQuery("#target_table_value").hide();
+      jQuery("#target_countries").hide();
+      jQuery("#target_channels").hide();
+      jQuery("#target_language").hide();
+      jQuery("#target_true_false").show();
+    } else {
+      jQuery("#target_table_value").show();
+      jQuery("#target_countries").hide();
+      jQuery("#target_channels").hide();
+      jQuery("#target_language").hide();
+      jQuery("#target_true_false").hide();
+    }
+  }
+});
+</script>
 <input type='submit' name='b' value='Save'>
 </form>
 <hr/>
@@ -155,13 +282,23 @@ class targets_table extends WP_List_Table {
     function column_target($item){
         
         //Build row actions
-        $actions = array(
+        if (isset($_GET['flightId'])) {
+          $actions = array(
             'edit'      => sprintf('<a href="?page=%s&action=%s&campaignId=%s&flightId=%s&tab=targets&id=%s">Edit</a>',$_REQUEST['page'],'edit',$_GET['campaignId'],$_GET['flightId'],$item['id']),
             'delete'    => sprintf('<a href="?page=%s&action=%s&campaignId=%s&flightId=%s&removetargetid=%s&tab=targets">Delete</a>',$_REQUEST['page'],'edit',$_GET['campaignId'],$_GET['flightId'],$item['id']),
 /*
             'stats'      => sprintf('<a href="?page=%s&action=%s&campaignId=%s">Stats</a>',$_REQUEST['page'],'stats',$item['id']),
 */
-        );
+          );
+        } else {
+          $actions = array(
+            'edit'      => sprintf('<a href="?page=%s&action=%s&campaignId=%s&tab=targets&id=%s">Edit</a>',$_REQUEST['page'],'edit',$_GET['campaignId'],$_GET['flightId'],$item['id']),
+            'delete'    => sprintf('<a href="?page=%s&action=%s&campaignId=%s&removetargetid=%s&tab=targets">Delete</a>',$_REQUEST['page'],'edit',$_GET['campaignId'],$item['id']),
+/*
+            'stats'      => sprintf('<a href="?page=%s&action=%s&campaignId=%s">Stats</a>',$_REQUEST['page'],'stats',$item['id']),
+*/
+          );
+        }
         
         //Return the title contents
         return sprintf('%1$s <span style="color:silver">(id:%2$s)</span>%3$s',

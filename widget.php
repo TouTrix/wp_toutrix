@@ -41,7 +41,7 @@ public function widget( $args, $instance ) {
   <script type='text/javascript'>var cpma_rnd=Math.floor(Math.random()*99999999999); document.write("<scr"+"ipt type='text/javascript' src='http://serv.toutrix.com/popunder_js?rnd="+cpma_rnd+"'></scr"+"ipt>");</script>
 <?php
   } else {
-    echo "<script src='http://serv.toutrix.com/js/creative?zone_id=" . $toutrix_zone_id . "&adtypeId=2'></script>";
+    echo "<script src='http://serv.toutrix.com/js/creative?zone_id=" . $toutrix_zone_id . "&adtypeId=" . $instance['adtypeId'] . "'></script>";
   }
 
   echo $args['after_widget'];

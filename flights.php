@@ -55,7 +55,7 @@ function toutrix_flight() {
 
     $response = $toutrix_adserver->flight_targets_delete($fields);
 ?>
-<div class="updated"><p><strong><?php _e('Creative flight deleted', 'wp-toutrix' ); ?></strong></p></div>
+<div class="updated"><p><strong><?php _e('Targeting deleted', 'wp-toutrix' ); ?></strong></p></div>
 <?php
   }
 
@@ -83,13 +83,7 @@ function toutrix_flight() {
 
   if (isset($_POST['target']) && $_POST['target']=='yes') {
     // We are adding a new target
-    $fields = new stdclass();
-    $fields->flightId = $_GET['flightId'];
-    $fields->isExcept = false;
-    $fields->target_type = $_POST['target_type'];
-    $fields->target_value = $_POST['target_value'];
-    stripslashes_deep( $fields );
-
+    $fields = get_form_target();
     $target = $toutrix_adserver->target_create($fields);
     //var_dump($target);
 ?>

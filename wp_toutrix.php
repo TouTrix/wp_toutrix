@@ -32,6 +32,8 @@ if(!class_exists('WP_List_Table')){
 
 require "config.php";
 require "table.class.php";
+require "countries.php";
+require "languages.php";
 require "classes/toutrix_php/api_toutrix.php";
 require "creative.php";
 require "campaign.php";
@@ -192,6 +194,8 @@ function mt_toutrix_page() {
      $channels = toutrix_get_channels();
      echo '<div class="wrap">';
 ?>
+
+<a href='http://toutrix.com/forums/forum/wordpress-adserver-plugin/' target='_blank'>Support</a>
 
 <h1>Create your account now</h2>
 Fill-up the form to create your account now.<br/>
