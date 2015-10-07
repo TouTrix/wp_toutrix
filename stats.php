@@ -24,8 +24,22 @@ Start date: <input type='text' name='startDate' value='<?php echo $fields->start
 End date: <input type='text' name='endDate' value='<?php echo $fields->endDate; ?>'><br/>
 <input type='submit' name='b' value='Go'><br/>
 </form>
+<?php
+$cur_tab = 'homepage';	
+  if (isset($_GET['tab']))
+    $cur_tab = $_GET['tab'];
 
-<h2>Per day</h2>
+  $tabs = array( 'homepage' => 'Per day', 'per_country' => 'Per country');
+  echo '<div id="icon-themes" class="icon32"><br></div>';
+  echo '<h2 class="nav-tab-wrapper">';
+  foreach( $tabs as $tab => $name ){
+      $class = ( $tab == $cur_tab ) ? ' nav-tab-active' : '';
+      echo "<a class='nav-tab$class' href='?page=mt_toutrix_stats_page&tab=$tab'>$name</a>";
+  }
+  echo '</h2>';
+
+  if ($cur_tab == 'homepage') {
+?>
 <?php
   //var_dump($stats->stats);
   //echo "<hr/>";
@@ -51,10 +65,8 @@ End date: <input type='text' name='endDate' value='<?php echo $fields->endDate; 
   echo "  <tr><td>Total:</td><td>" . $total_nbr_impressions . "</td><td>" . $total_nbr_clicks . "</td><td>" . $total_own_impressions . "</td><td>" . $total_own_clicks . "</td><td>$" . number_format($total_cost,4) . "</td></tr>";
 ?>
 </table>
-
-
-<h2>Per country</h2>
 <?php
+  } else {
   //var_dump($stats->stats);
   //echo "<hr/>";
   $stats_per_day = $stats->stats->per_country;
@@ -84,5 +96,6 @@ End date: <input type='text' name='endDate' value='<?php echo $fields->endDate; 
   </tbody>
 </table>
 <?php
+  }
 }
 ?>

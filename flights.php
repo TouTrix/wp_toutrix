@@ -131,7 +131,6 @@ function toutrix_flight() {
       $class = ( $tab == $cur_tab ) ? ' nav-tab-active' : '';
       echo "<a class='nav-tab$class' href='?page=mt_toutrix_campaign&action=edit&campaignId=" . $_GET['campaignId'] . "&flightId=" . $_GET['flightId'] . "&tab=$tab'>$name</a>";
   }
-
   echo '</h2>';
 
   if ($cur_tab == 'homepage') {
