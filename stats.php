@@ -39,8 +39,6 @@ $cur_tab = 'homepage';
   echo '</h2>';
 
   if ($cur_tab == 'homepage') {
-?>
-<?php
     //var_dump($stats->stats);
     //echo "<hr/>";
     $stats_per_day = $stats->stats->per_day;

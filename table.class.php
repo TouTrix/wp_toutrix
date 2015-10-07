@@ -20,9 +20,9 @@ class toutrix_table extends WP_List_Table {
             case 'nbr_clicks':
                 return $item[$column_name];
             case 'cost':
-                return $item[$column_name];
+                return "$" . number_format($item[$column_name],2);
             case 'revenu':
-                return $item[$column_name];
+                return "$" . number_format($item[$column_name],2);
 
             default:
                 return print_r($item,true); //Show the whole array for troubleshooting purposes
