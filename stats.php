@@ -34,7 +34,7 @@ $cur_tab = 'homepage';
   echo '<h2 class="nav-tab-wrapper">';
   foreach( $tabs as $tab => $name ){
       $class = ( $tab == $cur_tab ) ? ' nav-tab-active' : '';
-      echo "<a class='nav-tab$class' href='?page=mt_toutrix_stats_page&tab=$tab'>$name</a>";
+      echo "<a class='nav-tab$class' href='?page=mt_toutrix_stats_page&tab=$tab&startDate=$fields->startDate&endDate=$fields->endDate'>$name</a>";
   }
   echo '</h2>';
 
