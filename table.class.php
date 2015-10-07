@@ -2,11 +2,28 @@
 defined( 'ABSPATH' ) or die( 'No script kiddies please!' );
 
 class toutrix_table extends WP_List_Table {
+    var $datas;
+
+    function sort_data() {
+    }
 
     function column_default($item, $column_name){
         switch($column_name){
             case 'the_status':
                 return $item[$column_name];
+            case 'day':
+                return $item[$column_name];
+            case 'country':
+                return $item[$column_name] . " <img src='" . plugins_url( 'flags/' . strtolower($item[$column_name]) . '.png', __FILE__ ) . "'>";
+            case 'nbr_impressions':
+                return $item[$column_name];
+            case 'nbr_clicks':
+                return $item[$column_name];
+            case 'cost':
+                return $item[$column_name];
+            case 'revenu':
+                return $item[$column_name];
+
             default:
                 return print_r($item,true); //Show the whole array for troubleshooting purposes
         }
@@ -142,7 +159,7 @@ class toutrix_table extends WP_List_Table {
          * sorting technique would be unnecessary.
          */
 
-        usort($data, 'usort_reorder');
+        $this->sort_data();
         
         
         /***********************************************************************
@@ -180,7 +197,7 @@ class toutrix_table extends WP_List_Table {
          * to ensure that the data is trimmed to only the current page. We can use
          * array_slice() to 
          */
-        $data = array_slice($data,(($current_page-1)*$per_page),$per_page);
+        $data = array_slice($this->datas,(($current_page-1)*$per_page),$per_page);
         
         
         
@@ -202,3 +219,144 @@ class toutrix_table extends WP_List_Table {
     }
 
 }
+
+class stats_per_country_table extends toutrix_table {
+    function __construct(){
+        global $status, $page;
+                
+        //Set parent defaults
+        parent::__construct( array(
+            'singular'  => 'stat_per_country',     //singular name of the listed records
+            'plural'    => 'stat_per_countries',    //plural name of the listed records
+            'ajax'      => false        //does this table support ajax?
+        ) );      
+    }
+
+    function set_datas($stats) {
+        $arr = array();
+        foreach ($stats as $country => $stat) {
+          $new_crea = array('country'=>$country, 'nbr_impressions' => $stat->nbr_impressions + $stat->own_impressions, 'nbr_clicks' => $stat->nbr_clicks + $stat->own_clicks, 'cost'=>$stat->cost);
+          $arr[] = $new_crea;
+        }
+        $this->datas = $arr;
+    }
+
+    function get_columns(){
+        $columns = array(
+            'country'     => 'Country',
+            'nbr_impressions'     => 'Impressions',
+            'nbr_clicks'     => 'Clicks',
+            'cost'     => 'Cost',
+        );
+        return $columns;
+    }
+
+    function column_title($item){
+        
+        //Build row actions
+        $actions = array(
+        );
+        
+        //Return the title contents
+        return sprintf('%1$s',
+            /*$1%s*/ $item['country']
+        );
+    }
+}
+
+class stats_revenu_per_country_table extends stats_per_country_table {
+
+    function set_datas($stats) {
+        $arr = array();
+        foreach ($stats as $country => $stat) {
+          $new_crea = array('country'=>$country, 'nbr_impressions' => $stat->nbr_impressions + $stat->own_impressions, 'nbr_clicks' => $stat->nbr_clicks + $stat->own_clicks, 'revenu'=>$stat->revenu);
+          $arr[] = $new_crea;
+        }
+        $this->datas = $arr;
+    }
+
+    function get_columns(){
+        $columns = array(
+            'country'     => 'Country',
+            'nbr_impressions'     => 'Impressions',
+            'nbr_clicks'     => 'Clicks',
+            'revenu'     => 'Revenu',
+        );
+        return $columns;
+    }
+
+}
+
+class stats_per_day_table extends toutrix_table {
+
+    function __construct(){
+        global $status, $page;
+                
+        //Set parent defaults
+        parent::__construct( array(
+            'singular'  => 'stat_per_day',     //singular name of the listed records
+            'plural'    => 'stat_per_days',    //plural name of the listed records
+            'ajax'      => false        //does this table support ajax?
+        ) );      
+    }
+
+    function get_columns(){
+        $columns = array(
+            'day'     => 'Day',
+            'nbr_impressions'     => 'Impressions',
+            'nbr_clicks'     => 'Clicks',
+            'cost'     => 'Cost',
+        );
+        return $columns;
+    }
+
+    function set_datas($stats) {
+        $arr = array();
+        foreach ($stats as $day => $stat) {
+          $new_crea = array('day'=>$day, 'nbr_impressions' => $stat->nbr_impressions + $stat->own_impressions, 'nbr_clicks' => $stat->nbr_clicks + $stat->own_clicks, 'cost'=>$stat->cost);
+          $arr[] = $new_crea;
+        }
+        $this->datas = $arr;
+    }
+
+}
+
+class stats_revenue_per_day_table extends stats_per_day_table {
+
+    function get_columns(){
+        $columns = array(
+            'day'     => 'Day',
+            'nbr_impressions'     => 'Impressions',
+            'nbr_clicks'     => 'Clicks',
+            'revenu'     => 'Revenu',
+        );
+        return $columns;
+    }
+
+    function set_datas($stats) {
+        $arr = array();
+        foreach ($stats as $day => $stat) {
+          $new_crea = array('day'=>$day, 'nbr_impressions' => $stat->nbr_impressions + $stat->own_impressions, 'nbr_clicks' => $stat->nbr_clicks + $stat->own_clicks, 'revenu'=>$stat->revenu);
+          $arr[] = $new_crea;
+        }
+        $this->datas = $arr;
+    }
+
+}
+
+
+class stats_per_countries_table extends toutrix_table {
+
+    function __construct(){
+        global $status, $page;
+                
+        //Set parent defaults
+        parent::__construct( array(
+            'singular'  => 'stat_per_country',     //singular name of the listed records
+            'plural'    => 'stat_per_countries',    //plural name of the listed records
+            'ajax'      => false        //does this table support ajax?
+        ) );      
+    }
+
+}
+

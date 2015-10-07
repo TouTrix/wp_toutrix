@@ -41,61 +41,19 @@ $cur_tab = 'homepage';
   if ($cur_tab == 'homepage') {
 ?>
 <?php
-  //var_dump($stats->stats);
-  //echo "<hr/>";
-  $stats_per_day = $stats->stats->per_day;
-?>
-<table class="wp-list-table widefat fixed striped posts">
-  <tr><th>Day</th><th>Nbr. impressions</th><th>Nbr. clicks</th><th>Own impressions</th><th>Own clicks</th><th>Revenu</th></tr>
-<?php
-  $total_nbr_impressions = 0;
-  $total_nbr_clicks = 0;
-  $total_own_clicks = 0;
-  $total_own_impressions = 0;
-  $total_cost = 0;
-  foreach ($stats_per_day as $day => $country) {
-    $total_nbr_impressions += $country->nbr_impressions;
-    $total_nbr_clicks += $country->nbr_clicks;
-    $total_own_clicks += $country->own_clicks;
-    $total_own_impressions += $country->own_impressions;
-    $total_cost += $country->cost;
+    //var_dump($stats->stats);
+    //echo "<hr/>";
+    $stats_per_day = $stats->stats->per_day;
 
-    echo "  <tr><td>" . $day . "</td><td>" . $country->nbr_impressions . "</td><td>" . $country->nbr_clicks . "</td><td>" . $country->own_impressions . "</td><td>" . $country->own_clicks . "</td><td>$" . number_format($country->cost,4) . "</td></tr>";
-  }
-  echo "  <tr><td>Total:</td><td>" . $total_nbr_impressions . "</td><td>" . $total_nbr_clicks . "</td><td>" . $total_own_impressions . "</td><td>" . $total_own_clicks . "</td><td>$" . number_format($total_cost,4) . "</td></tr>";
-?>
-</table>
-<?php
+    $table = new stats_revenue_per_day_table();
+    $table->set_datas($stats->stats->per_day);
+    $table->prepare_items();
+    $table->display();
   } else {
-  //var_dump($stats->stats);
-  //echo "<hr/>";
-  $stats_per_day = $stats->stats->per_country;
-?>
-<table class="wp-list-table widefat fixed striped posts">
- <thead>
-  <tr><th>Country</th><th scope="col" id='nbr_impressions' class='manage-column column-title column-primary sortable desc'>Nbr. impressions</th><th>Nbr. clicks</th><th>Own impressions</th><th>Own clicks</th><th>Revenu</th></tr>
- </thead>
- <tbody id="the-list">
-<?php
-  $total_nbr_impressions = 0;
-  $total_nbr_clicks = 0;
-  $total_own_clicks = 0;
-  $total_own_impressions = 0;
-  $total_cost = 0;
-  foreach ($stats_per_day as $country_code => $country) {
-    $total_nbr_impressions += $country->nbr_impressions;
-    $total_nbr_clicks += $country->nbr_clicks;
-    $total_own_clicks += $country->own_clicks;
-    $total_own_impressions += $country->own_impressions;
-    $total_cost += $country->cost;
-
-    echo "  <tr><td>" .$country_code . " <img src='" . plugins_url( 'flags/' . strtolower($country_code) . '.png', __FILE__ ) . "'></td><td>" . $country->nbr_impressions . "</td><td>" . $country->nbr_clicks . "</td><td>" . $country->own_impressions . "</td><td>" . $country->own_clicks . "</td><td>$" . number_format($country->cost,4) . "</td></tr>";
-  }
-  echo "  <tr><td>Total:</td><td>" . $total_nbr_impressions . "</td><td>" . $total_nbr_clicks . "</td><td>" . $total_own_impressions . "</td><td>" . $total_own_clicks . "</td><td>$" . number_format($total_cost,4) . "</td></tr>";
-?>
-  </tbody>
-</table>
-<?php
+    $table = new stats_revenu_per_country_table();
+    $table->set_datas($stats->stats->per_country);
+    $table->prepare_items();
+    $table->display();
   }
 }
 ?>
