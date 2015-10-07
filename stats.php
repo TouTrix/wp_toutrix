@@ -1,6 +1,8 @@
 <?
 function toutrix_site_show_stats($site) {
   global $toutrix_adserver;
+  global $_countries;
+
   toutrix_get_token();
 
   $toutrix_website_id  = get_option("ad_toutrix_website_id");
@@ -46,11 +48,66 @@ $cur_tab = 'homepage';
     $table = new stats_revenue_per_day_table();
     $table->set_datas($stats->stats->per_day);
     $table->prepare_items();
+?>
+<div id="day_chart" style="width: 900px; height: 500px;"></div>
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script type="text/javascript">
+      google.load("visualization", "1.1", {packages:["bar"]});
+      google.setOnLoadCallback(drawChart);
+      function drawChart() {
+        var data = google.visualization.arrayToDataTable([
+          ['Day', 'Impressions', 'Clicks', 'Profit'],
+<?php foreach ($stats->stats->per_day as $day => $stat) {
+ echo "['" . $day . "', " . $stat->nbr_impressions .", " . $stat->nbr_clicks .", " . $stat->revenu ."],";
+}
+?>
+        ]);
+
+        var options = {
+          chart: {
+            title: 'Day Performance',
+            //subtitle: 'Sales, Expenses, and Profit: 2014-2017',
+          }
+        };
+
+        var chart = new google.charts.Bar(document.getElementById('day_chart'));
+
+        chart.draw(data, options);
+      }
+    </script>
+<?php
     $table->display();
   } else {
     $table = new stats_revenu_per_country_table();
     $table->set_datas($stats->stats->per_country);
     $table->prepare_items();
+?>
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script type="text/javascript">
+      google.load("visualization", "1", {packages:["geochart"]});
+      google.setOnLoadCallback(drawRegionsMap);
+
+      function drawRegionsMap() {
+
+        var data = google.visualization.arrayToDataTable([
+          ['Country', 'Popularity'],
+<?php
+//var_dump($stats->stats->per_country);
+foreach ($stats->stats->per_country as $country_code => $stat) {
+  echo "['" . str_replace("'", "\'", $_countries[$country_code]) . "', " . $stat->nbr_impressions ."],";
+}
+?>
+        ]);
+
+        var options = {};
+
+        var chart = new google.visualization.GeoChart(document.getElementById('regions_div'));
+
+        chart.draw(data, options);
+      }
+    </script>
+<div id="regions_div" style="width: 900px; height: 500px;"></div>
+<?php
     $table->display();
   }
 }
