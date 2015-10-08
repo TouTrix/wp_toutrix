@@ -27,6 +27,95 @@ End date: <input type='text' name='endDate' value='<?php echo $fields->endDate; 
 <input type='submit' name='b' value='Go'><br/>
 </form>
 
+<?php
+  $cur_tab = 'homepage';	
+  if (isset($_GET['tab_stat']))
+    $cur_tab = $_GET['tab_stat'];
+
+  $tabs = array( 'homepage' => 'Per day', 'per_country' => 'Per country');
+  echo '<div id="icon-themes" class="icon32"><br></div>';
+  echo '<h2 class="nav-tab-wrapper">';
+  foreach( $tabs as $tab => $name ){
+      $class = ( $tab == $cur_tab ) ? ' nav-tab-active' : '';
+      echo "<a class='nav-tab$class' href='?page=mt_toutrix_campaign&campaignId=" . $_GET['campaignId'] . "&action=edit&tab=stats&tab_stat=$tab&startDate=$fields->startDate&endDate=$fields->endDate'>$name</a>";
+  }
+  echo '</h2>';
+?>
+<div id="toutrix_chart" style="width: 900px; height: 500px;"></div>
+<?php
+  if ($cur_tab == 'homepage') {
+    //var_dump($stats->stats);
+    //echo "<hr/>";
+    $stats_per_day = $stats->stats->per_day;
+//var_dump($stats_per_day);
+
+    $table = new stats_per_day_table();
+    $table->set_datas($stats->stats->per_day);
+    $table->prepare_items();
+?>
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script type="text/javascript">
+      google.load("visualization", "1.1", {packages:["bar"]});
+      google.setOnLoadCallback(drawChart);
+      function drawChart() {
+        var data = google.visualization.arrayToDataTable([
+          ['Day', 'Impressions', 'Clicks', 'Cost'],
+<?php foreach ($stats->stats->per_day as $day => $stat) {
+ echo "['" . $day . "', " . $stat->nbr_impressions .", " . $stat->nbr_clicks .", " . $stat->cost ."],";
+}
+?>
+        ]);
+
+        var options = {
+          chart: {
+            title: 'Day Performance',
+            //subtitle: 'Sales, Expenses, and Profit: 2014-2017',
+          }
+        };
+
+        var chart = new google.charts.Bar(document.getElementById('toutrix_chart'));
+
+        chart.draw(data, options);
+      }
+    </script>
+<?php
+    $table->display();
+  } else {
+    $table = new stats_per_country_table();
+    $table->set_datas($stats->stats->per_country);
+    $table->prepare_items();
+?>
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script type="text/javascript">
+      google.load("visualization", "1", {packages:["geochart"]});
+      google.setOnLoadCallback(drawRegionsMap);
+
+      function drawRegionsMap() {
+
+        var data = google.visualization.arrayToDataTable([
+          ['Country', 'Popularity'],
+<?php
+//var_dump($stats->stats->per_country);
+foreach ($stats->stats->per_country as $country_code => $stat) {
+  echo "['" . str_replace("'", "\'", $_countries[$country_code]) . "', " . $stat->nbr_impressions ."],";
+}
+?>
+        ]);
+
+        var options = {};
+
+        var chart = new google.visualization.GeoChart(document.getElementById('toutrix_chart'));
+
+        chart.draw(data, options);
+      }
+    </script>
+<?php
+    $table->display();
+  }
+
+  return ;
+?>
+
 <h2>Per day</h2>
 <?php
   $stats_per_day = $stats->stats->per_day;
