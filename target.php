@@ -1,6 +1,23 @@
 <?php
 defined( 'ABSPATH' ) or die( 'No script kiddies please!' );
 
+global $_browsers;
+global $_oses;
+
+$_browsers = array(
+  'ie' => 'Internet Explorer',
+  'firefox' => 'Firefox',
+  'chrome' => 'Chrome',
+  'opera' => 'Opera',
+  'safari' => 'Safari'
+);
+
+$_oses = array(
+  'Windows' => 'Windows',
+  'Linux' => 'Linux',
+  'Mac' => 'Mac',
+);
+
 function get_form_target() {
   $fields = new stdclass();
   if (!empty($_POST['id']))
@@ -21,6 +38,20 @@ function get_form_target() {
   } else if ($fields->target_type == 'language') {
     $langs = array();
     foreach ($_POST['language'] as $num => $lang) {
+      $langs[] = $lang;
+    }
+    $langs = json_encode($langs);
+    $fields->target_value = $langs;
+  } else if ($fields->target_type == 'browser') {
+    $langs = array();
+    foreach ($_POST['browser'] as $num => $lang) {
+      $langs[] = $lang;
+    }
+    $langs = json_encode($langs);
+    $fields->target_value = $langs;
+  } else if ($fields->target_type == 'os') {
+    $langs = array();
+    foreach ($_POST['os'] as $num => $lang) {
       $langs[] = $lang;
     }
     $langs = json_encode($langs);
@@ -78,6 +109,9 @@ function toutrix_show_target_line($target) {
 function toutrix_show_target_form($target) {
   global $_countries;
   global $_languages;
+  global $_browsers;
+  global $_oses;
+
 ?>
 <form method='POST'>
 <input type='hidden' name='target' value='yes'>
@@ -98,6 +132,8 @@ Target type: <br/>
   <option value='is_carrier' <?php if ($target->target_type == 'is_carrier') echo "selected"; ?>>Is Carrier 3G</option>
   <option value='channelId' <?php if ($target->target_type == 'channelId') echo "selected"; ?>>By channel</option>
   <option value='language' <?php if ($target->target_type == 'language') echo "selected"; ?>>By user language</option>
+  <option value='browser' <?php if ($target->target_type == 'browser') echo "selected"; ?>>By user browser</option>
+  <option value='os' <?php if ($target->target_type == 'os') echo "selected"; ?>>By user OS</option>
 </select>
 <br/>
 <?php } ?>
@@ -119,6 +155,22 @@ foreach ($_countries as $country_code => $country_name) {
 foreach ($_languages as $lang_code => $lang) {
   echo "<input type='checkbox' name='language[]' value='" . $lang_code . "'> ";
   echo $lang . "<br/>";
+}
+?>
+</div>
+<div id='target_browser'>
+<?php 
+foreach ($_browsers as $browser_code => $browser) {
+  echo "<input type='checkbox' name='browser[]' value='" . $browser_code . "'> ";
+  echo $browser . "<br/>";
+}
+?>
+</div>
+<div id='target_os'>
+<?php 
+foreach ($_oses as $os_code => $os) {
+  echo "<input type='checkbox' name='os[]' value='" . $os_code . "'> ";
+  echo $os . "<br/>";
 }
 ?>
 </div>
@@ -153,30 +205,56 @@ jQuery(document).ready( function () {
       jQuery("#target_channels").hide();
       jQuery("#target_language").hide();
       jQuery("#target_true_false").hide();
+      jQuery("#target_browser").hide();
+      jQuery("#target_os").hide();
     } else if (target_type == 'channelId') {
       jQuery("#target_table_value").hide();
       jQuery("#target_countries").hide();
       jQuery("#target_channels").show();
       jQuery("#target_language").hide();
       jQuery("#target_true_false").hide();
+      jQuery("#target_browser").hide();
+      jQuery("#target_os").hide();
     } else if (target_type == 'language') {
       jQuery("#target_table_value").hide();
       jQuery("#target_countries").hide();
       jQuery("#target_channels").hide();
       jQuery("#target_language").show();
       jQuery("#target_true_false").hide();
+      jQuery("#target_browser").hide();
+      jQuery("#target_os").hide();
+    } else if (target_type == 'browser') {
+      jQuery("#target_table_value").hide();
+      jQuery("#target_countries").hide();
+      jQuery("#target_channels").hide();
+      jQuery("#target_language").hide();
+      jQuery("#target_true_false").hide();
+      jQuery("#target_browser").show();
+      jQuery("#target_os").hide();
+    } else if (target_type == 'os') {
+      jQuery("#target_table_value").hide();
+      jQuery("#target_countries").hide();
+      jQuery("#target_channels").hide();
+      jQuery("#target_language").hide();
+      jQuery("#target_true_false").hide();
+      jQuery("#target_browser").hide();
+      jQuery("#target_os").show();
     } else if (target_type == 'is_mobile' || target_type == 'is_carrier') {
       jQuery("#target_table_value").hide();
       jQuery("#target_countries").hide();
       jQuery("#target_channels").hide();
       jQuery("#target_language").hide();
       jQuery("#target_true_false").show();
+      jQuery("#target_browser").hide();
+      jQuery("#target_os").hide();
     } else {
       jQuery("#target_table_value").show();
       jQuery("#target_countries").hide();
       jQuery("#target_channels").hide();
       jQuery("#target_language").hide();
       jQuery("#target_true_false").hide();
+      jQuery("#target_browser").hide();
+      jQuery("#target_os").hide();
     }
   }
 });
