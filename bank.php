@@ -11,6 +11,7 @@ function mt_toutrix_bank_page() {
   $bitcoin_addresse = $bitcoin_addresse->address->bitcoin_address;
 ?>
 <h1>TouTrix Bank<h1>
+<?php echo_funds_available(); ?>
 <h2>Make a deposit</h2>
 We only accept BitCoin for the moment. We should add PayPal and Paxum shortly. For Paypal, we will need personal information to verify your account.<br/>
 <br/>

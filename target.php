@@ -33,6 +33,8 @@ function get_form_target() {
     $fields->target_value = $channels;
   } else if ($fields->target_type == 'is_mobile') {
     $fields->target_value = $_POST['true_false'];
+  } else if ($fields->target_type == 'is_carrier') {
+    $fields->target_value = $_POST['true_false'];
   } else {
     $fields->target_value = $_POST['target_value']; 
   }
@@ -93,6 +95,7 @@ Target type: <br/>
   <option value='country' <?php if ($target->target_type == 'country') echo "selected"; ?>>Target country</option>
 <!--  <option value='city' <?php if ($target->target_type == 'city') echo "selected"; ?>>Target city</option> -->
   <option value='is_mobile' <?php if ($target->target_type == 'is_mobile') echo "selected"; ?>>Is mobile</option>
+  <option value='is_carrier' <?php if ($target->target_type == 'is_carrier') echo "selected"; ?>>Is Carrier 3G</option>
   <option value='channelId' <?php if ($target->target_type == 'channelId') echo "selected"; ?>>By channel</option>
   <option value='language' <?php if ($target->target_type == 'language') echo "selected"; ?>>By user language</option>
 </select>
@@ -162,7 +165,7 @@ jQuery(document).ready( function () {
       jQuery("#target_channels").hide();
       jQuery("#target_language").show();
       jQuery("#target_true_false").hide();
-    } else if (target_type == 'is_mobile') {
+    } else if (target_type == 'is_mobile' || target_type == 'is_carrier') {
       jQuery("#target_table_value").hide();
       jQuery("#target_countries").hide();
       jQuery("#target_channels").hide();

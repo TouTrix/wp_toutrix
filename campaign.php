@@ -90,6 +90,8 @@ function mt_toutrix_campaign_page() {
 <div class='wrap'>
 <h1>Campaigns <a href="?page=mt_toutrix_campaign&action=new" class="page-title-action">Add New</a></h1>
 <?php
+    echo_funds_available();
+
     $table = new campaigns_table();
     $table->prepare_items();
     $table->display();

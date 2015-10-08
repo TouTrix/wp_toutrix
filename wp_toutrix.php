@@ -164,5 +164,5 @@ function echo_funds_available() {
   global $toutrix_adserver;
 
   $user = $toutrix_adserver->get_user();
-  echo "<font size='5'><b>Funds available: </b> <font color='green'>$" . number_format($user->funds,2) . "</font></font><br/>";
+  echo "<font size='5'><b>Funds available: </b> <font color='green'><a href='?page=mt_toutrix_bank'>$" . number_format($user->funds,2) . "</a></font></font><br/>";
 }
