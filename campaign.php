@@ -146,8 +146,9 @@ function mt_toutrix_campaign_page() {
     //var_dump($fields); echo "<br/>";
     $campaign = $toutrix_adserver->campaign_get($fields);
 
-    if (isset($_GET['action']) && $_GET['action']== 'stats') {
-      toutrix_campaign_show_stats(campaign);
+//    if (isset($_GET['action']) && $_GET['action']== 'stats') {
+    if (1==2) {
+      
     } else {
 ?>
 
@@ -174,6 +175,9 @@ function mt_toutrix_campaign_page() {
       toutrix_campaign_form($campaign);
   } elseif ($cur_tab=='flights') {
       toutrix_flights($campaign);
+  } elseif ($cur_tab=='stats') {
+    toutrix_campaign_show_stats(campaign);
+//?page=mt_toutrix_campaign&action=stats&campaignId=24
   } else {
 ?>
 <h2>Targeting for this campaign</h2>
@@ -644,7 +648,7 @@ class campaigns_table extends WP_List_Table {
         //Build row actions
         $actions = array(
             'edit'      => sprintf('<a href="?page=%s&action=%s&campaignId=%s">Edit</a>',$_REQUEST['page'],'edit',$item['id']),
-            'stats'      => sprintf('<a href="?page=%s&action=%s&campaignId=%s">Stats</a>',$_REQUEST['page'],'stats',$item['id']),
+            'stats'      => sprintf('<a href="?page=%s&action=%s&campaignId=%s&tab=stats">Stats</a>',$_REQUEST['page'],'edit',$item['id']),
             'delete'    => sprintf('<a href="?page=%s&action=%s&campaignId=%s">Delete</a>',$_REQUEST['page'],'delete',$item['id']),
         );
         

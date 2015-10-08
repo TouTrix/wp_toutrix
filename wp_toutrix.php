@@ -14,7 +14,6 @@ Text Domain: toutrix-adserver
 
 define('toutrix_plugin_version','0.6.35');
 
-
 // TODO - Error manager from the API. We don't check for error at all for the moment.
 // TODO - Validation before submiting
 // TODO - Add ads inside article
