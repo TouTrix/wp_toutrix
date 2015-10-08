@@ -16,13 +16,13 @@ class toutrix_table extends WP_List_Table {
             case 'country':
                 return $item[$column_name] . " <img src='" . plugins_url( 'flags/' . strtolower($item[$column_name]) . '.png', __FILE__ ) . "'>";
             case 'nbr_impressions':
-                return $item[$column_name];
+                return "<p align='right'>".number_format($item[$column_name],0)."</p>";
             case 'nbr_clicks':
-                return $item[$column_name];
+                return "<p align='right'>".$item[$column_name]."</p>";
             case 'cost':
-                return "$" . number_format($item[$column_name],2);
+                return "<p align='right'>$" . number_format($item[$column_name],2)."</p>";
             case 'revenu':
-                return "$" . number_format($item[$column_name],2);
+                return "<p align='right'>$" . number_format($item[$column_name],2)."</p>";
 
             default:
                 return print_r($item,true); //Show the whole array for troubleshooting purposes

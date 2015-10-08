@@ -73,7 +73,6 @@ function mt_toutrix_campaign_page() {
 <?php
   }
 
-
   if (empty($_GET['campaignId'])) {
     if (!empty($_POST['b'])) {
       $fields = new stdclass();

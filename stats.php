@@ -44,6 +44,7 @@ $cur_tab = 'homepage';
     //var_dump($stats->stats);
     //echo "<hr/>";
     $stats_per_day = $stats->stats->per_day;
+//var_dump($stats_per_day);
 
     $table = new stats_revenue_per_day_table();
     $table->set_datas($stats->stats->per_day);

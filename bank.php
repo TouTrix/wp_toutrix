@@ -14,19 +14,21 @@ function mt_toutrix_bank_page() {
 <h2>Make a deposit</h2>
 We only accept BitCoin for the moment. We should add PayPal and Paxum shortly. For Paypal, we will need personal information to verify your account.<br/>
 <br/>
+<center><font size='4'>First deposit is doubled.</font></center>
+<br/>
 <h3>Bitcoin</h3>
-Addresse payment: <?php echo $bitcoin_addresse; ?><br/><br/>
+Send any amount to this payment address: <?php echo $bitcoin_addresse; ?><br/><br/>
 <img src='https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=<?php echo $bitcoin_addresse; ?>'>
 <br/><br/>
-Deposit are automatic. But it take a lot of time.
+Deposit are automatic. But it take few minutes.
 
-<h2>Ask a withdrawl</h2>
+<h2>Withdrawal</h2>
 
-Withdrawal is coming very soon. You will be able to ask automatic hourly payment. Never wait to receive your money. You can send the money directly to your exchanger or in your mobile wallet. We will provide more information.
+Withdrawal are automatic. Just configure your account to receive hourly payment. You never have to wait for your money. You can send the money directly to your exchanger or in your mobile wallet. We may have to approve your account first.
 
 <h1>Exchange recommendation</h1>
 
-If you don't BitCoin, use an exchanger. We recommend CoinBase. Click the link below.<br/><br/>
+If you don't have BitCoin Wallet, you can use an exchanger and they will receive money on your behalf. We recommend CoinBase. Click the link below.<br/><br/>
 
 See <a href='http://toutrix.com/category/bitcoins/' target='_blank'>articles on TouTrix web site</a><br/>
 
