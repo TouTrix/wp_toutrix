@@ -29,7 +29,7 @@ function mt_toutrix_page() {
   echo "<script src='http://serv.toutrix.com/serv/tag?tagId=1'></script>";
 
 
-    $tabs = array( 'homepage' => 'Homepage', 'setting' => 'Settings', 'support' => 'Support');
+    $tabs = array( 'homepage' => 'Homepage', 'setting' => 'Settings', 'coming' => 'Coming soon', 'support' => 'Support');
     echo '<div id="icon-themes" class="icon32"><br></div>';
     echo '<h2 class="nav-tab-wrapper">';
     foreach( $tabs as $tab => $name ){
@@ -55,7 +55,10 @@ To earn money with ads, you drag a TouTrix Ad Widget in your page.<br/><br/>
 To buy traffic, you need to make a deposit first, create a creative, create a campaign, add a flight with your targetings and finally, add a creative to your flight.<br/><br/>
 
 <?php
+   } elseif ($cur_tab == 'coming') {
+     coming_soon();
    } else {
+
      toutrix_settings_page();
    }
 }

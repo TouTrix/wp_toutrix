@@ -36,6 +36,7 @@ require "countries.php";
 require "languages.php";
 require "classes/toutrix_php/api_toutrix.php";
 require "homepage.php";
+require "coming.php";
 require "settings.php";
 require "creative.php";
 require "campaign.php";
