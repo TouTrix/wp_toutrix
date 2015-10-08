@@ -45,6 +45,7 @@ function mt_toutrix_page() {
 
    if ($cur_tab == 'homepage') {
     echo "Current version: " . toutrix_plugin_version . "<br/><br/>";
+    echo_funds_available();
 ?>
 <h2>Publishers</h2>
 

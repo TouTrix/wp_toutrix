@@ -65,7 +65,7 @@ class api_toutrix_adserver extends api_toutrix {
      }
 
      $returns = json_decode($output,false);
-     if ($returns->error != null) {
+     if ($returns->error <> null) {
        echo "ERROR\n";
        return false;
      }
@@ -79,9 +79,9 @@ class api_toutrix_adserver extends api_toutrix {
      }
   }
 
-  function setAccessToken($token) {
+  function setAccessToken($token,$userId) {
     $this->access_token = $token;
-    // TODO - We have to get the userId
+    $this->userId = $userId;
   }
 
   // user
@@ -91,9 +91,14 @@ class api_toutrix_adserver extends api_toutrix {
       $fields = new stdclass();
       $fields->id = $this->userId;
       $path = $this->do_path($this->p_user_one, $fields);
-      $this->user = $this->model_get($path, $fields);
+      $user = $this->model_get($path, $fields);
+      if (!$user->error) {
+        $this->user = $user;
+      }
+    } else {
+      $user = $this->user;
     }
-    return $this->user;
+    return $user;
   }
    
   function user_create($fields) {
@@ -423,7 +428,7 @@ class api_toutrix {
         $url .= "?access_token=" . $this->access_token;
       }
 
-      //echo "URL : " . $url . "<br/>\n";
+//echo "URL : " . $url . "<br/>\n";
       if ($datas['fields'] <> null) {
         //echo "Fields : [" . $fields . "]<br\>\n";
         $fields = json_encode($datas['fields']);

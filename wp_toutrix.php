@@ -73,6 +73,9 @@ $toutrix_adserver = new api_toutrix_adserver();
 
 global $toutrix_zoneId;
 
+if (is_admin())
+  toutrix_connect();
+
 // action function for above hook
 function toutrix_add_pages() {
     add_menu_page(__('TouTrix','menu-toutrix'), __('TouTrix','wp-toutrix'), 'manage_options', 'mt_toutrix_page-handle', 'mt_toutrix_page');
@@ -103,24 +106,28 @@ function toutrix_get_token() {
     $toutrix_username = get_option("ad_toutrix_username");
     $toutrix_password  = get_option("ad_toutrix_password");
     $toutrix_access_token  = get_option("ad_toutrix_access_token");
-
-    //if (strlen($toutrix_access_token)>0) {
-    //  $adserver->setAccessToken($toutrix_access_token);
-    //} else
-    if (strlen($toutrix_username)>0 && strlen($toutrix_password)>0) {
-        // Si nous n'avons pas d'access token, ca nous en prend un
-        //if (strlen($toutrix_access_token)==0) {
-           if ($toutrix_adserver->login($toutrix_username, $toutrix_password)) {
-             //echo "Access Token is now: " . $adserver->access_token . "<br/>";
-             update_option( "ad_toutrix_access_token", $toutrix_adserver->access_token );
-             return true;
-           } else {
+    $toutrix_user_id  = get_option("ad_toutrix_user_id");
+//echo "Current username: " . $toutrix_username . "<br/>";
+//echo "Current token: " . $toutrix_access_token . "<br/>";
+    if (strlen($toutrix_access_token)>0) {
+//echo "Set access token : " . $toutrix_access_token . "<br/>";
+      $toutrix_adserver->setAccessToken($toutrix_access_token, $toutrix_user_id);
+      return true;
+    } elseif (strlen($toutrix_username)>0 && strlen($toutrix_password)>0) {
+      // Si nous n'avons pas d'access token, ca nous en prend un
+      if ($toutrix_adserver->login($toutrix_username, $toutrix_password)) {
+         echo "New access Token is now: " . $toutrix_adserver->access_token . "<br/>";
+         update_option( "ad_toutrix_access_token", $toutrix_adserver->access_token );
+         update_option( "ad_toutrix_user_id", $toutrix_adserver->userId );
+//$toutrix_access_token2  = get_option("ad_toutrix_access_token");
+//echo "Updated to " . $toutrix_access_token2 . "<br/>";
+         return true;
+       } else {
 ?>
 <div class="updated"><p><strong><?php _e('Cant connect with these credentials.', 'menu-test' ); ?></strong></p></div>
 <?php
-             update_option( "ad_toutrix_access_token", '' );
-           }
-        //}
+         update_option( "ad_toutrix_access_token", '' );
+       }
     }
     return false;
 }
@@ -129,11 +136,33 @@ function mt_toutrix_stats_page() {
   toutrix_site_show_stats(null);
 }
 
+function toutrix_connect() {
+  global $user;
+  global $toutrix_adserver;
+
+  if (toutrix_get_token()) {
+    $user = $toutrix_adserver->get_user();
+//var_dump($user); echo "<br>";
+    if ($user->error) {
+      update_option( "ad_toutrix_access_token", '');
+//echo "Getting new token..<br/>";
+      if (!toutrix_get_token()) {
+        echo "TOUTRIX PROBLEM<br/>";
+        die();
+      } else {
+        update_option( "ad_toutrix_access_token", $toutrix_adserver->access_token );
+//echo "Saving new address token to : " . $toutrix_adserver->access_token . "<br/>";
+      }
+      $user = $toutrix_adserver->get_user();
+   }
+//var_dump($user);
+  }
+}
+
 function echo_funds_available() {
   global $user;
   global $toutrix_adserver;
 
   $user = $toutrix_adserver->get_user();
-
   echo "<font size='5'><b>Funds available: </b> <font color='green'>$" . number_format($user->funds,2) . "</font></font><br/>";
 }
