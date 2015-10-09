@@ -7,17 +7,32 @@ class toutrix_table extends WP_List_Table {
     function sort_data() {
     }
 
+    function column_adtypeId($item) {
+      switch ($item['adtypeId']) {
+         case 1:
+           return 'PopUnder';
+         case 2:
+           return '300x250';
+         default:
+           return 'Unknown';
+      }
+    }
+
     function column_default($item, $column_name){
         switch($column_name){
             case 'the_status':
                 return $item[$column_name];
             case 'day':
                 return $item[$column_name];
+            case 'domain':
+                return "<a href='http://" . $item[$column_name] . "' target='_blank'>" . $item[$column_name] . "</a>";
             case 'country':
                 return " <img src='" . plugins_url( 'flags/' . strtolower($item[$column_name]) . '.png', __FILE__ ) . "'> " . $item[$column_name];
             case 'nbr_impressions':
                 return "<p align='right'>".number_format($item[$column_name],0)."</p>";
             case 'nbr_clicks':
+                return "<p align='right'>".$item[$column_name]."</p>";
+            case 'nbr_leads':
                 return "<p align='right'>".$item[$column_name]."</p>";
             case 'cost':
                 return "<p align='right'>$" . number_format($item[$column_name],2)."</p>";
@@ -386,3 +401,48 @@ class stats_per_countries_table extends toutrix_table {
 
 }
 
+
+class toutrix_marketplace_table extends toutrix_table {
+    function __construct(){
+        global $status, $page;
+                
+        //Set parent defaults
+        parent::__construct( array(
+            'singular'  => 'market',     //singular name of the listed records
+            'plural'    => 'markets',    //plural name of the listed records
+            'ajax'      => false        //does this table support ajax?
+        ) );      
+    }
+
+    function set_datas($stats) {
+        $arr = array();
+        foreach ($stats as $domain => $stat) {
+          $new_crea = array('domain'=>$stat->domain, 'adtypeId'=>$stat->adtypeId, 'nbr_impressions' => $stat->nbr_impressions, 'nbr_clicks' => $stat->nbr_clics, 'nbr_leads'=>$stat->nbr_leads);
+          $arr[] = $new_crea;
+        }
+        $this->datas = $arr;
+    }
+
+    function get_columns(){
+        $columns = array(
+            'domain'     => 'Domain',
+            'adtypeId' => 'Ad type',
+            'nbr_impressions'     => '<p align=\'right\'>Impressions</p>',
+            'nbr_clicks'     => '<p align=\'right\'>Clicks</p>',
+            'nbr_leads'     => '<p align=\'right\'>Leads</p>',
+        );
+        return $columns;
+    }
+
+    function column_title($item){
+        
+        //Build row actions
+        $actions = array(
+        );
+        
+        //Return the title contents
+        return sprintf('%1$s',
+            /*$1%s*/ $item['country']
+        );
+    }
+}

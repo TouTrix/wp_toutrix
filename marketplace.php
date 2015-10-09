@@ -31,19 +31,10 @@ function mt_toutrix_marketplace_page() {
 
 usort($marketplace,'VolumeSort');
 
-?>
-<table class="wp-list-table widefat fixed striped posts">
-  <tr><th>Domain</th><th>Ad Type</th><th>Last 24 hours impressions</th><th>Last 24 hours clicks</th><th>Last 24 hours leads</th></tr>
-<?php
-      //var_dump($marketplace);
-      foreach ($marketplace as $place) {
-        if ($place->channelId == $zone->channelId)
-          echo "<tr><td>" . $place->domain . "</td><td>" . get_adtype_name($place->adtypeId) . "</td><td><p align='right'>" . $place->nbr_impressions . "</p></td><td><p align='right'>" . $place->nbr_clics . "</p></td><td><p align='right'>" . $place->nbr_leads . "</p></td></tr>";
-      }
+      $table = new toutrix_marketplace_table();
+      $table->set_datas($marketplace);
+      $table->prepare_items();
+      $table->display();
     }
-?>
-</table>
-
-<?php
 }
 ?>
