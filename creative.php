@@ -133,6 +133,13 @@ function toutrix_creative_form($creative) {
 <input type="submit" name="b" class="button-primary" value="<?php esc_attr_e('Save Changes') ?>" />
 </p>
 </form>
+
+<h2>Macros</h2>
+
+Macros are all between %<br/>
+<br/>
+%clickId% - Create a unique clickId<br/>
+
 <script type="text/javascript">
 jQuery(document).ready( function () { 
   updateForm();
