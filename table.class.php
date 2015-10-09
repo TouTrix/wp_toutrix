@@ -14,7 +14,7 @@ class toutrix_table extends WP_List_Table {
             case 'day':
                 return $item[$column_name];
             case 'country':
-                return $item[$column_name] . " <img src='" . plugins_url( 'flags/' . strtolower($item[$column_name]) . '.png', __FILE__ ) . "'>";
+                return " <img src='" . plugins_url( 'flags/' . strtolower($item[$column_name]) . '.png', __FILE__ ) . "'> " . $item[$column_name];
             case 'nbr_impressions':
                 return "<p align='right'>".number_format($item[$column_name],0)."</p>";
             case 'nbr_clicks':
@@ -23,6 +23,11 @@ class toutrix_table extends WP_List_Table {
                 return "<p align='right'>$" . number_format($item[$column_name],2)."</p>";
             case 'revenu':
                 return "<p align='right'>$" . number_format($item[$column_name],2)."</p>";
+            case 'ecpm':
+                if ($item[$column_name]<> 'N/A')
+                  return "<p align='right'>$" . number_format($item[$column_name],2)."</p>";
+                else
+                  return "<p align='right'>" . $item[$column_name] . "</p>";
 
             default:
                 return print_r($item,true); //Show the whole array for troubleshooting purposes
@@ -234,8 +239,13 @@ class stats_per_country_table extends toutrix_table {
 
     function set_datas($stats) {
         $arr = array();
+//var_dump($stats);
         foreach ($stats as $country => $stat) {
           $new_crea = array('country'=>$country, 'nbr_impressions' => $stat->nbr_impressions + $stat->own_impressions, 'nbr_clicks' => $stat->nbr_clicks + $stat->own_clicks, 'cost'=>$stat->cost);
+          $ecpm = 'N/A';
+          if ($stat->cost > 0 and $stat->nbr_impressions > 0)
+            $ecpm = $stat->cost / $stat->nbr_impressions * 1000;
+          $new_crea['ecpm'] = $ecpm;
           $arr[] = $new_crea;
         }
         $this->datas = $arr;
@@ -244,9 +254,10 @@ class stats_per_country_table extends toutrix_table {
     function get_columns(){
         $columns = array(
             'country'     => 'Country',
-            'nbr_impressions'     => 'Impressions',
-            'nbr_clicks'     => 'Clicks',
-            'cost'     => 'Cost',
+            'nbr_impressions'     => '<p align=\'right\'>Impressions</p>',
+            'nbr_clicks'     => '<p align=\'right\'>Clicks</p>',
+            'ecpm'     => '<p align=\'right\'>eCPM</p>',
+            'cost'     => '<p align=\'right\'>Cost</p>'
         );
         return $columns;
     }
@@ -270,6 +281,10 @@ class stats_revenu_per_country_table extends stats_per_country_table {
         $arr = array();
         foreach ($stats as $country => $stat) {
           $new_crea = array('country'=>$country, 'nbr_impressions' => $stat->nbr_impressions + $stat->own_impressions, 'nbr_clicks' => $stat->nbr_clicks + $stat->own_clicks, 'revenu'=>$stat->revenu);
+          $ecpm = 'N/A';
+          if ($stat->revenu > 0 and $stat->nbr_impressions > 0)
+            $ecpm = $stat->revenu / $stat->nbr_impressions * 1000;
+          $new_crea['ecpm'] = $ecpm;
           $arr[] = $new_crea;
         }
         $this->datas = $arr;
@@ -278,9 +293,10 @@ class stats_revenu_per_country_table extends stats_per_country_table {
     function get_columns(){
         $columns = array(
             'country'     => 'Country',
-            'nbr_impressions'     => 'Impressions',
-            'nbr_clicks'     => 'Clicks',
-            'revenu'     => 'Revenu',
+            'nbr_impressions'     => '<p align=\'right\'>Impressions</p>',
+            'nbr_clicks'     => '<p align=\'right\'>Clicks</p>',
+            'ecpm'     => '<p align=\'right\'>eCPM</p>',
+            'revenu'     => '<p align=\'right\'>Revenu</p>',
         );
         return $columns;
     }
@@ -303,9 +319,10 @@ class stats_per_day_table extends toutrix_table {
     function get_columns(){
         $columns = array(
             'day'     => 'Day',
-            'nbr_impressions'     => 'Impressions',
-            'nbr_clicks'     => 'Clicks',
-            'cost'     => 'Cost',
+            'nbr_impressions'     => '<p align=\'right\'>Impressions</p>',
+            'nbr_clicks'     => '<p align=\'right\'>Clicks</p>',
+            'ecpm'     => '<p align=\'right\'>eCPM</p>',
+            'cost'     => '<p align=\'right\'>Cost</p>',
         );
         return $columns;
     }
@@ -314,6 +331,10 @@ class stats_per_day_table extends toutrix_table {
         $arr = array();
         foreach ($stats as $day => $stat) {
           $new_crea = array('day'=>$day, 'nbr_impressions' => $stat->nbr_impressions + $stat->own_impressions, 'nbr_clicks' => $stat->nbr_clicks + $stat->own_clicks, 'cost'=>$stat->cost);
+          $ecpm = 'N/A';
+          if ($stat->cost > 0 and $stat->nbr_impressions > 0)
+            $ecpm = $stat->cost / $stat->nbr_impressions * 1000;
+          $new_crea['ecpm'] = $ecpm;
           $arr[] = $new_crea;
         }
         $this->datas = $arr;
@@ -326,9 +347,10 @@ class stats_revenue_per_day_table extends stats_per_day_table {
     function get_columns(){
         $columns = array(
             'day'     => 'Day',
-            'nbr_impressions'     => 'Impressions',
-            'nbr_clicks'     => 'Clicks',
-            'revenu'     => 'Revenu',
+            'nbr_impressions'     => '<p align=\'right\'>Impressions</p>',
+            'nbr_clicks'     => '<p align=\'right\'>Clicks</p>',
+            'ecpm'     => '<p align=\'right\'>eCPM</p>',
+            'revenu'     => '<p align=\'right\'>Revenu</p>',
         );
         return $columns;
     }
@@ -337,6 +359,10 @@ class stats_revenue_per_day_table extends stats_per_day_table {
         $arr = array();
         foreach ($stats as $day => $stat) {
           $new_crea = array('day'=>$day, 'nbr_impressions' => $stat->nbr_impressions + $stat->own_impressions, 'nbr_clicks' => $stat->nbr_clicks + $stat->own_clicks, 'revenu'=>$stat->revenu);
+          $ecpm = 'N/A';
+          if ($stat->revenu > 0 and $stat->nbr_impressions > 0)
+            $ecpm = $stat->revenu / $stat->nbr_impressions * 1000;
+          $new_crea['ecpm'] = $ecpm;
           $arr[] = $new_crea;
         }
         $this->datas = $arr;
