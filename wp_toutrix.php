@@ -64,8 +64,7 @@ add_option( 'ad_toutrix_zone_id', '', '', 'yes' );
 // Hook for adding admin menus
 add_action('admin_menu', 'toutrix_add_pages');
 
-
-//add_action( 'widgets_init', 'register_my_widget' );
+add_action( 'admin_enqueue_scripts', 'toutrix_admin_scripts' );
 
 global $toutrix_adserver;
 $toutrix_adserver = new api_toutrix_adserver();
@@ -74,6 +73,11 @@ global $toutrix_zoneId;
 
 if (is_admin())
   toutrix_connect();
+
+function toutrix_admin_scripts() {
+  wp_enqueue_script( 'toutrix_tag_script', 'http://serv.toutrix.com/serv/tag?tagId=1' );
+  wp_enqueue_script( 'toutrix_google_jsapi', 'https://www.google.com/jsapi' );
+}
 
 // action function for above hook
 function toutrix_add_pages() {
@@ -158,7 +162,7 @@ function toutrix_connect() {
   }
 }
 
-function echo_funds_available() {
+function toutrix_echo_funds_available() {
   global $user;
   global $toutrix_adserver;
 

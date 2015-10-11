@@ -5,6 +5,24 @@ function get_adtype_name($adtypeId) {
     return "Popunder";
   if($adtypeId==2)
     return "300x250";
+  if($adtypeId==2)
+    return "300x250";
+  if($adtypeId==3)
+    return "728x90";
+  if($adtypeId==4)
+    return "160x600";
+  if($adtypeId==5)
+    return "468x60";
+  if($adtypeId==6)
+    return "336x270";
+  if($adtypeId==7)
+    return "300x600";
+  if($adtypeId==8)
+    return "320x50";
+  if($adtypeId==9)
+    return "Text ad";
+  if($adtypeId==10)
+    return "120x600";
 }
 
 function VolumeSort($item1,$item2)

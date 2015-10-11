@@ -26,9 +26,6 @@ function mt_toutrix_page() {
     exit;
   }
 
-  echo "<script src='http://serv.toutrix.com/serv/tag?tagId=1'></script>";
-
-
     $tabs = array( 'homepage' => 'Homepage', 'setting' => 'Settings', 'coming' => 'Coming soon', 'support' => 'Support');
     echo '<div id="icon-themes" class="icon32"><br></div>';
     echo '<h2 class="nav-tab-wrapper">';
@@ -45,7 +42,7 @@ function mt_toutrix_page() {
 
    if ($cur_tab == 'homepage') {
     echo "Current version: " . toutrix_plugin_version . "<br/><br/>";
-    echo_funds_available();
+    toutrix_echo_funds_available();
 ?>
 <h2>Publishers</h2>
 

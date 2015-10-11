@@ -7,10 +7,10 @@ function toutrix_campaign_show_stats($campaign) {
   toutrix_get_token();
 
   $fields = new stdClass();
-  $fields->id = $_GET['campaignId'];
+  $fields->id = intval($_GET['campaignId']);
   if (isset($_GET['startDate'])) {
-    $fields->startDate = $_GET['startDate'];
-    $fields->endDate = $_GET['endDate'];
+    $fields->startDate = sanitize_text_field($_GET['startDate']);
+    $fields->endDate = sanitize_text_field($_GET['endDate']);
   } else {
     $fields->startDate = date("m/01/Y");
     $fields->endDate = date("m/t/Y");
@@ -21,8 +21,9 @@ function toutrix_campaign_show_stats($campaign) {
 
 <form method='GET'>
 <input type='hidden' name='page' value='mt_toutrix_campaign'>
-<input type='hidden' name='campaignId' value='<?php echo $_GET['campaignId'];?>'>
-<input type='hidden' name='action' value='stats'>
+<input type='hidden' name='campaignId' value='<?php echo intval($_GET['campaignId']);?>'>
+<input type='hidden' name='action' value='edit'>
+<input type='hidden' name='tab' value='stats'>
 Start date: <input type='text' name='startDate' value='<?php echo $fields->startDate; ?>'><br/>
 End date: <input type='text' name='endDate' value='<?php echo $fields->endDate; ?>'><br/>
 <input type='submit' name='b' value='Go'><br/>
@@ -31,14 +32,14 @@ End date: <input type='text' name='endDate' value='<?php echo $fields->endDate; 
 <?php
   $cur_tab = 'homepage';	
   if (isset($_GET['tab_stat']))
-    $cur_tab = $_GET['tab_stat'];
+    $cur_tab = sanitize_text_field($_GET['tab_stat']);
 
   $tabs = array( 'homepage' => 'Per day', 'per_country' => 'Per country');
   echo '<div id="icon-themes" class="icon32"><br></div>';
   echo '<h2 class="nav-tab-wrapper">';
   foreach( $tabs as $tab => $name ){
       $class = ( $tab == $cur_tab ) ? ' nav-tab-active' : '';
-      echo "<a class='nav-tab$class' href='?page=mt_toutrix_campaign&campaignId=" . $_GET['campaignId'] . "&action=edit&tab=stats&tab_stat=$tab&startDate=$fields->startDate&endDate=$fields->endDate'>$name</a>";
+      echo "<a class='nav-tab$class' href='?page=mt_toutrix_campaign&campaignId=" . intval($_GET['campaignId']) . "&action=edit&tab=stats&tab_stat=$tab&startDate=$fields->startDate&endDate=$fields->endDate'>$name</a>";
   }
   echo '</h2>';
 ?>
@@ -54,7 +55,6 @@ End date: <input type='text' name='endDate' value='<?php echo $fields->endDate; 
     $table->set_datas($stats->stats->per_day);
     $table->prepare_items();
 ?>
-    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
     <script type="text/javascript">
       google.load("visualization", "1.1", {packages:["bar"]});
       google.setOnLoadCallback(drawChart);
@@ -86,7 +86,6 @@ End date: <input type='text' name='endDate' value='<?php echo $fields->endDate; 
     $table->set_datas($stats->stats->per_country);
     $table->prepare_items();
 ?>
-    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
     <script type="text/javascript">
       google.load("visualization", "1", {packages:["geochart"]});
       google.setOnLoadCallback(drawRegionsMap);
@@ -180,7 +179,7 @@ function mt_toutrix_campaign_page() {
 <div class='wrap'>
 <h1>Campaigns <a href="?page=mt_toutrix_campaign&action=new" class="page-title-action">Add New</a></h1>
 <?php
-    echo_funds_available();
+    toutrix_echo_funds_available();
 
     $table = new campaigns_table();
     $table->prepare_items();

@@ -27,7 +27,7 @@ End date: <input type='text' name='endDate' value='<?php echo $fields->endDate; 
 <input type='submit' name='b' value='Go'><br/>
 </form>
 <?php
-$cur_tab = 'homepage';	
+  $cur_tab = 'homepage';	
   if (isset($_GET['tab']))
     $cur_tab = $_GET['tab'];
 
