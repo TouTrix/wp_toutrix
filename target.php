@@ -4,6 +4,14 @@ defined( 'ABSPATH' ) or die( 'No script kiddies please!' );
 global $_browsers;
 global $_oses;
 
+if (is_admin()) {
+  wp_enqueue_style( 'jquery-tag-it', plugins_url( 'css/jquery.tagit.css', __FILE__ ) );
+  wp_enqueue_style( 'jquery-ui', 'http://ajax.googleapis.com/ajax/libs/jqueryui/1/themes/flick/jquery-ui.css' );
+
+  wp_enqueue_script( 'jquery-ui', 'https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js');
+  wp_enqueue_script( 'jquery-tag-it', plugins_url( 'js/tag-it.js', __FILE__ ));
+}
+
 $_browsers = array(
   'ie' => 'Internet Explorer',
   'firefox' => 'Firefox',
@@ -20,6 +28,7 @@ $_oses = array(
 
 function get_form_target() {
   $fields = new stdclass();
+
   if (!empty($_POST['id']))
     $fields->id = $_POST['id'];
   if (isset($_GET['flightId'])) {
@@ -27,6 +36,10 @@ function get_form_target() {
   } else {
     $fields->campaignId = $_GET['campaignId'];
   }
+  $fields->isExcept = false;
+  if ($_POST['exception']=='on')
+    $fields->isExcept = true;
+
   $fields->target_type = $_POST['target_type'];
   if ($fields->target_type == 'country') {
     $countries = array();
@@ -66,10 +79,15 @@ function get_form_target() {
     $fields->target_value = $_POST['true_false'];
   } else if ($fields->target_type == 'is_carrier') {
     $fields->target_value = $_POST['true_false'];
+  } else if ($fields->target_type == 'domain') {
+    $arr = explode(",",$_POST['domains']);
+    //print_r($arr);
+    $fields->target_value = json_encode($arr);
+//echo $fields->target_value;
+//die();
   } else {
-    $fields->target_value = $_POST['target_value']; 
+    $fields->target_value = $_POST['target_value'];
   }
-  $fields->isExcept = false;
   stripslashes_deep( $fields );
   return $fields;
 }
@@ -111,7 +129,6 @@ function toutrix_show_target_form($target) {
   global $_languages;
   global $_browsers;
   global $_oses;
-
 ?>
 <form method='POST'>
 <input type='hidden' name='target' value='yes'>
@@ -131,6 +148,7 @@ Target type: <br/>
   <option value='is_mobile' <?php if ($target->target_type == 'is_mobile') echo "selected"; ?>>Is mobile</option>
   <option value='is_carrier' <?php if ($target->target_type == 'is_carrier') echo "selected"; ?>>Is Carrier 3G</option>
   <option value='channelId' <?php if ($target->target_type == 'channelId') echo "selected"; ?>>By channel</option>
+  <option value='domain' <?php if ($target->target_type == 'domain') echo "selected"; ?>>By domains</option>
   <option value='language' <?php if ($target->target_type == 'language') echo "selected"; ?>>By user language</option>
   <option value='browser' <?php if ($target->target_type == 'browser') echo "selected"; ?>>By user browser</option>
   <option value='os' <?php if ($target->target_type == 'os') echo "selected"; ?>>By user OS</option>
@@ -141,6 +159,11 @@ Target type: <br/>
 Target value: <br/>
 <input type='text' name='target_value' value="<?php echo $target->target_value; ?>"><br/>
 </div>
+<div id='target_domains'>
+Domains: <br/>
+<input id='domains' type='text' name='domains' value=""><br/>
+</div>
+
 <div id='target_countries'>
 <?php 
 foreach ($_countries as $country_code => $country_name) {
@@ -191,6 +214,8 @@ foreach ($channels as $channel) {
 </div>
 <script type="text/javascript">
 jQuery(document).ready( function () { 
+  jQuery('#domains').tagit();
+
   updateForm();
 
   jQuery('#sel_target_type').change(function() {
@@ -207,6 +232,7 @@ jQuery(document).ready( function () {
       jQuery("#target_true_false").hide();
       jQuery("#target_browser").hide();
       jQuery("#target_os").hide();
+      jQuery("#target_domains").hide();
     } else if (target_type == 'channelId') {
       jQuery("#target_table_value").hide();
       jQuery("#target_countries").hide();
@@ -215,6 +241,16 @@ jQuery(document).ready( function () {
       jQuery("#target_true_false").hide();
       jQuery("#target_browser").hide();
       jQuery("#target_os").hide();
+      jQuery("#target_domains").hide();
+    } else if (target_type == 'domain') {
+      jQuery("#target_table_value").hide();
+      jQuery("#target_countries").hide();
+      jQuery("#target_channels").hide();
+      jQuery("#target_language").hide();
+      jQuery("#target_true_false").hide();
+      jQuery("#target_browser").hide();
+      jQuery("#target_os").hide();
+      jQuery("#target_domains").show();
     } else if (target_type == 'language') {
       jQuery("#target_table_value").hide();
       jQuery("#target_countries").hide();
@@ -223,6 +259,7 @@ jQuery(document).ready( function () {
       jQuery("#target_true_false").hide();
       jQuery("#target_browser").hide();
       jQuery("#target_os").hide();
+      jQuery("#target_domains").hide();
     } else if (target_type == 'browser') {
       jQuery("#target_table_value").hide();
       jQuery("#target_countries").hide();
@@ -231,6 +268,7 @@ jQuery(document).ready( function () {
       jQuery("#target_true_false").hide();
       jQuery("#target_browser").show();
       jQuery("#target_os").hide();
+      jQuery("#target_domains").hide();
     } else if (target_type == 'os') {
       jQuery("#target_table_value").hide();
       jQuery("#target_countries").hide();
@@ -239,6 +277,7 @@ jQuery(document).ready( function () {
       jQuery("#target_true_false").hide();
       jQuery("#target_browser").hide();
       jQuery("#target_os").show();
+      jQuery("#target_domains").hide();
     } else if (target_type == 'is_mobile' || target_type == 'is_carrier') {
       jQuery("#target_table_value").hide();
       jQuery("#target_countries").hide();
@@ -247,6 +286,7 @@ jQuery(document).ready( function () {
       jQuery("#target_true_false").show();
       jQuery("#target_browser").hide();
       jQuery("#target_os").hide();
+      jQuery("#target_domains").hide();
     } else {
       jQuery("#target_table_value").show();
       jQuery("#target_countries").hide();
@@ -255,6 +295,7 @@ jQuery(document).ready( function () {
       jQuery("#target_true_false").hide();
       jQuery("#target_browser").hide();
       jQuery("#target_os").hide();
+      jQuery("#target_domains").hide();
     }
   }
 });
@@ -289,7 +330,10 @@ class targets_table extends WP_List_Table {
     function set_datas($stats) {
         $arr = array();
         foreach ($stats as $target) {
-          $new_crea = array('id'=>$target->id, 'isExcept'=>$target->isExcept, 'target_type' => $target->target_type, 'target_value' => $target->target_value);
+          $target_type = $target->target_type;
+          if ($target->isExcept==1)
+            $target_type = "Not " . $target_type;
+          $new_crea = array('id'=>$target->id, 'isExcept'=>$target->isExcept, 'target_type' => $target_type, 'target_value' => $target->target_value);
           $arr[] = $new_crea;
         }
         $this->datas = $arr;
