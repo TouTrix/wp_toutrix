@@ -146,7 +146,7 @@ jQuery(document).ready( function () {
 
   function updateForm() {
     var adtypeId = jQuery('#adtypeId').find(":selected").val();
-    if (adtypeId == 1) {
+    if (adtypeId == 1 || adtypeId == 11) {
       jQuery("#url_row").show();
       jQuery("#banner_row").hide();
       jQuery("#html_row").hide();

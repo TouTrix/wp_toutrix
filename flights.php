@@ -103,6 +103,9 @@ function toutrix_flight() {
 
   if (isset($_GET['b'])) {
     $flight->Price = $_GET['Price'];
+    $flight->IsActive = 0;
+    if ($_GET['IsActive'] == 'on')
+      $flight->IsActive = 1;
     $flight->MaxPerIp = $_GET['MaxPerIp'];
     $flight = $toutrix_adserver->flight_update($flight);
   }
@@ -140,6 +143,7 @@ function toutrix_flight() {
 <input type='hidden' name='page' value='mt_toutrix_campaign'>
 <input type='hidden' name='campaignId' value='<?php echo $_GET['campaignId']; ?>'>
 <input type='hidden' name='flightId' value='<?php echo $_GET['flightId']; ?>'>
+Enabled: <input type='checkbox' name='IsActive' <?php if ($flight->IsActive == 1) echo "checked"; ?>><br/>
 Price: $<input type='text' name='Price' value='<?php echo $flight->Price; ?>'> (CPM price)<br/>
 Max Per IP: <input type='text' name='MaxPerIp' value='<?php echo $flight->MaxPerIp; ?>'><br/>
 <input type='submit' name='b' value='Save'>

@@ -206,7 +206,9 @@ function mt_toutrix_campaign_page() {
       $fields->Price = $_POST['Price'];
       $fields->MaxPerIp = $_POST['MaxPerIp'];
       $fields->IsDeleted = false;
-      $fields->IsActive = true;
+      $fields->IsActive = false;
+      if ($_POST['IsActive'] == 'on')
+        $fields->IsActive = true;
       $fields->IsUnlimited = true;
       $fields->NoEndDate = true;
       stripslashes_deep( $fields );
