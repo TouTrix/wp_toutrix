@@ -20,7 +20,15 @@ function toutrix_settings_page() {
     $toutrix_website_id  = get_option("ad_toutrix_website_id");
     $toutrix_zone_id  = get_option("ad_toutrix_zone_id");
 
-    if( isset($_POST[ "signup" ]) && $_POST[ "signup" ] == 'Y' ) {
+    if( isset($_POST["wp_config"]) && $_POST[ "wp_config" ] == 'Y' ) {
+        $is_skimmed = 0;
+        if ($_POST['is_skimmed']=='on')
+          $is_skimmed = 1;
+        update_option( "ad_toutrix_skimmed_enabled", $is_skimmed);
+?>
+<div class="updated"><p><strong><?php _e($user->error->message, 'menu-test' ); ?></strong></p></div>
+<?php
+    } elseif( isset($_POST[ "signup" ]) && $_POST[ "signup" ] == 'Y' ) {
         update_option( "ad_toutrix_access_token", "" );
         update_option( "ad_toutrix_website_id", "" );
         update_option( "ad_toutrix_zone_id", "" );
@@ -159,8 +167,26 @@ Fill-up the form to create your account now.<br/>
        }
     }
 
-    //echo_funds_available();
+  $is_skimmed = get_option("ad_toutrix_skimmed_enabled");
 ?>
+<div class='wrap'>
+<h1>AdServer setting</h1>
+<form name="form_setting" method="POST">
+<input type="hidden" name="wp_config" value="Y">
+<!--<table class="form-table">-->
+<table class="form-table">
+<tr>
+<td><input type="checkbox" name="is_skimmed" <?php if ($is_skimmed == 1) echo "checked"; ?>></td>
+<td><?php _e("Skimmed some traffic", 'toutrix' ); ?></td>
+</tr>
+
+</table>
+<p class="submit">
+<input type="submit" name="Submit" class="button-primary" value="<?php esc_attr_e('Save Changes') ?>" />
+</p>
+</form>
+</div>
+
 <h1>Connect with your TouTrix account</h2>
 <?php
     echo '<div class="wrap">';

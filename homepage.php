@@ -56,7 +56,6 @@ To buy traffic, you need to make a deposit first, create a creative, create a ca
    } elseif ($cur_tab == 'coming') {
      coming_soon();
    } else {
-
      toutrix_settings_page();
    }
 }
