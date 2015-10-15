@@ -1,6 +1,8 @@
 <?
 function toutrix_site_show_stats($site) {
   global $toutrix_adserver;
+  global $_countries;
+
   toutrix_get_token();
 
   $toutrix_website_id  = get_option("ad_toutrix_website_id");
@@ -24,64 +26,90 @@ Start date: <input type='text' name='startDate' value='<?php echo $fields->start
 End date: <input type='text' name='endDate' value='<?php echo $fields->endDate; ?>'><br/>
 <input type='submit' name='b' value='Go'><br/>
 </form>
-
-<h2>Per day</h2>
 <?php
-  //var_dump($stats->stats);
-  //echo "<hr/>";
-  $stats_per_day = $stats->stats->per_day;
-?>
-<div class="CSSTableGenerator">
-<table>
-  <tr><th>Day</th><th>Nbr. impressions</th><th>Nbr. clicks</th><th>Own impressions</th><th>Own clicks</th><th>Revenu</th></tr>
-<?php
-  $total_nbr_impressions = 0;
-  $total_nbr_clicks = 0;
-  $total_own_clicks = 0;
-  $total_own_impressions = 0;
-  $total_cost = 0;
-  foreach ($stats_per_day as $day => $country) {
-    $total_nbr_impressions += $country->nbr_impressions;
-    $total_nbr_clicks += $country->nbr_clicks;
-    $total_own_clicks += $country->own_clicks;
-    $total_own_impressions += $country->own_impressions;
-    $total_cost += $country->cost;
+  $cur_tab = 'homepage';	
+  if (isset($_GET['tab']))
+    $cur_tab = $_GET['tab'];
 
-    echo "  <tr><td>" . $day . "</td><td>" . $country->nbr_impressions . "</td><td>" . $country->nbr_clicks . "</td><td>" . $country->own_impressions . "</td><td>" . $country->own_clicks . "</td><td>$" . number_format($country->cost,4) . "</td></tr>";
+  $tabs = array( 'homepage' => 'Per day', 'per_country' => 'Per country');
+  echo '<div id="icon-themes" class="icon32"><br></div>';
+  echo '<h2 class="nav-tab-wrapper">';
+  foreach( $tabs as $tab => $name ){
+      $class = ( $tab == $cur_tab ) ? ' nav-tab-active' : '';
+      echo "<a class='nav-tab$class' href='?page=mt_toutrix_stats_page&tab=$tab&startDate=$fields->startDate&endDate=$fields->endDate'>$name</a>";
   }
-  echo "  <tr><td>Total:</td><td>" . $total_nbr_impressions . "</td><td>" . $total_nbr_clicks . "</td><td>" . $total_own_impressions . "</td><td>" . $total_own_clicks . "</td><td>$" . number_format($total_cost,4) . "</td></tr>";
-?>
-</table>
-</div>
+  echo '</h2>';
 
-<h2>Per country</h2>
-<?php
-  //var_dump($stats->stats);
-  //echo "<hr/>";
-  $stats_per_day = $stats->stats->per_country;
-?>
-<div class="CSSTableGenerator">
-<table>
-  <tr><th>Country</th><th>Nbr. impressions</th><th>Nbr. clicks</th><th>Own impressions</th><th>Own clicks</th><th>Revenu</th></tr>
-<?php
-  $total_nbr_impressions = 0;
-  $total_nbr_clicks = 0;
-  $total_own_clicks = 0;
-  $total_own_impressions = 0;
-  $total_cost = 0;
-  foreach ($stats_per_day as $country_code => $country) {
-    $total_nbr_impressions += $country->nbr_impressions;
-    $total_nbr_clicks += $country->nbr_clicks;
-    $total_own_clicks += $country->own_clicks;
-    $total_own_impressions += $country->own_impressions;
-    $total_cost += $country->cost;
+  if ($cur_tab == 'homepage') {
+    //var_dump($stats->stats);
+    //echo "<hr/>";
+    $stats_per_day = $stats->stats->per_day;
+//var_dump($stats_per_day);
 
-    echo "  <tr><td>" .$country_code . " <img src='" . plugins_url( 'flags/' . strtolower($country_code) . '.png', __FILE__ ) . "'></td><td>" . $country->nbr_impressions . "</td><td>" . $country->nbr_clicks . "</td><td>" . $country->own_impressions . "</td><td>" . $country->own_clicks . "</td><td>$" . number_format($country->cost,4) . "</td></tr>";
+    $table = new stats_revenue_per_day_table();
+    $table->set_datas($stats->stats->per_day);
+    $table->prepare_items();
+?>
+<div id="day_chart" style="width: 900px; height: 500px;"></div>
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script type="text/javascript">
+      google.load("visualization", "1.1", {packages:["bar"]});
+      google.setOnLoadCallback(drawChart);
+      function drawChart() {
+        var data = google.visualization.arrayToDataTable([
+          ['Day', 'Impressions', 'Clicks', 'Profit'],
+<?php foreach ($stats->stats->per_day as $day => $stat) {
+ echo "['" . $day . "', " . $stat->nbr_impressions .", " . $stat->nbr_clicks .", " . $stat->revenu ."],";
+}
+?>
+        ]);
+
+        var options = {
+          chart: {
+            title: 'Day Performance',
+            //subtitle: 'Sales, Expenses, and Profit: 2014-2017',
+          }
+        };
+
+        var chart = new google.charts.Bar(document.getElementById('day_chart'));
+
+        chart.draw(data, options);
+      }
+    </script>
+<?php
+    $table->display();
+  } else {
+    $table = new stats_revenu_per_country_table();
+    $table->set_datas($stats->stats->per_country);
+    $table->prepare_items();
+?>
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script type="text/javascript">
+      google.load("visualization", "1", {packages:["geochart"]});
+      google.setOnLoadCallback(drawRegionsMap);
+
+      function drawRegionsMap() {
+
+        var data = google.visualization.arrayToDataTable([
+          ['Country', 'Popularity'],
+<?php
+//var_dump($stats->stats->per_country);
+foreach ($stats->stats->per_country as $country_code => $stat) {
+  echo "['" . str_replace("'", "\'", $_countries[$country_code]) . "', " . $stat->nbr_impressions ."],";
+}
+?>
+        ]);
+
+        var options = {};
+
+        var chart = new google.visualization.GeoChart(document.getElementById('regions_div'));
+
+        chart.draw(data, options);
+      }
+    </script>
+<div id="regions_div" style="width: 900px; height: 500px;"></div>
+<?php
+    $table->display();
   }
-  echo "  <tr><td>Total:</td><td>" . $total_nbr_impressions . "</td><td>" . $total_nbr_clicks . "</td><td>" . $total_own_impressions . "</td><td>" . $total_own_clicks . "</td><td>$" . number_format($total_cost,4) . "</td></tr>";
-?>
-</table>
-</div>
-<?php
 }
 ?>

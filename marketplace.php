@@ -5,6 +5,30 @@ function get_adtype_name($adtypeId) {
     return "Popunder";
   if($adtypeId==2)
     return "300x250";
+  if($adtypeId==2)
+    return "300x250";
+  if($adtypeId==3)
+    return "728x90";
+  if($adtypeId==4)
+    return "160x600";
+  if($adtypeId==5)
+    return "468x60";
+  if($adtypeId==6)
+    return "336x270";
+  if($adtypeId==7)
+    return "300x600";
+  if($adtypeId==8)
+    return "320x50";
+  if($adtypeId==9)
+    return "Text ad";
+  if($adtypeId==10)
+    return "120x600";
+}
+
+function VolumeSort($item1,$item2)
+{
+    if ($item1->nbr_impressions == $item2->nbr_impressions) return 0;
+    return ($item1->nbr_impressions < $item2->nbr_impressions) ? 1 : -1;
 }
 
 function mt_toutrix_marketplace_page() {
@@ -20,21 +44,15 @@ function mt_toutrix_marketplace_page() {
 
     if (empty($_GET['subpage'])) {
       echo "<h2>Marketplace</h2>";
+      echo "The volume may be little higher because it's only sold volume.";
       $marketplace = $toutrix_adserver->marketplace_list(null);
-?>
-<div class="CSSTableGenerator">
-<table>
-  <tr><th>Domain</th><th>Ad Type</th><th>Last 24 hours impressions</th><th>Last 24 hours clicks</th><th>Last 24 hours leads</th></tr>
-<?php
-      //var_dump($marketplace);
-      foreach ($marketplace as $place) {
-        if ($place->channelId == $zone->channelId)
-          echo "<tr><td>" . $place->domain . "</td><td>" . get_adtype_name($place->adtypeId) . "</td><td><p align='right'>" . $place->nbr_impressions . "</p></td><td><p align='right'>" . $place->nbr_clics . "</p></td><td><p align='right'>" . $place->nbr_leads . "</p></td></tr>";
-      }
+
+usort($marketplace,'VolumeSort');
+
+      $table = new toutrix_marketplace_table();
+      $table->set_datas($marketplace);
+      $table->prepare_items();
+      $table->display();
     }
-?>
-</table>
-</div>
-<?php
 }
 ?>
