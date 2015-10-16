@@ -49,7 +49,7 @@ function toutrix_settings_page() {
         $user->refererId = intval($_POST[ "refererId" ]);
 //var_dump($adserver);
         $user = $toutrix_adserver->user_create($user);
-        if ($user->error) {
+        if ($user->error && $user->error->status <> 500) {
 ?>
 <div class="updated"><p><strong><?php _e($user->error->message, 'menu-test' ); ?></strong></p></div>
 <?php

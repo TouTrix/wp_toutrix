@@ -81,21 +81,24 @@ function toutrix_admin_scripts() {
 
 // action function for above hook
 function toutrix_add_pages() {
+  global $toutrix_adserver;
     add_menu_page(__('TouTrix','menu-toutrix'), __('TouTrix','wp-toutrix'), 'manage_options', 'mt_toutrix_page-handle', 'mt_toutrix_page');
 
     //add_submenu_page('mt_toutrix_page-handle', __('Settings','wp-toutrix'), __('Settings','wp-toutrix'), 'manage_options', 'toutrix_setting_page', 'toutrix_settings_page');
 
-    add_submenu_page('mt_toutrix_page-handle', __('Stats','wp-toutrix'), __('Stats','wp-toutrix'), 'manage_options', 'mt_toutrix_stats_page', 'mt_toutrix_stats_page');
+    if (strlen($toutrix_adserver->access_token)>0) {
+      add_submenu_page('mt_toutrix_page-handle', __('Stats','wp-toutrix'), __('Stats','wp-toutrix'), 'manage_options', 'mt_toutrix_stats_page', 'mt_toutrix_stats_page');
 
-    add_submenu_page('mt_toutrix_page-handle', __('Creatives','wp-toutrix'), __('Creatives','wp-toutrix'), 'manage_options', 'toutrix_creative', 'toutrix_creative_page');
+      add_submenu_page('mt_toutrix_page-handle', __('Creatives','wp-toutrix'), __('Creatives','wp-toutrix'), 'manage_options', 'toutrix_creative', 'toutrix_creative_page');
 
-    add_submenu_page('mt_toutrix_page-handle', __('Campaigns','wp-toutrix'), __('Campaigns','wp-toutrix'), 'manage_options', 'mt_toutrix_campaign', 'mt_toutrix_campaign_page');
+      add_submenu_page('mt_toutrix_page-handle', __('Campaigns','wp-toutrix'), __('Campaigns','wp-toutrix'), 'manage_options', 'mt_toutrix_campaign', 'mt_toutrix_campaign_page');
 
-    add_submenu_page('mt_toutrix_page-handle', __('Marketplace','wp-toutrix'), __('Marketplace','wp-toutrix'), 'manage_options', 'mt_toutrix_marketplace', 'mt_toutrix_marketplace_page');
+      add_submenu_page('mt_toutrix_page-handle', __('Marketplace','wp-toutrix'), __('Marketplace','wp-toutrix'), 'manage_options', 'mt_toutrix_marketplace', 'mt_toutrix_marketplace_page');
 
-    add_submenu_page('mt_toutrix_page-handle', __('Bank','wp-toutrix'), __('Bank','wp-toutrix'), 'manage_options', 'mt_toutrix_bank', 'mt_toutrix_bank_page');
+      add_submenu_page('mt_toutrix_page-handle', __('Bank','wp-toutrix'), __('Bank','wp-toutrix'), 'manage_options', 'mt_toutrix_bank', 'mt_toutrix_bank_page');
 
-    add_submenu_page('mt_toutrix_page-handle', __('Inventory','wp-toutrix'), __('Inventory','wp-toutrix'), 'manage_options', 'mt_toutrix_inventory', 'mt_toutrix_inventory_page');
+      add_submenu_page('mt_toutrix_page-handle', __('Inventory','wp-toutrix'), __('Inventory','wp-toutrix'), 'manage_options', 'mt_toutrix_inventory', 'mt_toutrix_inventory_page');
+    }
 }
 
 function toutrix_get_channels() {
@@ -145,20 +148,16 @@ function toutrix_connect() {
 
   if (toutrix_get_token()) {
     $user = $toutrix_adserver->get_user();
-//var_dump($user); echo "<br>";
     if ($user->error) {
       update_option( "ad_toutrix_access_token", '');
-//echo "Getting new token..<br/>";
       if (!toutrix_get_token()) {
         echo "TOUTRIX PROBLEM<br/>";
         die();
       } else {
         update_option( "ad_toutrix_access_token", $toutrix_adserver->access_token );
-//echo "Saving new address token to : " . $toutrix_adserver->access_token . "<br/>";
       }
       $user = $toutrix_adserver->get_user();
-   }
-//var_dump($user);
+    }
   }
 }
 
