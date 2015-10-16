@@ -1,4 +1,4 @@
-<?
+<?php
 function toutrix_site_show_stats($site) {
   global $toutrix_adserver;
   global $_countries;
@@ -112,4 +112,4 @@ foreach ($stats->stats->per_country as $country_code => $stat) {
     $table->display();
   }
 }
-?>
+

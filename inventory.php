@@ -1,5 +1,4 @@
 <?php
-
 function mt_toutrix_inventory_page() {
   global $toutrix_adserver;
 
@@ -11,14 +10,13 @@ function mt_toutrix_inventory_page() {
     $new_inv = array('adtypeId'=>$inv->adtypeId,'title'=>$inv->title,'targets'=>$inv->targets, 'Price'=>$inv->Price);
     $inventories[] = $new_inv;
   }
-  //var_dump($inventories);
 
-function PriceSort($item1,$item2)
-{
+  function PriceSort($item1,$item2)
+  {
     if ($item1['Price'] == $item2['Price']) return 0;
     return ($item1['Price'] < $item2['Price']) ? 1 : -1;
-}
-usort($inventories,'PriceSort');
+  }
+  usort($inventories,'PriceSort');
 
 ?>
 <table class="wp-list-table widefat fixed striped posts">
@@ -32,6 +30,24 @@ foreach ($inventories as $num => $inv) {
     $adtype = "PopUnder";
   elseif ($inv["adtypeId"]==2)
     $adtype = "300x250";
+  elseif ($inv["adtypeId"]==3)
+    $adtype = "728x90";
+  elseif ($inv["adtypeId"]==4)
+    $adtype = "160x600";
+  elseif ($inv["adtypeId"]==5)
+    $adtype = "468x60";
+  elseif ($inv["adtypeId"]==6)
+    $adtype = "336x280";
+  elseif ($inv["adtypeId"]==7)
+    $adtype = "300x600";
+  elseif ($inv["adtypeId"]==8)
+    $adtype = "320x50";
+  elseif ($inv["adtypeId"]==9)
+    $adtype = "Text Ad";
+  elseif ($inv["adtypeId"]==10)
+    $adtype = "120x600";
+  elseif ($inv["adtypeId"]==10)
+    $adtype = "Skimmed";
   else
     $adtype = $inv['adtypeId'];
 
@@ -60,6 +76,10 @@ foreach ($inventories as $num => $inv) {
           echo "Adult";
         elseif ($channelId == 3)
           echo "Bad Traffic";
+        elseif ($channelId == 6)
+          echo "Bitcoin";
+        elseif ($channelId == 7)
+          echo "Health";
         else
           echo $channelId;
       }
@@ -75,4 +95,3 @@ foreach ($inventories as $num => $inv) {
 <?php
 }
 
-?>

@@ -138,7 +138,7 @@ function mt_toutrix_campaign_page() {
   global $toutrix_adserver;
   toutrix_get_token();
   
-  if (!empty($_GET['flightId'])) {
+  if (!empty($_GET['flightId']) && $_GET['action'] != 'delete') {
     toutrix_flight();
     return;
   }
@@ -153,8 +153,8 @@ function mt_toutrix_campaign_page() {
 
   if (isset($_GET['removetargetid']) && !isset($_GET['flightId']) && isset($_GET['campaignId'])) {
     $fields = new stdclass();
-    $fields->campaignId = $_GET['campaignId'];
-    $fields->id = $_GET['removetargetid'];
+    $fields->campaignId = intval($_GET['campaignId']);
+    $fields->id = intval($_GET['removetargetid']);
 
     $response = $toutrix_adserver->campaign_targets_delete($fields);
 ?>
@@ -166,7 +166,7 @@ function mt_toutrix_campaign_page() {
     if (!empty($_POST['b'])) {
       $fields = new stdclass();
       $fields->user_id = $adserver->userId;
-      $fields->name = $_POST['name'];
+      $fields->name = sanitize_text_field($_POST['name']);
       $fields->isDeleted = 0;
       $fields->isActive = 1;
       stripslashes_deep( $fields );
@@ -190,36 +190,39 @@ function mt_toutrix_campaign_page() {
   } elseif (!empty($_GET['campaignId'])) {
     if (!empty($_POST['b']) && $_POST['target']=='yes') {
       $fields = get_form_target();
-//var_dump($fields);
-//echo "<br/>";
       $target = $toutrix_adserver->target_create($fields);
-//var_dump($target);
 ?>
 <div class="updated"><p><strong><?php _e('Target added', 'wp-toutrix' ); ?></strong></p></div>
 <?php
     } elseif (!empty($_POST['b']) && $_POST['flight']=='yes') {
       $fields = new stdclass();
       if (!empty($_POST['id']))
-        $fields->id = $_POST['id'];
-      $fields->campaignId = $_POST['campaignId'];
-      $fields->Name = $_POST['Name'];
+        $fields->id = intval($_POST['id']);
+      $fields->campaignId = intval($_POST['campaignId']);
+      $fields->Name = sanitize_text_field($_POST['Name']);
       $fields->Price = $_POST['Price'];
-      $fields->MaxPerIp = $_POST['MaxPerIp'];
+      $fields->MaxPerIp = intval($_POST['MaxPerIp']);
       $fields->IsDeleted = false;
-      $fields->IsActive = false;
+      $fields->IsActive = true;
       if ($_POST['IsActive'] == 'on')
         $fields->IsActive = true;
       $fields->IsUnlimited = true;
       $fields->NoEndDate = true;
       stripslashes_deep( $fields );
-//var_dump($fields);
-//echo "<br/>";
       $flight = $toutrix_adserver->flight_create($fields);
-//var_dump($flight);
+      $_GET['action'] = "edit";
+      $_GET['tab'] = 'flights';
+    } elseif ($_GET['action'] == 'delete' && $_GET['campaignId']>0 && $_GET['flightId']>0) {
+      $fields = new stdclass();
+      $fields->id = intval($_GET['flightId']);
+      $fields->IsDeleted = true;
+      $fields->IsActive = false;
+      $flight = $toutrix_adserver->flight_update($fields);
+      $_GET['action'] = 'edit';
     } elseif (!empty($_POST['b'])) {
       $fields = new stdclass();
-      $fields->id = $_POST['id'];
-      $fields->name = $_POST['name'];
+      $fields->id = intval($_POST['id']);
+      $fields->name = sanitize_text_field($_POST['name']);
       $fields->isActive = 0;
       if ($_POST['isActive'] == 'on')
         $fields->isActive = 1;
@@ -233,17 +236,10 @@ function mt_toutrix_campaign_page() {
 <?php
     }
     $fields = new stdclass();
-    $fields->campaignId = $_GET['campaignId'];
+    $fields->campaignId = intval($_GET['campaignId']);
     //var_dump($fields); echo "<br/>";
     $campaign = $toutrix_adserver->campaign_get($fields);
 
-//    if (isset($_GET['action']) && $_GET['action']== 'stats') {
-    if (1==2) {
-      
-    } else {
-?>
-
-<?php
     $cur_tab = 'homepage';	
     if (isset($_GET['tab']))
       $cur_tab = $_GET['tab'];
@@ -253,36 +249,35 @@ function mt_toutrix_campaign_page() {
     echo '<h2 class="nav-tab-wrapper">';
     foreach( $tabs as $tab => $name ){
         $class = ( $tab == $cur_tab ) ? ' nav-tab-active' : '';
-        echo "<a class='nav-tab$class' href='?page=mt_toutrix_campaign&action=edit&campaignId=" . $_GET['campaignId'] . "&tab=$tab'>$name</a>";
+        echo "<a class='nav-tab$class' href='?page=mt_toutrix_campaign&action=edit&campaignId=" . intval($_GET['campaignId']) . "&tab=$tab'>$name</a>";
     }
 
     echo '</h2>';
 
-   if ($cur_tab == 'homepage') {
+     if ($cur_tab == 'homepage') {
 ?>
 
 <h2>Update campaign</h2>
 <?php
       toutrix_campaign_form($campaign);
-  } elseif ($cur_tab=='flights') {
+    } elseif ($cur_tab=='flights') {
       toutrix_flights($campaign);
-  } elseif ($cur_tab=='stats') {
-    toutrix_campaign_show_stats(campaign);
+    } elseif ($cur_tab=='stats') {
+      toutrix_campaign_show_stats(campaign);
 //?page=mt_toutrix_campaign&action=stats&campaignId=24
-  } else {
+    } else {
 ?>
 <h2>Targeting for this campaign</h2>
 It applies to all flights.<br/>
 <?php
 
       $fields = new stdclass();
-      $fields->campaignId = $_GET['campaignId'];
+      $fields->campaignId = intval($_GET['campaignId']);
       $targets = $toutrix_adserver->campaign_targets($fields);
       toutrix_show_targets($targets);
 
       echo "<h2>Add a new target</h2>";
       toutrix_show_target_form($fields);
-  }
     }
   }
 }

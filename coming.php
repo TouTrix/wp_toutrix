@@ -1,5 +1,4 @@
-<?
-
+<?php
 function coming_soon() {
 ?>
 <h1>Paxum deposit (December 2015)</h1>

@@ -5,20 +5,32 @@ function toutrix_creative_page() {
   global $toutrix_adserver;
   toutrix_get_token();
 
+  if ($_GET['action'] == 'delete' && !empty($_GET['creativeId'])) {
+    $fields = new stdclass();
+    $fields->id = intval($_GET['creativeId']);
+    $fields->IsActive = 0; 
+    $fields->IsDeleted = 1;
+    $creative = $toutrix_adserver->creative_update($fields);
+//print_r($creative);
+    unset($_GET['action']);
+    unset($_GET['creativeId']);
+  }
+
   if (empty($_GET['creativeId'])) {
     if (!empty($_POST['b'])) {
       $fields = new stdclass();
       $fields->user_id = $adserver->userId;
-      $fields->title = $_POST['title'];
-      $fields->url = $_POST['url'];
-      $fields->banner_url = $_POST['banner_url'];
-      $fields->body = $_POST['body'];
-      $fields->html = $_POST['html'];
-      $fields->adtypeId = $_POST['adtypeId'];
+      $fields->title = sanitize_text_field($_POST['title']);
+      $fields->url = sanitize_text_field($_POST['url']);
+      $fields->banner_url = sanitize_text_field($_POST['banner_url']);
+      $fields->body = sanitize_text_field($_POST['body']);
+      $fields->html = sanitize_text_field($_POST['html']);
+      $fields->adtypeId = intval($_POST['adtypeId']);
       $fields->IsDeleted = 0;
       $fields->IsActive = 1;
       stripslashes_deep( $fields );
       $creative = $toutrix_adserver->creative_create($fields);
+      $_GET['new'] = '';
 //var_dump($creative);
 ?>
 <div class="updated"><p><strong><?php _e('Creative added', 'wp-toutrix' ); ?></strong></p></div>
@@ -28,27 +40,22 @@ function toutrix_creative_page() {
 ?>
 <div class='wrap'>
 <?php
-if (!isset($_GET['new'])) {
+if (!isset($_GET['new']) || $_GET['new'] == '') {
 ?>
 <h1>Creatives <a href="?page=toutrix_creative&new=1" class="page-title-action">Add New</a></h1>
-
 <?php
     $creatives = $toutrix_adserver->creatives_list(array());
 ?>
-
 <ul class='subsubsub'>
 	<li class='all'><a href='' class="current">All <span class="count">(<?php echo count($creatives);?>)</span></a></li>
 </ul>
-
 <?php
-
     $table = new creative_table();
     $table->prepare_items();
     $table->display();
 
 } else { 
 ?>
-
 <h2>Create a new creative</h2>
 <?php
     $new = new stdclass();
@@ -61,14 +68,14 @@ if (!isset($_GET['new'])) {
       $isActive = 0;
       if ($_POST['IsActive'] == 'on')
         $isActive = 1;
-      $fields->id = $_POST['id'];
+      $fields->id = intval($_POST['id']);
       $fields->IsActive = $isActive;
-      $fields->title = $_POST['title'];
-      $fields->url = $_POST['url'];
-      $fields->banner_url = $_POST['banner_url'];
-      $fields->body = $_POST['body'];
-      $fields->html = $_POST['html'];
-      $fields->adtypeId = $_POST['adtypeId'];
+      $fields->title = sanitize_text_field($_POST['title']);
+      $fields->url = sanitize_text_field($_POST['url']);
+      $fields->banner_url = sanitize_text_field($_POST['banner_url']);
+      $fields->body = sanitize_text_field($_POST['body']);
+      $fields->html = sanitize_text_field($_POST['html']);
+      $fields->adtypeId = intval($_POST['adtypeId']);
       stripslashes_deep( $fields );
 //var_dump($fields);
 //echo "<br/>";
@@ -79,7 +86,7 @@ if (!isset($_GET['new'])) {
 <?php
     }
     $fields = new stdclass();
-    $fields->creativeId = $_GET['creativeId'];
+    $fields->creativeId = intval($_GET['creativeId']);
     $creative = $toutrix_adserver->creative_get($fields)
 ?>
 <h2>Update creative</h2>
@@ -398,10 +405,11 @@ class creative_table extends toutrix_table {
         global $toutrix_adserver;
         $creatives = $toutrix_adserver->creatives_list(array());
         $arr = array();
-        foreach ($creatives as $creative) {
-          $new_crea = array('id'=>$creative->id, 'title'=>$creative->title, 'isActive'=>$creative->IsActive);
-          $arr[] = $new_crea;
-        }
+        foreach ($creatives as $creative)
+          if ($creative->IsDeleted==0) {
+            $new_crea = array('id'=>$creative->id, 'title'=>$creative->title, 'isActive'=>$creative->IsActive);
+            $arr[] = $new_crea;
+          }
         $data = $arr;
         
         /**

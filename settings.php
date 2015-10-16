@@ -1,5 +1,4 @@
 <?php
-
 function toutrix_settings_page() {
     //must check that the user has the required capability 
     if (!current_user_can('manage_options'))
@@ -25,6 +24,12 @@ function toutrix_settings_page() {
         if ($_POST['is_skimmed']=='on')
           $is_skimmed = 1;
         update_option( "ad_toutrix_skimmed_enabled", $is_skimmed);
+
+        $replace_links = 0;
+        if ($_POST['replace_links']=='on')
+          $replace_links = 1;
+        update_option( "ad_toutrix_replace_links", $replace_links);
+
 ?>
 <div class="updated"><p><strong><?php _e($user->error->message, 'menu-test' ); ?></strong></p></div>
 <?php
@@ -32,16 +37,16 @@ function toutrix_settings_page() {
         update_option( "ad_toutrix_access_token", "" );
         update_option( "ad_toutrix_website_id", "" );
         update_option( "ad_toutrix_zone_id", "" );
-        update_option( "ad_channel_id", $_POST[ 'channelId'] );
+        update_option( "ad_channel_id", intval($_POST[ 'channelId']) );
 
         // Read their posted value
-        $toutrix_username = $_POST[ "ad_toutrix_username" ];
-        $toutrix_password = $_POST[ "ad_toutrix_password" ];
+        $toutrix_username = sanitize_text_field($_POST[ "ad_toutrix_username" ]);
+        $toutrix_password = sanitize_text_field($_POST[ "ad_toutrix_password" ]);
         $user = new stdClass();
-        $user->username = $_POST[ "ad_toutrix_username" ];
-        $user->password = $_POST[ "ad_toutrix_password" ];
-        $user->email = $_POST[ "ad_toutrix_email" ];
-        $user->refererId = $_POST[ "refererId" ];
+        $user->username = sanitize_text_field($_POST[ "ad_toutrix_username" ]);
+        $user->password = sanitize_text_field($_POST[ "ad_toutrix_password" ]);
+        $user->email = sanitize_text_field($_POST[ "ad_toutrix_email" ]);
+        $user->refererId = intval($_POST[ "refererId" ]);
 //var_dump($adserver);
         $user = $toutrix_adserver->user_create($user);
         if ($user->error) {
@@ -61,8 +66,8 @@ function toutrix_settings_page() {
 
     if( isset($_POST[ "config" ]) && $_POST[ "config" ] == 'Y' ) {
         // Read their posted value
-        $toutrix_username = $_POST[ "ad_toutrix_username" ];
-        $toutrix_password = $_POST[ "ad_toutrix_password" ];
+        $toutrix_username = sanitize_text_field($_POST[ "ad_toutrix_username" ]);
+        $toutrix_password = sanitize_text_field($_POST[ "ad_toutrix_password" ]);
 
         // Save the posted value in the database
         update_option( "ad_toutrix_username", $toutrix_username  );
@@ -84,7 +89,7 @@ function toutrix_settings_page() {
 Fill-up the form to create your account now.<br/>
 <form name="form1" method="post" action="">
 <input type="hidden" name="signup" value="Y">
-<input type="hidden" name="refererId" value="<?php echo referer_id; ?>">
+<input type="hidden" name="refererId" value="<?php echo toutrix_referer_id; ?>">
 <input type="hidden" name="tab" value="setting">
 
 <p><?php _e("Username:", 'menu-test' ); ?> 
@@ -168,6 +173,7 @@ Fill-up the form to create your account now.<br/>
     }
 
   $is_skimmed = get_option("ad_toutrix_skimmed_enabled");
+  $replace_links = get_option("ad_toutrix_replace_links");
 ?>
 <div class='wrap'>
 <h1>AdServer setting</h1>
@@ -178,6 +184,11 @@ Fill-up the form to create your account now.<br/>
 <tr>
 <td><input type="checkbox" name="is_skimmed" <?php if ($is_skimmed == 1) echo "checked"; ?>></td>
 <td><?php _e("Skimmed some traffic", 'toutrix' ); ?></td>
+</tr>
+
+<tr>
+<td><input type="checkbox" name="replace_links" <?php if ($replace_links == 1) echo "checked"; ?>></td>
+<td><?php _e("Replace links with bitcoin address referer", 'toutrix' ); ?></td>
 </tr>
 
 </table>

@@ -1,5 +1,4 @@
 <?php
-
 function toutrix_user_form() {
   global $user;
   global $toutrix_adserver;
@@ -10,8 +9,8 @@ function toutrix_user_form() {
     //$fields = new stdclass();
 
     //$fields->id = $user->id;
-      $user->withdraw_bitcoin = $_GET['withdraw_bitcoin'];
-      $user->withdraw_at = $_GET['withdraw_at'];
+      $user->withdraw_bitcoin = sanitize_text_field($_GET['withdraw_bitcoin']);
+      $user->withdraw_at = sanitize_text_field($_GET['withdraw_at']);
       $user = $toutrix_adserver->user_update($user);
       if ($user->error) {
 ?>
@@ -47,4 +46,3 @@ Minimum is $0.10</td>
 </form>
 <?php
 }
-?>

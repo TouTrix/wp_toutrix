@@ -30,11 +30,11 @@ function get_form_target() {
   $fields = new stdclass();
 
   if (!empty($_POST['id']))
-    $fields->id = $_POST['id'];
+    $fields->id = intval($_POST['id']);
   if (isset($_GET['flightId'])) {
-    $fields->flightId = $_GET['flightId'];
+    $fields->flightId = intval($_GET['flightId']);
   } else {
-    $fields->campaignId = $_GET['campaignId'];
+    $fields->campaignId = intval($_GET['campaignId']);
   }
   $fields->isExcept = false;
   if ($_POST['exception']=='on')
@@ -640,4 +640,3 @@ class targets_table extends WP_List_Table {
     }
 
 }
-?>

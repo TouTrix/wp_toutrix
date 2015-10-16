@@ -13,6 +13,24 @@ class toutrix_table extends WP_List_Table {
            return 'PopUnder';
          case 2:
            return '300x250';
+         case 3:
+           return '728x90';
+         case 4:
+           return '160x600';
+         case 5:
+           return '468x60';
+         case 6:
+           return '336x280';
+         case 7:
+           return '300x600';
+         case 8:
+           return '320x50';
+         case 9:
+           return 'Text Ad';
+         case 10:
+           return '120x600';
+         case 11:
+           return 'Skimmed';
          default:
            return 'Unknown';
       }
@@ -98,12 +116,12 @@ class toutrix_table extends WP_List_Table {
      * @see $this->prepare_items()
      **************************************************************************/
     function process_bulk_action() {
-        
+        /*
         //Detect when a bulk action is being triggered...
         if( 'delete'===$this->current_action() ) {
             wp_die('Items deleted (or they would be if we had items to delete)!');
         }
-        
+*/      
     }
 
 

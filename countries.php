@@ -1,4 +1,4 @@
-<?
+<?php
 global $_countries;
 $_countries = array(
   "US" => "United States",

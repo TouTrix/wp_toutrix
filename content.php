@@ -18,7 +18,6 @@ function toutrix_process_content($content) {
 }
 
 add_filter( 'the_content', 'post_ads' ); 
-
 function post_ads( $content ) { 
   $toutrix_zone_id  = get_option("ad_toutrix_zone_id");
   $ad_code = "<div><center><script src='http://serv.toutrix.com/js/creative?zone_id=" . $toutrix_zone_id . "&adtypeId=3'></script></center></div>";
@@ -37,9 +36,7 @@ function ad_after_para( $insertion, $paragraph_id, $content ) {
       $paragraphs[$index] .= $closing_p; 
     }
     if ( $paragraph_id == $index + 1 ) {
-      //echo $paragraph_id . " == " . ($index + 1) . "\n";
       if ($toutrix_ad_count == 0) {
-        //echo $insertion;	
         $paragraphs[$index] .= $insertion;
         $toutrix_ad_count++;
       }
@@ -52,11 +49,11 @@ function ad_after_para( $insertion, $paragraph_id, $content ) {
 // For skimmed traffic
 $items = array( 'post', 'page', 'date', 'tag', 'term', 'year', 'month' ); 
 foreach( $items as $item ) {
-  add_filter( $item . '_link', 'my_link', 99, 2 );
+  add_filter( $item . '_link', 'toutrix_my_link', 99, 2 );
 }
 
-function my_link( $permalink, $post ) {
-  // TODO - Check if this is a bot
+function toutrix_my_link( $permalink, $post ) {
+  // TODO - Check if visitor is a bot and not allow link change
   $is_skimmed = get_option("ad_toutrix_skimmed_enabled");
   if ($is_skimmed == 1) {   
     if (rand(0, 100)>20) {

@@ -6,7 +6,7 @@ function toutrix_flights($campaign) {
   toutrix_get_token();
 ?>
 <div class='wrap'>
-<h1>Flights <a href="?page=mt_toutrix_campaign&action=new&campaignId=<?php echo $_GET['campaignId'];?>&tab=flights" class="page-title-action">Add New</a></h1>
+<h1>Flights <a href="?page=mt_toutrix_campaign&action=new&campaignId=<?php echo intval($_GET['campaignId']);?>&tab=flights" class="page-title-action">Add New</a></h1>
 
 <?php
   if (isset($_GET['action']) && $_GET['action']=='edit') {
@@ -18,15 +18,13 @@ function toutrix_flights($campaign) {
     $flights_table->set_datas($flights);
     $flights_table->prepare_items();
     $flights_table->display();
-
-    //var_dump($flights);
   } else {
 ?>
 <h2>Create a new flight</h2>
 <?php
     $flight = new stdclass();
     $flight->max_per_ip = 0;
-    $flight->campaignId = $_GET['campaignId'];
+    $flight->campaignId = intval($_GET['campaignId']);
     toutrix_flight_form($flight);
   }
 ?>
@@ -40,7 +38,7 @@ function toutrix_flight() {
 
   if (isset($_GET['activeId']) && $_GET['activeId'] > 0) {
     $fields = new stdclass();
-    $fields->id = $_GET['activeId'];
+    $fields->id = intval($_GET['activeId']);
     $fields->IsActive = true;
     $target = $toutrix_adserver->creative_flight_save($fields);
 ?>
@@ -50,8 +48,8 @@ function toutrix_flight() {
 
   if (isset($_GET['removetargetid']) && isset($_GET['flightId'])) {
     $fields = new stdclass();
-    $fields->flightId = $_GET['flightId'];
-    $fields->id = $_GET['removetargetid'];
+    $fields->flightId = intval($_GET['flightId']);
+    $fields->id = intval($_GET['removetargetid']);
 
     $response = $toutrix_adserver->flight_targets_delete($fields);
 ?>
@@ -62,7 +60,7 @@ function toutrix_flight() {
 
   if (isset($_GET['deactiveId']) && $_GET['deactiveId'] > 0) {
     $fields = new stdclass();
-    $fields->id = $_GET['deactiveId'];
+    $fields->id = intval($_GET['deactiveId']);
     $fields->IsActive = false;
     $target = $toutrix_adserver->creative_flight_save($fields);
 ?>
@@ -72,7 +70,7 @@ function toutrix_flight() {
 
   if (isset($_GET['removeTargetId']) && $_GET['removeTargetId'] > 0) {
     $fields = new stdclass();
-    $fields->id = $_GET['removeTargetId'];
+    $fields->id = intval($_GET['removeTargetId']);
     $fields->IsDeleted = true;
     $fields->IsActive = false;
     $target = $toutrix_adserver->creative_flight_save($fields);
@@ -92,13 +90,13 @@ function toutrix_flight() {
   }
 
   $fields = new stdclass();
-  $fields->campaignId = $_GET['campaignId'];
+  $fields->campaignId = intval($_GET['campaignId']);
   //var_dump($fields); echo "<br/>";
   $campaign = $toutrix_adserver->campaign_get($fields);
 
   $fields = new stdclass();
-  $fields->campaignId = $_GET['campaignId'];
-  $fields->flightId = $_GET['flightId'];
+  $fields->campaignId = intval($_GET['campaignId']);
+  $fields->flightId = intval($_GET['flightId']);
   $flight = $toutrix_adserver->flights_get($fields);
 
   if (isset($_GET['b'])) {
@@ -106,15 +104,15 @@ function toutrix_flight() {
     $flight->IsActive = 0;
     if ($_GET['IsActive'] == 'on')
       $flight->IsActive = 1;
-    $flight->MaxPerIp = $_GET['MaxPerIp'];
+    $flight->MaxPerIp = intval($_GET['MaxPerIp']);
     $flight = $toutrix_adserver->flight_update($flight);
   }
 
   if (isset($_POST['creative']) && $_POST['creative']=='Y') {
     $fields = new stdclass();
-    $fields->flightId = $_GET['flightId'];
-    $fields->campaignId = $_GET['campaignId'];
-    $fields->creativeId = $_POST['creativeId'];
+    $fields->flightId = intval($_GET['flightId']);
+    $fields->campaignId = intval($_GET['campaignId']);
+    $fields->creativeId = intval($_POST['creativeId']);
     $fields->IsActive = true;
     $creative_flights = $toutrix_adserver->creative_flight_create($fields);
     //var_dump($creative_flights);
@@ -132,7 +130,7 @@ function toutrix_flight() {
   echo '<h2 class="nav-tab-wrapper">';
   foreach( $tabs as $tab => $name ){
       $class = ( $tab == $cur_tab ) ? ' nav-tab-active' : '';
-      echo "<a class='nav-tab$class' href='?page=mt_toutrix_campaign&action=edit&campaignId=" . $_GET['campaignId'] . "&flightId=" . $_GET['flightId'] . "&tab=$tab'>$name</a>";
+      echo "<a class='nav-tab$class' href='?page=mt_toutrix_campaign&action=edit&campaignId=" . intval($_GET['campaignId']) . "&flightId=" . intval($_GET['flightId']) . "&tab=$tab'>$name</a>";
   }
   echo '</h2>';
 
@@ -141,8 +139,8 @@ function toutrix_flight() {
 ?>
 <form>
 <input type='hidden' name='page' value='mt_toutrix_campaign'>
-<input type='hidden' name='campaignId' value='<?php echo $_GET['campaignId']; ?>'>
-<input type='hidden' name='flightId' value='<?php echo $_GET['flightId']; ?>'>
+<input type='hidden' name='campaignId' value='<?php echo intval($_GET['campaignId']); ?>'>
+<input type='hidden' name='flightId' value='<?php echo intval($_GET['flightId']); ?>'>
 Enabled: <input type='checkbox' name='IsActive' <?php if ($flight->IsActive == 1) echo "checked"; ?>><br/>
 Price: $<input type='text' name='Price' value='<?php echo $flight->Price; ?>'> (CPM price)<br/>
 Max Per IP: <input type='text' name='MaxPerIp' value='<?php echo $flight->MaxPerIp; ?>'><br/>
@@ -151,7 +149,7 @@ Max Per IP: <input type='text' name='MaxPerIp' value='<?php echo $flight->MaxPer
 <?php
   } elseif ($cur_tab == 'creative') {
     $fields = new stdclass();
-    $fields->flightId = $_GET['flightId'];
+    $fields->flightId = intval($_GET['flightId']);
     $creative_flights = $toutrix_adserver->creative_flight_get($fields);
 //var_dump($creative_flights);
 
@@ -182,12 +180,12 @@ foreach ($creatives as $one_crea) {
   } elseif ($cur_tab == 'targets') {
     echo "<h2>Targets for " . $campaign->name . "</h2>";
     $fields = new stdclass();
-    $fields->flightId = $_GET['flightId'];
+    $fields->flightId = intval($_GET['flightId']);
     $targets = $toutrix_adserver->flight_targets_get($fields);
     toutrix_show_targets($targets);
 
     $fields = new stdclass();
-    $fields->flightId = $_GET['flightId'];
+    $fields->flightId = intval($_GET['flightId']);
 
     echo "<h2>Add a new target</h2>";
     toutrix_show_target_form($fields);
@@ -562,12 +560,13 @@ class flights_table extends WP_List_Table {
     }
 
     function set_datas($stats) {
-        $arr = array();
-        foreach ($stats as $flight) {
+      $arr = array();
+      foreach ($stats as $flight)
+        if ($flight->IsDeleted == 0) {
           $new_crea = array('id'=>$flight->id, 'name' => $flight->Name, 'price' => $flight->Price, 'IsActive'=>$flight->IsActive);
           $arr[] = $new_crea;
         }
-        $this->datas = $arr;
+      $this->datas = $arr;
     }
 
 
@@ -631,7 +630,7 @@ class flights_table extends WP_List_Table {
         //Build row actions
         $actions = array(
             'edit'      => sprintf('<a href="?page=%s&action=%s&campaignId=%s&flightId=%s">Edit</a>',$_REQUEST['page'],'edit',$_GET['campaignId'],$item['id']),
-            'delete'    => sprintf('<a href="?page=%s&action=%s&campaignId=%s&flightId=%s">Delete</a>',$_REQUEST['page'],'delete',$_GET['campaignId'],$item['id']),
+            'delete'    => sprintf('<a href="?page=%s&action=%s&campaignId=%s&flightId=%s&tab=flights">Delete</a>',$_REQUEST['page'],'delete',$_GET['campaignId'],$item['id']),
 /*
             'stats'      => sprintf('<a href="?page=%s&action=%s&campaignId=%s">Stats</a>',$_REQUEST['page'],'stats',$item['id']),
 */
@@ -745,12 +744,12 @@ class flights_table extends WP_List_Table {
      * @see $this->prepare_items()
      **************************************************************************/
     function process_bulk_action() {
-        
+        /*
         //Detect when a bulk action is being triggered...
         if( 'delete'===$this->current_action() ) {
             wp_die('Items deleted (or they would be if we had items to delete)!');
         }
-        
+        */
     }
 
 
@@ -862,4 +861,3 @@ class flights_table extends WP_List_Table {
 
 }
 
-?>
