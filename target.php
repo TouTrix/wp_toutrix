@@ -79,12 +79,12 @@ function get_form_target() {
     $fields->target_value = $_POST['true_false'];
   } else if ($fields->target_type == 'is_carrier') {
     $fields->target_value = $_POST['true_false'];
-  } else if ($fields->target_type == 'domain') {
-    $arr = explode(",",$_POST['domains']);
-    //print_r($arr);
+  } else if ($fields->target_type == 'keywords') {
+    $arr = explode(",",$_POST['keywords']);
     $fields->target_value = json_encode($arr);
-//echo $fields->target_value;
-//die();
+  } else if ($fields->target_type == 'domain') {
+    $arr = explode(",",$_POST['keywords']);
+    $fields->target_value = json_encode($arr);
   } else {
     $fields->target_value = $_POST['target_value'];
   }
@@ -148,6 +148,7 @@ Target type: <br/>
   <option value='is_mobile' <?php if ($target->target_type == 'is_mobile') echo "selected"; ?>>Is mobile</option>
   <option value='is_carrier' <?php if ($target->target_type == 'is_carrier') echo "selected"; ?>>Is Carrier 3G</option>
   <option value='channelId' <?php if ($target->target_type == 'channelId') echo "selected"; ?>>By channel</option>
+  <option value='keywords' <?php if ($target->target_type == 'keywords') echo "selected"; ?>>By keywords</option>
   <option value='domain' <?php if ($target->target_type == 'domain') echo "selected"; ?>>By domains</option>
   <option value='language' <?php if ($target->target_type == 'language') echo "selected"; ?>>By user language</option>
   <option value='browser' <?php if ($target->target_type == 'browser') echo "selected"; ?>>By user browser</option>
@@ -159,9 +160,10 @@ Target type: <br/>
 Target value: <br/>
 <input type='text' name='target_value' value="<?php echo $target->target_value; ?>"><br/>
 </div>
-<div id='target_domains'>
+
+<div id='target_keywords'>
 Domains: <br/>
-<input id='domains' type='text' name='domains' value=""><br/>
+<input id='keywords' type='text' name='keywords' value=""><br/>
 </div>
 
 <div id='target_countries'>
@@ -214,7 +216,7 @@ foreach ($channels as $channel) {
 </div>
 <script type="text/javascript">
 jQuery(document).ready( function () { 
-  jQuery('#domains').tagit();
+  jQuery('#keywords').tagit();
 
   updateForm();
 
@@ -224,78 +226,32 @@ jQuery(document).ready( function () {
 
   function updateForm() {
     var target_type = jQuery('#sel_target_type').find(":selected").val();
+    jQuery("#target_table_value").hide();
+    jQuery("#target_channels").hide();
+    jQuery("#target_language").hide();
+    jQuery("#target_true_false").hide();
+    jQuery("#target_browser").hide();
+    jQuery("#target_os").hide();
+    jQuery("#target_keywords").hide();
+    jQuery("#target_countries").hide();
     if (target_type == 'country') {
-      jQuery("#target_table_value").hide();
       jQuery("#target_countries").show();
-      jQuery("#target_channels").hide();
-      jQuery("#target_language").hide();
-      jQuery("#target_true_false").hide();
-      jQuery("#target_browser").hide();
-      jQuery("#target_os").hide();
-      jQuery("#target_domains").hide();
     } else if (target_type == 'channelId') {
-      jQuery("#target_table_value").hide();
-      jQuery("#target_countries").hide();
       jQuery("#target_channels").show();
-      jQuery("#target_language").hide();
-      jQuery("#target_true_false").hide();
-      jQuery("#target_browser").hide();
-      jQuery("#target_os").hide();
-      jQuery("#target_domains").hide();
+    } else if (target_type == 'keywords') {
+      jQuery("#target_keywords").show();
     } else if (target_type == 'domain') {
-      jQuery("#target_table_value").hide();
-      jQuery("#target_countries").hide();
-      jQuery("#target_channels").hide();
-      jQuery("#target_language").hide();
-      jQuery("#target_true_false").hide();
-      jQuery("#target_browser").hide();
-      jQuery("#target_os").hide();
-      jQuery("#target_domains").show();
+      jQuery("#target_keywords").show();
     } else if (target_type == 'language') {
-      jQuery("#target_table_value").hide();
-      jQuery("#target_countries").hide();
-      jQuery("#target_channels").hide();
       jQuery("#target_language").show();
-      jQuery("#target_true_false").hide();
-      jQuery("#target_browser").hide();
-      jQuery("#target_os").hide();
-      jQuery("#target_domains").hide();
     } else if (target_type == 'browser') {
-      jQuery("#target_table_value").hide();
-      jQuery("#target_countries").hide();
-      jQuery("#target_channels").hide();
-      jQuery("#target_language").hide();
-      jQuery("#target_true_false").hide();
       jQuery("#target_browser").show();
-      jQuery("#target_os").hide();
-      jQuery("#target_domains").hide();
     } else if (target_type == 'os') {
-      jQuery("#target_table_value").hide();
-      jQuery("#target_countries").hide();
-      jQuery("#target_channels").hide();
-      jQuery("#target_language").hide();
-      jQuery("#target_true_false").hide();
-      jQuery("#target_browser").hide();
       jQuery("#target_os").show();
-      jQuery("#target_domains").hide();
     } else if (target_type == 'is_mobile' || target_type == 'is_carrier') {
-      jQuery("#target_table_value").hide();
-      jQuery("#target_countries").hide();
-      jQuery("#target_channels").hide();
-      jQuery("#target_language").hide();
       jQuery("#target_true_false").show();
-      jQuery("#target_browser").hide();
-      jQuery("#target_os").hide();
-      jQuery("#target_domains").hide();
     } else {
       jQuery("#target_table_value").show();
-      jQuery("#target_countries").hide();
-      jQuery("#target_channels").hide();
-      jQuery("#target_language").hide();
-      jQuery("#target_true_false").hide();
-      jQuery("#target_browser").hide();
-      jQuery("#target_os").hide();
-      jQuery("#target_domains").hide();
     }
   }
 });

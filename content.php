@@ -1,6 +1,6 @@
 <?php
 //add_filter('the_content_feed', 'toutrix_process_content');
-
+/*
 global $toutrix_ad_count;
 $toutrix_ad_count = 0 ;
 
@@ -63,4 +63,4 @@ function toutrix_my_link( $permalink, $post ) {
   }
   return $permalink;
 }
-
+*/
