@@ -3,5 +3,7 @@ global $_languages;
 $_languages = array(
   "EN" => 'en',
   "FR" => 'fr',
-  "ES" => 'es'
+  "ES" => 'es',
+  "IT" => 'it',
+  "DE" => 'de'
 );

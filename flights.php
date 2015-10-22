@@ -120,7 +120,11 @@ function toutrix_flight() {
 <div class="updated"><p><strong><?php _e('Creative added to the flight', 'wp-toutrix' ); ?></strong></p></div>
 <?php
   }
+?>
+<div class="wrap">
 
+<a href="?page=mt_toutrix_campaign" class="page-title-action">All campaigns</a> > <a href='?page=mt_toutrix_campaign&action=edit&campaignId=<?php echo $campaign->id?>"&tab=flights' class="page-title-action"><?php echo $campaign->name; ?></a>
+<?php
   $cur_tab = 'homepage';	
   if (isset($_GET['tab']))
     $cur_tab = $_GET['tab'];

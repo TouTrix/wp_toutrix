@@ -79,6 +79,8 @@ function get_form_target() {
     $fields->target_value = $_POST['true_false'];
   } else if ($fields->target_type == 'is_carrier') {
     $fields->target_value = $_POST['true_false'];
+  } else if ($fields->target_type == 'is_referer') {
+    $fields->target_value = $_POST['true_false'];
   } else if ($fields->target_type == 'keywords') {
     $arr = explode(",",$_POST['keywords']);
     $fields->target_value = json_encode($arr);
@@ -145,6 +147,7 @@ Target type: <br/>
   <option value='choose'>Select a targeting type</option>
   <option value='country' <?php if ($target->target_type == 'country') echo "selected"; ?>>Target country</option>
 <!--  <option value='city' <?php if ($target->target_type == 'city') echo "selected"; ?>>Target city</option> -->
+  <option value='is_referer' <?php if ($target->target_type == 'is_referer') echo "selected"; ?>>Have referal</option>
   <option value='is_mobile' <?php if ($target->target_type == 'is_mobile') echo "selected"; ?>>Is mobile</option>
   <option value='is_carrier' <?php if ($target->target_type == 'is_carrier') echo "selected"; ?>>Is Carrier 3G</option>
   <option value='channelId' <?php if ($target->target_type == 'channelId') echo "selected"; ?>>By channel</option>
@@ -248,7 +251,7 @@ jQuery(document).ready( function () {
       jQuery("#target_browser").show();
     } else if (target_type == 'os') {
       jQuery("#target_os").show();
-    } else if (target_type == 'is_mobile' || target_type == 'is_carrier') {
+    } else if (target_type == 'is_mobile' || target_type == 'is_carrier' || target_type == 'is_referer') {
       jQuery("#target_true_false").show();
     } else {
       jQuery("#target_table_value").show();

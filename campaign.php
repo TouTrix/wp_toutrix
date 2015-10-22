@@ -177,6 +177,9 @@ function mt_toutrix_campaign_page() {
     }
 ?>
 <div class='wrap'>
+
+<a href="?page=toutrix_creative" class="page-title-action">Go to creatives</a><hr/>
+
 <h1>Campaigns <a href="?page=mt_toutrix_campaign&action=new" class="page-title-action">Add New</a></h1>
 <?php
     toutrix_echo_funds_available();
@@ -227,10 +230,7 @@ function mt_toutrix_campaign_page() {
       if ($_POST['isActive'] == 'on')
         $fields->isActive = 1;
       stripslashes_deep( $fields );
-//var_dump($fields);
-//echo "<br/>";
       $campaign = $toutrix_adserver->campaign_update($fields);
-//var_dump($campaign);
 ?>
 <div class="updated"><p><strong><?php _e('Campaign saved', 'wp-toutrix' ); ?></strong></p></div>
 <?php
@@ -243,7 +243,11 @@ function mt_toutrix_campaign_page() {
     $cur_tab = 'homepage';	
     if (isset($_GET['tab']))
       $cur_tab = $_GET['tab'];
-
+?>
+<div class='wrap'>
+<a href="?page=mt_toutrix_campaign" class="page-title-action">All campaigns</a> > <?php echo $campaign->name;?>
+<hr/>
+<?php
     $tabs = array( 'homepage' => 'Settings', 'flights' => 'Flights', 'targets' => 'Targets', 'stats' => 'Stats' );
     echo '<div id="icon-themes" class="icon32"><br></div>';
     echo '<h2 class="nav-tab-wrapper">';

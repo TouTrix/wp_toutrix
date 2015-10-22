@@ -42,6 +42,9 @@ function toutrix_creative_page() {
 <?php
 if (!isset($_GET['new']) || $_GET['new'] == '') {
 ?>
+<a href="?page=mt_toutrix_campaign" class="page-title-action">Go to campaigns</a>
+<hr/>
+
 <h1>Creatives <a href="?page=toutrix_creative&new=1" class="page-title-action">Add New</a></h1>
 <?php
     $creatives = $toutrix_adserver->creatives_list(array());
@@ -56,6 +59,9 @@ if (!isset($_GET['new']) || $_GET['new'] == '') {
 
 } else { 
 ?>
+<a href="?page=toutrix_creative" class="page-title-action">Go to creatives</a>
+<hr/>
+
 <h2>Create a new creative</h2>
 <?php
     $new = new stdclass();
@@ -77,10 +83,7 @@ if (!isset($_GET['new']) || $_GET['new'] == '') {
       $fields->html = sanitize_text_field($_POST['html']);
       $fields->adtypeId = intval($_POST['adtypeId']);
       stripslashes_deep( $fields );
-//var_dump($fields);
-//echo "<br/>";
       $creative = $toutrix_adserver->creative_update($fields);
-//var_dump($creative);
 ?>
 <div class="updated"><p><strong><?php _e('Creative saved', 'wp-toutrix' ); ?></strong></p></div>
 <?php
@@ -89,6 +92,10 @@ if (!isset($_GET['new']) || $_GET['new'] == '') {
     $fields->creativeId = intval($_GET['creativeId']);
     $creative = $toutrix_adserver->creative_get($fields)
 ?>
+<div class='wrap'>
+<a href="?page=toutrix_creative" class="page-title-action">Go to creatives</a>
+<hr/>
+
 <h2>Update creative</h2>
 <?php
     toutrix_creative_form($creative);

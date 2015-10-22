@@ -46,11 +46,13 @@ function mt_toutrix_page() {
 ?>
 <h2>Publishers</h2>
 
-To earn money with ads, you drag a TouTrix Ad Widget in your page.<br/><br/>
+To earn money with ads, you drag a <a href='/wp-admin/widgets.php'>TouTrix Ad Widget</a> in your page.<br/><br/>
+
+<a href='?page=mt_toutrix_stats_page'>Check your stats</a> here.
 
 <h2>Advertisers</h2>
 
-To buy traffic, you need to make a deposit first, create a creative, create a campaign, add a flight with your targetings and finally, add a creative to your flight.<br/><br/>
+To buy traffic, you need to <a href='?page=mt_toutrix_bank'>make a deposit</a> first, <a href='?page=toutrix_creative'>create a creative</a>, <a href='?page=mt_toutrix_campaign'>create a campaign</a>, add a flight with your targetings and finally, add a creative to your flight.<br/><br/>
 
 <?php
    } elseif ($cur_tab == 'coming') {
