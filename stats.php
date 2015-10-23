@@ -18,7 +18,7 @@ function toutrix_site_show_stats($site) {
   }
   $stats = $toutrix_adserver->site_report($fields);
 ?>
-<h1>Publisher statistique</h1>
+<h1>Publisher statistics</h1>
 
 <form method='GET'>
 <input type='hidden' name='page' value='mt_toutrix_stats_page'>

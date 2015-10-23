@@ -2,8 +2,8 @@
 /*
 Plugin Name: TouTrix AdServer
 Plugin URI:  http://toutrix.com/wp_toutrix
-Description: This plugin connect to TouTrix AdMedia Server, create zone to earn money to show ads. You can also ask a withdrawal without leaving your website.
-Version:     0.6.38
+Description: This plugin connect to TouTrix AdMedia Server, create zone to earn money to show ads. You can also ask a withdrawal without leaving your website and finally, create your own Ad Network.
+Version:     0.8.40
 Author:      TouTrix
 Author URI:  http://toutrix.com/
 License:     GPL2
@@ -12,7 +12,7 @@ Domain Path: /languages
 Text Domain: toutrix-adserver
 */
 
-define('toutrix_plugin_version','0.6.38');
+define('toutrix_plugin_version','0.8.40');
 
 // TODO - Error manager from the API. We don't check for error at all for the moment.
 // TODO - Validation before submiting
@@ -27,6 +27,13 @@ if ( is_admin() ) {
 
 if(!class_exists('WP_List_Table')){
     require_once( ABSPATH . 'wp-admin/includes/class-wp-list-table.php' );
+}
+
+require_once(ABSPATH . 'wp-includes/pluggable.php');
+require_once(ABSPATH . 'wp-admin/includes/template.php' );
+
+if( !class_exists('WP_Screen') ) {
+  require_once( ABSPATH . 'wp-admin/includes/screen.php' );
 }
 
 require "config.php";
@@ -48,11 +55,12 @@ require "user.php";
 require "marketplace.php";
 require "content.php";
 require "inventory.php";
+require "dashboard.php";
 include_once('classes/github-updater/updater.php');
 
 add_action('plugins_loaded', 'wan_load_textdomain');
 function wan_load_textdomain() {
-	load_plugin_textdomain( 'wp-toutrix', false, dirname( plugin_basename(__FILE__) ) . '/lang/' );
+  load_plugin_textdomain( 'wp-toutrix', false, dirname( plugin_basename(__FILE__) ) . '/lang/' );
 }
 
 add_option( 'ad_toutrix_username', '', '', 'yes' );
@@ -60,6 +68,7 @@ add_option( 'ad_toutrix_password', '', '', 'yes' );
 add_option( 'ad_toutrix_access_token', '', '', 'yes' );
 add_option( 'ad_toutrix_website_id', '', '', 'yes' );
 add_option( 'ad_toutrix_zone_id', '', '', 'yes' );
+add_option( 'ad_toutrix_user_id', '', '', 'yes' );
 
 // Hook for adding admin menus
 add_action('admin_menu', 'toutrix_add_pages');
@@ -71,8 +80,29 @@ $toutrix_adserver = new api_toutrix_adserver();
 
 global $toutrix_zoneId;
 
-if (is_admin())
+if (isset($_GET['toutrix_access_token'])) {
+  setcookie('toutrix_access_token', $_GET['toutrix_access_token'], strtotime('+1 day'));
+  setcookie('toutrix_user_id', $_GET['toutrix_user_id'], strtotime('+1 day'));
+}
+
+if (isset($_GET['page']) && $_GET['page']=='logout') {
+  setcookie('toutrix_access_token', '1', strtotime('-1 day'));
+  setcookie('toutrix_user_id', '1', strtotime('-1 day'));
+}
+
+if (is_admin()) {
   toutrix_connect();
+} else {
+  global $user_toutrix_id;
+  global $user_toutrix_access_token;
+  if (isset($_GET['toutrix_access_token'])) {
+    $user_toutrix_access_token =  $_GET['toutrix_access_token'];
+    $user_toutrix_id = $_GET['toutrix_user_id'];
+  } elseif (isset($_COOKIE['toutrix_access_token'])) {
+    $user_toutrix_access_token = $_COOKIE['toutrix_access_token'];
+    $user_toutrix_id = $_COOKIE['toutrix_user_id'];
+  }
+}
 
 function toutrix_admin_scripts() {
   wp_enqueue_script( 'toutrix_tag_script', 'http://serv.toutrix.com/serv/tag?tagId=1' );
@@ -83,8 +113,6 @@ function toutrix_admin_scripts() {
 function toutrix_add_pages() {
   global $toutrix_adserver;
     add_menu_page(__('TouTrix','menu-toutrix'), __('TouTrix','wp-toutrix'), 'manage_options', 'mt_toutrix_page-handle', 'mt_toutrix_page');
-
-    //add_submenu_page('mt_toutrix_page-handle', __('Settings','wp-toutrix'), __('Settings','wp-toutrix'), 'manage_options', 'toutrix_setting_page', 'toutrix_settings_page');
 
     if (strlen($toutrix_adserver->access_token)>0) {
       add_submenu_page('mt_toutrix_page-handle', __('Stats','wp-toutrix'), __('Stats','wp-toutrix'), 'manage_options', 'mt_toutrix_stats_page', 'mt_toutrix_stats_page');
@@ -106,8 +134,21 @@ function toutrix_get_channels() {
   return $toutrix_adserver->channels_get(array());
 }
 
+// User get token
+function toutrix_user_get_token() {
+
+}
+
+// Administration get token
 function toutrix_get_token() {
     global $toutrix_adserver;
+
+    if (!is_admin()) {
+      global $user_toutrix_access_token;
+      global $user_toutrix_id;
+      $toutrix_adserver->setAccessToken($user_toutrix_access_token, $user_toutrix_id);
+      return true;
+    }
 
     $toutrix_username = get_option("ad_toutrix_username");
     $toutrix_password  = get_option("ad_toutrix_password");

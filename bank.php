@@ -13,7 +13,7 @@ function mt_toutrix_bank_page() {
 <h1>TouTrix Bank<h1>
 <?php toutrix_echo_funds_available(); ?>
 <h2>Make a deposit</h2>
-We only accept BitCoin for the moment. We should add PayPal and Paxum shortly. For Paypal, we will need personal information to verify your account.<br/>
+We only accept BitCoin for the moment.<br/>
 <br/>
 <center><font size='4'>First deposit is doubled.</font></center>
 <br/>
@@ -25,15 +25,24 @@ Deposit are automatic. But it take few minutes.
 
 <h2>Withdrawal</h2>
 
-Withdrawal are automatic. Just configure your account to receive hourly payment. You never have to wait for your money. You can send the money directly to your exchanger or in your mobile wallet. We may have to approve your account first.
+Configure your account in settings to receive hourly payment. You never have to wait for your money. You can send the money directly to your exchanger or in your mobile wallet.<br/>
+We may have to approve your account first.
 
-<h1>Exchange recommendation</h1>
+
+<h1>Exchange Bitcoins</h1>
 
 <!-- TODO Exchange recommendation -->
 
-If you don't have BitCoin Wallet, you can use an exchanger and they will receive money on your behalf. We recommend CoinBase. Click the link below.<br/><br/>
+If you don't have BitCoin Wallet, you can use an exchanger and they will receive money on your behalf. <br/>
+<br/>
+We recommend <a href="https://www.coinbase.com/join/52cb9f042fe57d1d9400001f" target="_blank">CoinBase</a>. <br/>
+<br/>
 
-See <a href='http://toutrix.com/category/bitcoins/' target='_blank'>articles on TouTrix web site</a><br/>
+<h1>Need a lend?</h1>
+
+<!-- TODO We should ask adserver with keyword: btc lend -->
+
+<a href='https://btcjam.com/?r=688f61e1-439f-4b8a-93a5-e7f57068c158&utm_medium=direct&utm_source=referral_url&utm_campaign=ad_2' target="_blank">BTCjam</a>
 
 <h1>Need a lend?</h1>
 

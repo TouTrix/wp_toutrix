@@ -1,6 +1,6 @@
 === Plugin Name ===
 Contributors: c3rv3au
-Tags: adserver, bitcoin, publisher, advertiser, marketing
+Tags: adserver, bitcoin, publisher, advertiser, marketing, network, ad network
 Requires at least: 3.0.1
 Tested up to: 3.4
 Stable tag: 4.3
@@ -17,8 +17,9 @@ Add Ads Widget to your page to show ads and earn money, check your stats and eve
 
 For Advertiser, you manage all your ads in your WordPress admin panel. Stats are available and much more.
 
+For Network, you could bring publishers and advertisers to sell or buy ads directly from your website by using the TouTrix AdServer API. You get a 5% referral commissions from anyone using your website.
 
-This plugin use this TouTrix API, but did we said you never have to leave your website?
+This plugin use the TouTrix API, but did we said you never have to leave your website?
 
 http://serv.toutrix.com/explorer/
 

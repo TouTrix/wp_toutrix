@@ -153,6 +153,7 @@ function toutrix_creative_form($creative) {
 Macros are all between %<br/>
 <br/>
 %clickId% - Create a unique clickId<br/>
+%domain% - Source Domain<br/>
 
 <script type="text/javascript">
 jQuery(document).ready( function () { 

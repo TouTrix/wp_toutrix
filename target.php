@@ -262,8 +262,8 @@ jQuery(document).ready( function () {
 <input type='submit' name='b' value='Save'>
 </form>
 <hr/>
-It's easier to delete a target and create a one. You can't update a target yet.<br/>
-We are going to work on a better form. We understand it's not easily.
+It's easier to delete a target and create a new one. You can't update a target yet.<br/>
+We are going to work on a better form very soon. We understand it's not easy.
 <?php
 }
 

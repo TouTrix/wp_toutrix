@@ -17,7 +17,7 @@ function toutrix_campaign_show_stats($campaign) {
   }
   $stats = $toutrix_adserver->campaign_report($fields);
 ?>
-<h1>Statistique</h1>
+<h1>Statistics</h1>
 
 <form method='GET'>
 <input type='hidden' name='page' value='mt_toutrix_campaign'>

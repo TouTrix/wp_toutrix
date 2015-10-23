@@ -7,6 +7,7 @@ Add Ads Widget to your page to show ads and earn money, check your stats and eve
 
 For Advertiser, you manage all your ads in your WordPress admin panel. Stats are available and much more.
 
+For Network, you could bring publishers and advertisers to sell or buy ads in the TouTrix Network. You get a 5% referral commissions from anyone using your website.
 
 This plugin use this TouTrix API:
 
