@@ -13,7 +13,6 @@ function toutrix_creative_page() {
     $fields->IsActive = 0; 
     $fields->IsDeleted = 1;
     $creative = $toutrix_adserver->creative_update($fields);
-//print_r($creative);
     unset($_GET['action']);
     unset($_GET['creativeId']);
   }

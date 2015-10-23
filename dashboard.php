@@ -1,5 +1,6 @@
 <?php
 require_once "websites.php";
+require_once "signup.php";
 
 add_shortcode( 'dashboard', 'toutrix_network_shortcode_callback' );
 
@@ -72,11 +73,8 @@ $toutrix_set_token = '';
       $user->password = sanitize_text_field($_POST[ "password" ]);
       $user->email = sanitize_text_field($_POST[ "email" ]);
       $user->refererId = get_option("ad_toutrix_user_id");
-//echo "Before:<br/>";
-//var_dump($user);
+
       $user = $toutrix_adserver->user_create($user);
-//echo "After:<br/>";
-//var_dump($user);
       if (($user == NULL) || ($user->error && $user->error->status <> 500)) {
 ?>
 <div class="updated"><p><strong>ERROR : <?php _e($user->error->message, 'menu-test' ); ?></strong></p></div>
@@ -84,8 +82,11 @@ $toutrix_set_token = '';
         $toutrix_username = "";
         $toutrix_password = "";
       } else {
-        update_option( "ad_toutrix_username", $toutrix_username  );
-        update_option( "ad_toutrix_password", $toutrix_password  );
+        if ($toutrix_adserver->login($_POST['username'], $_POST['password'])) {
+          $user_toutrix_access_token = $toutrix_adserver->access_token;
+          $user_toutrix_id = $toutrix_adserver->userId;
+          $toutrix_set_token = '&toutrix_access_token=' . $user_toutrix_access_token . "&toutrix_user_id=" . $user_toutrix_id;
+        }
 ?>
 <div class="updated"><p><strong><?php _e('TouTrix account is created.', 'menu-test' ); ?></strong></p></div>
 <?php
@@ -94,6 +95,9 @@ $toutrix_set_token = '';
   }
 
   if (strlen($user_toutrix_access_token)==0) {
+    if ($_GET['page']=='signup') {
+      toutrix_signup_form();      
+    } else {  
 ?>
 <center>Please log in.
 
@@ -105,18 +109,13 @@ Password: <input type='password' name='password'> <br/>
 </form>
 <br/><br/>
 
-Or Signup here.. <br/>
+Or <a href='?page=signup'>Signup here</a> <br/>
 <br/>
 
-<form method='POST'>
-Username: <input type='text' name='username' value='<?php echo $_POST['username']; ?>'> <br/>
-Password: <input type='password' name='password' value='<?php echo $_POST['password']; ?>'> <br/>
-Email: <input type='text' name='email' value='<?php echo $_POST['email']; ?>'> <br/>
-<input type='submit' name='b' value='Signup'>
-</form>
 
 </center>
 <?php
+    }
   } else {
 ?>
 <div id='wrapper'>
@@ -136,6 +135,9 @@ Email: <input type='text' name='email' value='<?php echo $_POST['email']; ?>'> <
 <?php
     if (isset($_GET['page'])) {
       switch ($_GET['page']) {
+        case 'signup':
+          toutrix_signup_form();
+          break;
         case 'stats':
           mt_toutrix_stats_page();
           break;
