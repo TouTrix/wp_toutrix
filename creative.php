@@ -1,6 +1,8 @@
 <?php
 defined( 'ABSPATH' ) or die( 'No script kiddies please!' );
 
+$toutrix_do_wrap = false;
+
 function toutrix_creative_page() {
   global $toutrix_adserver;
   toutrix_get_token();
@@ -37,9 +39,12 @@ function toutrix_creative_page() {
 <?php
     }
 
+if ($toutrix_do_wrap) {
 ?>
 <div class='wrap'>
 <?php
+}
+
 if (!isset($_GET['new']) || $_GET['new'] == '') {
 ?>
 <a href="?page=mt_toutrix_campaign" class="page-title-action">Go to campaigns</a>
@@ -90,9 +95,13 @@ if (!isset($_GET['new']) || $_GET['new'] == '') {
     }
     $fields = new stdclass();
     $fields->creativeId = intval($_GET['creativeId']);
-    $creative = $toutrix_adserver->creative_get($fields)
+    $creative = $toutrix_adserver->creative_get($fields);
+if ($toutrix_do_wrap) {
 ?>
 <div class='wrap'>
+<?php
+}
+?>
 <a href="?page=toutrix_creative" class="page-title-action">Go to creatives</a>
 <hr/>
 
@@ -101,9 +110,12 @@ if (!isset($_GET['new']) || $_GET['new'] == '') {
     toutrix_creative_form($creative);
     //var_dump($creative);
   }
+
+  if ($toutrix_do_wrap) {
 ?>
 </div>
 <?php
+  }
 }
 
 function toutrix_creative_form($creative) {

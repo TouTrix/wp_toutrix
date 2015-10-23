@@ -3,6 +3,16 @@ require_once "websites.php";
 
 add_shortcode( 'dashboard', 'toutrix_network_shortcode_callback' );
 
+function toutrix_user_scripts() {
+	wp_enqueue_style( 't_admin_load_style', "/wp-admin/load-styles.php?c=0&amp;dir=ltr&amp;load=dashicons,admin-bar,wp-admin,buttons,wp-auth-check,media-views&amp;ver=4.3.1" );
+	wp_enqueue_style( 'jquery-ui', "http://ajax.googleapis.com/ajax/libs/jqueryui/1/themes/flick/jquery-ui.css?ver=4.3.1" );
+	wp_enqueue_style( 'tag-it', get_template_directory_uri() . "/css/jquery.tagit.css" );
+	wp_enqueue_script( 'jquery-ui', "https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js?ver=4.3.1", array(), '1.0.0', true );
+	wp_enqueue_script( 'tag-it', get_template_directory_uri() . '/js/tag-it.js', array(), '4.3.1', true );
+}
+add_action( 'wp_enqueue_scripts', 'toutrix_user_scripts' );
+
+
 function toutrix_logout() {
 ?>
 <center>You are logged out.</center>
@@ -14,24 +24,18 @@ function toutrix_network_shortcode_callback() {
 
   ob_start();
 ?>
-<!-- Cant put this elsewhere for the moment -->
-<link rel='stylesheet' href='http://toutrix.com/wp-admin/load-styles.php?c=0&amp;dir=ltr&amp;load=dashicons,admin-bar,wp-admin,buttons,wp-auth-check,media-views&amp;ver=4.3.1' type='text/css' media='all' />
-<link rel='stylesheet' id='jquery-ui-css'  href='http://ajax.googleapis.com/ajax/libs/jqueryui/1/themes/flick/jquery-ui.css?ver=4.3.1' type='text/css' media='all' />
-<script type='text/javascript' src='https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js?ver=4.3.1'></script>
-<script type='text/javascript' src='http://toutrix.com/wp-content/plugins/wp_toutrix/js/tag-it.js?ver=4.3.1'></script>
-<link rel='stylesheet' id='jquery-tag-it-css'  href='http://toutrix.com/wp-content/plugins/wp_toutrix/css/jquery.tagit.css?ver=4.3.1' type='text/css' media='all' />
 <style>
 #wrapper {
-  margin-right: 200px;
+  margin-right: 150px;
+}
+#sidebar {
+  float: left;
+  width: 150px;
 }
 #content {
   float: left;
-  width: 200px;
-}
-#sidebar {
-  float: right;
   width: 100%;
-  margin-right: -200px;
+  margin-right: -150px;
 }
 #cleared {
   clear: both;
@@ -39,7 +43,7 @@ function toutrix_network_shortcode_callback() {
 </style>
 <?php
 
-  echo "<div class='wrap'>";
+//echo "<div class='wrap'>";
 
 global $user_toutrix_access_token;
 global $user_toutrix_id;
@@ -116,7 +120,7 @@ Email: <input type='text' name='email' value='<?php echo $_POST['email']; ?>'> <
   } else {
 ?>
 <div id='wrapper'>
-  <div id="content">
+  <div id="sidebar">
 
 <a href='?page=homepage<?php echo $toutrix_set_token; ?>'>Home</a><br/>
 <!-- <a href='?page=websites<?php echo $toutrix_set_token; ?>'>Websites</a><br/>-->
@@ -128,7 +132,7 @@ Email: <input type='text' name='email' value='<?php echo $_POST['email']; ?>'> <
 <a href='?page=logout'>Logout</a><br/>
 
   </div>
-  <div id="sidebar">
+  <div id="content">
 <?php
     if (isset($_GET['page'])) {
       switch ($_GET['page']) {
@@ -172,7 +176,7 @@ Email: <input type='text' name='email' value='<?php echo $_POST['email']; ?>'> <
   <div id="cleared"></div>
 </div>
 <?php
-  echo "</div>";
+  //echo "</div>";
   $page = ob_get_contents();
   ob_end_clean();
   return $page;
