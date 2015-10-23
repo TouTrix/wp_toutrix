@@ -68,11 +68,11 @@ $toutrix_set_token = '';
       $user->password = sanitize_text_field($_POST[ "password" ]);
       $user->email = sanitize_text_field($_POST[ "email" ]);
       $user->refererId = get_option("ad_toutrix_user_id");
-echo "Before:<br/>";
-var_dump($user);
+//echo "Before:<br/>";
+//var_dump($user);
       $user = $toutrix_adserver->user_create($user);
-echo "After:<br/>";
-var_dump($user);
+//echo "After:<br/>";
+//var_dump($user);
       if (($user == NULL) || ($user->error && $user->error->status <> 500)) {
 ?>
 <div class="updated"><p><strong>ERROR : <?php _e($user->error->message, 'menu-test' ); ?></strong></p></div>
@@ -105,9 +105,9 @@ Or Signup here.. <br/>
 <br/>
 
 <form method='POST'>
-Username: <input type='text' name='username'> <br/>
-Password: <input type='password' name='password'> <br/>
-Email: <input type='text' name='email'> <br/>
+Username: <input type='text' name='username' value='<?php echo $_POST['username']; ?>'> <br/>
+Password: <input type='password' name='password' value='<?php echo $_POST['password']; ?>'> <br/>
+Email: <input type='text' name='email' value='<?php echo $_POST['email']; ?>'> <br/>
 <input type='submit' name='b' value='Signup'>
 </form>
 
