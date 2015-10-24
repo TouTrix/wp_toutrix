@@ -20,16 +20,15 @@ function toutrix_settings_page() {
     $toutrix_zone_id  = get_option("ad_toutrix_zone_id");
 
     if( isset($_POST["wp_config"]) && $_POST[ "wp_config" ] == 'Y' ) {
-        $is_skimmed = 0;
-        if ($_POST['is_skimmed']=='on')
-          $is_skimmed = 1;
-        update_option( "ad_toutrix_skimmed_enabled", $is_skimmed);
+      $is_skimmed = 0;
+      if ($_POST['is_skimmed']=='on')
+        $is_skimmed = 1;
+      update_option( "ad_toutrix_skimmed_enabled", $is_skimmed);
 
-        $replace_links = 0;
-        if ($_POST['replace_links']=='on')
-          $replace_links = 1;
-        update_option( "ad_toutrix_replace_links", $replace_links);
-
+      $replace_links = 0;
+      if ($_POST['replace_links']=='on')
+        $replace_links = 1;
+      update_option( "ad_toutrix_replace_links", $replace_links);
 ?>
 <div class="updated"><p><strong><?php _e($user->error->message, 'menu-test' ); ?></strong></p></div>
 <?php

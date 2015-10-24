@@ -71,7 +71,7 @@ function get_form_target() {
     $fields->target_value = $langs;
   } else if ($fields->target_type == 'channelId') {
     foreach ($_POST['channel_ids'] as $num => $chanId) {
-      $channels[] = $chanId;
+      $channels[] = intval($chanId);
     }
     $channels = json_encode($channels);
     $fields->target_value = $channels;

@@ -1,7 +1,7 @@
 <?php
 defined( 'ABSPATH' ) or die( 'No script kiddies please!' );
 
-$toutrix_do_wrap = false;
+$toutrix_do_wrap = true;
 
 function toutrix_creative_page() {
   global $toutrix_adserver;
@@ -37,13 +37,9 @@ function toutrix_creative_page() {
 <div class="updated"><p><strong><?php _e('Creative added', 'wp-toutrix' ); ?></strong></p></div>
 <?php
     }
-
-if ($toutrix_do_wrap) {
 ?>
 <div class='wrap'>
 <?php
-}
-
 if (!isset($_GET['new']) || $_GET['new'] == '') {
 ?>
 <a href="?page=mt_toutrix_campaign" class="page-title-action">Go to campaigns</a>
@@ -95,12 +91,8 @@ if (!isset($_GET['new']) || $_GET['new'] == '') {
     $fields = new stdclass();
     $fields->creativeId = intval($_GET['creativeId']);
     $creative = $toutrix_adserver->creative_get($fields);
-if ($toutrix_do_wrap) {
 ?>
 <div class='wrap'>
-<?php
-}
-?>
 <a href="?page=toutrix_creative" class="page-title-action">Go to creatives</a>
 <hr/>
 

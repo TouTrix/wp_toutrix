@@ -6,6 +6,7 @@ add_shortcode( 'dashboard', 'toutrix_network_shortcode_callback' );
 
 function toutrix_user_scripts() {
 	wp_enqueue_style( 't_admin_load_style', "/wp-admin/load-styles.php?c=0&amp;dir=ltr&amp;load=dashicons,admin-bar,wp-admin,buttons,wp-auth-check,media-views&amp;ver=4.3.1" );
+	wp_enqueue_style( 't_table', "/wp-admin/css/list-tables.css" );
 	wp_enqueue_style( 'jquery-ui', "http://ajax.googleapis.com/ajax/libs/jqueryui/1/themes/flick/jquery-ui.css?ver=4.3.1" );
 	wp_enqueue_style( 'tag-it', get_template_directory_uri() . "/css/jquery.tagit.css" );
 	wp_enqueue_script( 'jquery-ui', "https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js?ver=4.3.1", array(), '1.0.0', true );
