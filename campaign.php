@@ -137,7 +137,7 @@ foreach ($stats->stats->per_country as $country_code => $stat) {
 function mt_toutrix_campaign_page() {
   global $toutrix_adserver;
   toutrix_get_token();
-  
+
   if (!empty($_GET['flightId']) && $_GET['action'] != 'delete') {
     toutrix_flight();
     return;
@@ -166,7 +166,7 @@ function mt_toutrix_campaign_page() {
     if (!empty($_POST['b'])) {
       $fields = new stdclass();
       $fields->user_id = $adserver->userId;
-      $fields->name = sanitize_text_field($_POST['name']);
+      $fields->name = sanitize_text_field($_POST['camp_name']);
       $fields->isDeleted = 0;
       $fields->isActive = 1;
       stripslashes_deep( $fields );
@@ -294,7 +294,7 @@ function toutrix_campaign_form($campaign) {
 <input type='hidden' name='id' value='<?php echo $campaign->id;?>'>
 <?php } ?>
 Enabled: <input type='checkbox' name='isActive' <?php if ($campaign->isActive) echo "checked";?>><br/>
-Name: <input type='text' name='name' value='<?php echo $campaign->name;?>'><br/>
+Name: <input type='text' name='camp_name' value='<?php echo $campaign->name;?>'><br/>
 
 <input type='submit' name='b' value='Save'>
 </form>

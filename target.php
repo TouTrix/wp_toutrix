@@ -4,13 +4,16 @@ defined( 'ABSPATH' ) or die( 'No script kiddies please!' );
 global $_browsers;
 global $_oses;
 
-if (is_admin()) {
-  wp_enqueue_style( 'jquery-tag-it', plugins_url( 'css/jquery.tagit.css', __FILE__ ) );
-  wp_enqueue_style( 'jquery-ui', 'http://ajax.googleapis.com/ajax/libs/jqueryui/1/themes/flick/jquery-ui.css' );
-
-  wp_enqueue_script( 'jquery-ui', 'https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js');
-  wp_enqueue_script( 'jquery-tag-it', plugins_url( 'js/tag-it.js', __FILE__ ));
+function toutrix_my_plugin_dir($file) {
+  $retour = "/wp-content/plugins/wp_toutrix/";
+  return $retour;
 }
+
+//if (is_admin()) {
+//if (!is_admin()) {
+   wp_enqueue_script('jquery');
+//}
+
 
 $_browsers = array(
   'ie' => 'Internet Explorer',
@@ -127,6 +130,14 @@ function toutrix_show_target_line($target) {
 }
 
 function toutrix_show_target_form($target) {
+
+  wp_enqueue_style( 'jquery-tag-it', toutrix_my_plugin_dir(__FILE__) . 'css/jquery.tagit.css' );
+  wp_enqueue_script( 'jquery-tag-it', toutrix_my_plugin_dir(__FILE__) . 'js/tag-it.js');
+
+  wp_enqueue_style( 'jquery-ui', 'http://ajax.googleapis.com/ajax/libs/jqueryui/1/themes/flick/jquery-ui.css' );
+  wp_enqueue_script( 'jquery-ui', 'https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js');
+
+
   global $_countries;
   global $_languages;
   global $_browsers;
